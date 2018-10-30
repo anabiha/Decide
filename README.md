@@ -1,4 +1,4 @@
-# Decider/Crossroads/
+# Decider/Crossroads/Pickit/Surefire/ThisOrThat
 Decider allows users to pose their most difficult decisions to other users and receive feedback on they should decide. 
 ## Audience
 Anyone that needs help making a decision.
