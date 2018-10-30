@@ -2,7 +2,8 @@
 ## Audience
 Anyone that needs help making a decision.
 ## Experience
-A user opens the app
+A user opens the app... [complete this thought]
+​
 # Technical
 ## Models
 [What data are we dealing with? What classes will we create for that data?]
@@ -11,7 +12,7 @@ A user opens the app
 [What custom views do we need to create? Include pictures of your prototypes/sketches!]
 ​
 ## Controllers
-[What controllers will we need? What will they do?]
+What is up
 ​
 ## Other
 [Any other frameworks / things we will need? Helpers? Services?]
