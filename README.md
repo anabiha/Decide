@@ -1,9 +1,17 @@
-# Decider
+# Decider/Crossroads/
+Decider allows users to pose their most difficult decisions to other users and receive feedback on they should decide. 
 ## Audience
 Anyone that needs help making a decision.
 ## Experience
-A user opens the app... [complete this thought]
+A user opens the app and finds a home page displaying numerous decisions that other users have posted.
+Upon selecting one of these decisions, users can view more detailed information about the situation and vote for the choice they fell is best. 
+
+
 ​
+## Future Plans
+Company-sponsored polls that are used to collect data on interesting topics. This data can be presented 
+People who have high prestige are "admins": have power 
+
 # Technical
 ## Models
 [What data are we dealing with? What classes will we create for that data?]
@@ -12,7 +20,7 @@ A user opens the app... [complete this thought]
 [What custom views do we need to create? Include pictures of your prototypes/sketches!]
 ​
 ## Controllers
-What is up
+[What controllers will we need? What will they do?]
 ​
 ## Other
 [Any other frameworks / things we will need? Helpers? Services?]
