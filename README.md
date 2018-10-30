@@ -2,8 +2,7 @@
 ## Audience
 Anyone that needs help making a decision.
 ## Experience
-A user opens the app... [complete this thought]
-​
+A user opens the app
 # Technical
 ## Models
 [What data are we dealing with? What classes will we create for that data?]
