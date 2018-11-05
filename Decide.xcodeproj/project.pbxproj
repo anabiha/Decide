@@ -12,6 +12,8 @@
 		35105AD72185EE2F00C93FE8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35105AD52185EE2F00C93FE8 /* Main.storyboard */; };
 		35105AD92185EE3000C93FE8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35105AD82185EE3000C93FE8 /* Assets.xcassets */; };
 		35105ADC2185EE3000C93FE8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35105ADA2185EE3000C93FE8 /* LaunchScreen.storyboard */; };
+		65C42978218FDCC100B7768C /* profpic.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 65C42977218FDCC100B7768C /* profpic.PNG */; };
+		65C4297A218FDD4000B7768C /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C42979218FDD4000B7768C /* ProfileViewController.swift */; };
 		65F21E69218F4CE800A74B52 /* FeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F21E68218F4CE800A74B52 /* FeedTableViewController.swift */; };
 		65F21E6B218F4CFB00A74B52 /* FeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F21E6A218F4CFB00A74B52 /* FeedTableViewCell.swift */; };
 		65F21E6E218F594F00A74B52 /* NewDecisionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F21E6C218F527A00A74B52 /* NewDecisionViewController.swift */; };
@@ -25,6 +27,8 @@
 		35105AD82185EE3000C93FE8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35105ADB2185EE3000C93FE8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		35105ADD2185EE3000C93FE8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		65C42977218FDCC100B7768C /* profpic.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = profpic.PNG; path = ../../profpic.PNG; sourceTree = "<group>"; };
+		65C42979218FDD4000B7768C /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		65F21E68218F4CE800A74B52 /* FeedTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewController.swift; sourceTree = "<group>"; };
 		65F21E6A218F4CFB00A74B52 /* FeedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewCell.swift; sourceTree = "<group>"; };
 		65F21E6C218F527A00A74B52 /* NewDecisionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDecisionViewController.swift; sourceTree = "<group>"; };
@@ -60,11 +64,13 @@
 		35105AD02185EE2F00C93FE8 /* Decide */ = {
 			isa = PBXGroup;
 			children = (
+				65C42977218FDCC100B7768C /* profpic.PNG */,
 				35105AD12185EE2F00C93FE8 /* AppDelegate.swift */,
 				35105AD32185EE2F00C93FE8 /* ViewController.swift */,
 				35105AD52185EE2F00C93FE8 /* Main.storyboard */,
 				65F21E6C218F527A00A74B52 /* NewDecisionViewController.swift */,
 				65F21E68218F4CE800A74B52 /* FeedTableViewController.swift */,
+				65C42979218FDD4000B7768C /* ProfileViewController.swift */,
 				65F21E6A218F4CFB00A74B52 /* FeedTableViewCell.swift */,
 				35105AD82185EE3000C93FE8 /* Assets.xcassets */,
 				35105ADA2185EE3000C93FE8 /* LaunchScreen.storyboard */,
@@ -133,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				35105ADC2185EE3000C93FE8 /* LaunchScreen.storyboard in Resources */,
+				65C42978218FDCC100B7768C /* profpic.PNG in Resources */,
 				35105AD92185EE3000C93FE8 /* Assets.xcassets in Resources */,
 				35105AD72185EE2F00C93FE8 /* Main.storyboard in Resources */,
 			);
@@ -145,6 +152,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65C4297A218FDD4000B7768C /* ProfileViewController.swift in Sources */,
 				35105AD42185EE2F00C93FE8 /* ViewController.swift in Sources */,
 				65F21E6B218F4CFB00A74B52 /* FeedTableViewCell.swift in Sources */,
 				65F21E69218F4CE800A74B52 /* FeedTableViewController.swift in Sources */,

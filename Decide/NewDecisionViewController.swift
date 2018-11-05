@@ -9,7 +9,6 @@
 import UIKit
 class NewDecisionViewController: UIViewController {
     @IBOutlet weak var decisionField: UITextField!
-    @IBOutlet weak var contentView: UITextView!
 override func viewDidLoad() {
     super.viewDidLoad()
 }
@@ -24,13 +23,10 @@ override func viewWillAppear(_ animated: Bool) { //a lifecycle method that is ca
         
         // 2
         switch identifier {
-        case "displayNote":
-            print("note cell tapped")
-            
-        case "addNote":
-            
-            print("create note bar button item tapped")
-            
+        case "cancel":
+            print("cancel button tapped")
+        case "save":
+            print("save button tapped")
         default:
             print("unexpected segue identifier")
         }
