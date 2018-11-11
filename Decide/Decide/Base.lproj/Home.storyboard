@@ -21,7 +21,7 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="554"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Z1m-KA-bVf">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="feedCell" id="Z1m-KA-bVf">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Z1m-KA-bVf" id="dzh-tr-QsN">
@@ -42,6 +42,11 @@
                         <viewLayoutGuide key="safeArea" id="F2O-PC-krC"/>
                     </view>
                     <navigationItem key="navigationItem" id="Fbp-sO-OPb"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="tableView" destination="26r-U2-AmV" id="Ute-4k-C37"/>
+                        <outlet property="tableView1" destination="26r-U2-AmV" id="cGA-Gg-mVg"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fJV-g6-CF2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -51,7 +56,7 @@
         <scene sceneID="DhP-5U-rmC">
             <objects>
                 <navigationController title="Navigation" automaticallyAdjustsScrollViewInsets="NO" id="wbS-Yg-j6I" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" tag="1" title="Item 1" id="62e-sa-qVS"/>
+                    <tabBarItem key="tabBarItem" title="Item 0" id="62e-sa-qVS"/>
                     <toolbarItems/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="ea9-Re-va9">
