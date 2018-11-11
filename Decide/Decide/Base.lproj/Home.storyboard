@@ -18,14 +18,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="26r-U2-AmV">
-                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
+                                <rect key="frame" x="20" y="64" width="335" height="554"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="feedCell" id="Z1m-KA-bVf">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="335" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Z1m-KA-bVf" id="dzh-tr-QsN">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="335" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -34,8 +34,8 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="26r-U2-AmV" firstAttribute="leading" secondItem="F2O-PC-krC" secondAttribute="leading" id="1kj-ht-H0P"/>
-                            <constraint firstItem="F2O-PC-krC" firstAttribute="trailing" secondItem="26r-U2-AmV" secondAttribute="trailing" id="Ga6-C9-guy"/>
+                            <constraint firstAttribute="trailing" secondItem="26r-U2-AmV" secondAttribute="trailing" constant="20" id="JWb-9H-fAE"/>
+                            <constraint firstItem="26r-U2-AmV" firstAttribute="leading" secondItem="Nur-pp-MPq" secondAttribute="leading" constant="20" id="Yg1-Mi-c4d"/>
                             <constraint firstItem="26r-U2-AmV" firstAttribute="top" secondItem="F2O-PC-krC" secondAttribute="top" id="aqF-Ti-B1d"/>
                             <constraint firstItem="F2O-PC-krC" firstAttribute="bottom" secondItem="26r-U2-AmV" secondAttribute="bottom" id="jnW-Kw-nAm"/>
                         </constraints>

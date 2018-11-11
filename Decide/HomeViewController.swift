@@ -13,7 +13,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var tableView: UITableView!
     
     let cellReuseIdentifier = "feedCell"
-    let cellSpacingHeight: CGFloat = 5
+    let cellSpacingHeight: CGFloat = 15
     override func viewDidLoad() {
        super.viewDidLoad()
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
