@@ -9,7 +9,9 @@
 import UIKit
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    
     @IBOutlet weak var tableView: UITableView!
+    
     let cellReuseIdentifier = "feedCell"
     let cellSpacingHeight: CGFloat = 5
     override func viewDidLoad() {
@@ -67,6 +69,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         //the height of the post, to be implemented later
-        return 10
+        return 50
     }
 }

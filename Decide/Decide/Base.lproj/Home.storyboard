@@ -44,8 +44,7 @@
                     <navigationItem key="navigationItem" id="Fbp-sO-OPb"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="tableView" destination="26r-U2-AmV" id="Ute-4k-C37"/>
-                        <outlet property="tableView1" destination="26r-U2-AmV" id="cGA-Gg-mVg"/>
+                        <outlet property="tableView" destination="26r-U2-AmV" id="Qwe-RK-0OV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fJV-g6-CF2" userLabel="First Responder" sceneMemberID="firstResponder"/>
