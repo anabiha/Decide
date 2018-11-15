@@ -7,28 +7,32 @@
 //
 
 import UIKit
-class NewDecisionViewController: UIViewController {
-    @IBOutlet weak var decisionField: UITextField!
-override func viewDidLoad() {
-    super.viewDidLoad()
-}
-
-override func viewWillAppear(_ animated: Bool) { //a lifecycle method that is called before a view appears. I guess when animated is false, nothing appears.
-    super.viewWillAppear(animated)
-}
+class NewDecisionViewController: UIViewController, UITableViewDelegate {
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // 1
-        guard let identifier = segue.identifier else { return }
-        
-        // 2
-        switch identifier {
-        case "cancel":
-            print("cancel button tapped")
-        case "save":
-            print("save button tapped")
-        default:
-            print("unexpected segue identifier")
-        }
+    @IBOutlet weak var decisionTitle: UITextField!
+    @IBOutlet weak var tableView: UITableView!
+    
+    var decision = Decision()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
+    //some function that, once tapped, saves the title and all decisions
+    
+    //function to hide the cells until add decisionitem button is tapped
+    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        // 1
+//        guard let identifier = segue.identifier else { return }
+//
+//        // 2
+//        switch identifier {
+//        case "cancel":
+//            print("cancel button tapped")
+//        case "save":
+//            print("save button tapped")
+//        default:
+//            print("unexpected segue identifier")
+//        }
+//    }
 }

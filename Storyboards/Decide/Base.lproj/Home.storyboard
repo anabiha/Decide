@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wbS-Yg-j6I">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gHM-nM-zi9">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -49,32 +49,25 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fJV-g6-CF2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2814" y="-1130"/>
+            <point key="canvasLocation" x="3152.8000000000002" y="-1130.2848575712144"/>
         </scene>
-        <!--Navigation-->
-        <scene sceneID="DhP-5U-rmC">
+        <!--Navigation Controller-->
+        <scene sceneID="02y-sz-CIc">
             <objects>
-                <navigationController title="Navigation" automaticallyAdjustsScrollViewInsets="NO" id="wbS-Yg-j6I" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="HomeNew" id="62e-sa-qVS">
-                        <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
-                    </tabBarItem>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gHM-nM-zi9" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="ea9-Re-va9">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Qbj-a7-sjJ">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="nFv-N2-VGO" kind="relationship" relationship="rootViewController" id="ok8-rv-fiS"/>
+                        <segue destination="nFv-N2-VGO" kind="relationship" relationship="rootViewController" id="SEN-1B-DJW"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="CtZ-MD-kCC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZRV-xC-LQJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1958" y="-1130"/>
+            <point key="canvasLocation" x="2302" y="-1122"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="HomeNew" width="25" height="25"/>
-    </resources>
 </document>
