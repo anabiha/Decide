@@ -13,5 +13,5 @@ class Decision {
     var decisionItemList: [DecisionItem] = []
 }
 class DecisionItem: UITableViewCell {
-    var description: String = ""
+    //some iboutlet textview which will be the description
 }
