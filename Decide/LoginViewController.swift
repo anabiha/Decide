@@ -20,6 +20,9 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+
+        
 
     }
     
@@ -58,7 +61,7 @@ extension LoginViewController: FUIAuthDelegate {
         
         userRef.observeSingleEvent(of: .value, with: { [unowned self] (snapshot) in
           
-            if let user = User(snapshot: snapshot) {
+            if let user = User(snapshot: snapshot) { //if old user
                 
                 User.setCurrent(user)
                 
@@ -69,7 +72,7 @@ extension LoginViewController: FUIAuthDelegate {
                     self.view.window?.makeKeyAndVisible()
                 }
                 
-            } else {
+            } else { //if new user
                 
                 self.performSegue(withIdentifier: "toCreateUsername", sender: self)
                 
