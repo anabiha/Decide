@@ -7,9 +7,10 @@
 //
 
 import UIKit
-import FirebaseAuth
 import FirebaseUI
 import FirebaseDatabase
+import FirebaseAuth
+
 
 typealias FIRUser = FirebaseAuth.User
 

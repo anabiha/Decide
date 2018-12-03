@@ -49,7 +49,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell:UITableViewCell = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as UITableViewCell!
         
         // note that indexPath.section is used rather than indexPath.row
-        cell.textLabel?.text = "999"
+        cell.textLabel?.text = "100"
         
         // add border and color
         cell.backgroundColor = UIColor.white
