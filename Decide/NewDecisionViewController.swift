@@ -15,11 +15,13 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     var decision = Decision()
     var decisionItemCount = 2;
     let cellReuseIdentifier = "decisionItemCell"
+    let addButtonCellReuseIdentifier = "addButtonCell"
     let cellSpacingHeight: CGFloat = 15
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.register(DecisionItem.self, forCellReuseIdentifier: cellReuseIdentifier)
+          self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: addButtonCellReuseIdentifier) //this will be the addButton
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
@@ -50,19 +52,24 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if indexPath.section == decisionItemCount - 1 { //if the selected row is the add row, note that indexPath.section is used rather than indexPath.row
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem
-        
-        // add border and color
-        let grayColor = UIColor(red: 235, green: 235, blue: 235, alpha: 1)
-        cell.backgroundColor = grayColor
-        cell.layer.borderColor = grayColor.cgColor
-        cell.layer.borderWidth = 1
-        cell.layer.cornerRadius = 8
-        cell.clipsToBounds = true
-        
-        return cell
-        } else { //if it's not the add row....
+        if indexPath.section == decisionItemCount - 1 { //if the selected row is the add row. note that indexPath.section is used rather than indexPath.row
+            let cell: UITableViewCell = self.tableView.dequeueReusableCell(withIdentifier: addButtonCellReuseIdentifier) as UITableViewCell! // add button will be a normal cell
+            
+            //addbutton aesthetics
+            cell.textLabel?.text = "+ Add an item"
+            cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15.0)
+            cell.textLabel?.textAlignment = .center
+            // add border and color
+            let grayColor = UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1)//custom color (pretty light gray)
+            cell.backgroundColor = grayColor
+            cell.layer.borderColor = grayColor.cgColor
+            cell.layer.borderWidth = 1
+            cell.layer.cornerRadius = 8
+            cell.clipsToBounds = true
+            
+            return cell
+            
+        } else { //if it's not the add item button.... (basically everything else)
             let cell = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
             cell.backgroundColor = UIColor.white
             cell.layer.borderColor = UIColor.black.cgColor

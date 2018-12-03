@@ -15,3 +15,4 @@ class Decision {
 class DecisionItem: UITableViewCell {
     //some iboutlet textview which will be the description
 }
+
