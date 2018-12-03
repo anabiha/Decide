@@ -14,6 +14,7 @@ class User {
     let uid: String
     let username: String
     
+    //create a private static variable to hold our current user
     private static var _current: User?
     
     init(uid: String, username: String) {
@@ -34,18 +35,22 @@ class User {
         
     }
     
+    //create a computed variable that only has a getter than can access the private _current variable
     static var current: User {
         
+        //check that _current that is of type User? isn't nil. If _current is nill and current is being read, the guard statement will crash with fatalError()
         guard let currentUser = _current else {
             
             fatalError("Error: current user doesnt exist")
             
         }
         
+        //if _current isn't nil, it will be returned to the user
         return currentUser
         
     }
     
+    //create a custom setter method to set the current user
     static func setCurrent(_ user: User) {
         
         _current = user

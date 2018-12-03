@@ -33,12 +33,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         } else { // no user is signed in
             
+            //create an instanceof the Login storyboard that has LoginViewController set as its intitial view controller
             let storyboard = UIStoryboard(name: "Login", bundle: .main)
             
+            //check if the storyboard has an initial view controller set
             if let initialViewController = storyboard.instantiateInitialViewController() {
                 
+                //if the storyboard has an initial view controller exists, set it to the window's rootViewController
                 window?.rootViewController = initialViewController
-                
+                //position the window above any other exisiting windows
                 window?.makeKeyAndVisible()
                 
             }

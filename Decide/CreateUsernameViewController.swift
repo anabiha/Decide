@@ -23,6 +23,7 @@ class CreateUsernameViewController: UIViewController {
     
     @IBAction func nextButtonTapped(_ sender: UIButton) {
 
+        //guard to check that a FIRUser is logged in and that the user has provided a username in the text field
         guard let firUser = Auth.auth().currentUser,
             let username = usernameTextField.text,
             !username.isEmpty else { return }
