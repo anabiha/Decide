@@ -11,8 +11,6 @@ import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
-    //this is my branch
 
     var window: UIWindow?
 
