@@ -16,7 +16,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     var decisionItemCount = 2;
     let cellReuseIdentifier = "decisionItemCell"
     let addButtonCellReuseIdentifier = "addButtonCell"
-    let cellSpacingHeight: CGFloat = 15
+    let cellSpacingHeight: CGFloat = 12
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,8 +71,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
             
         } else { //if it's not the add item button.... (basically everything else)
             let cell = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
-            cell.backgroundColor = UIColor.white
-            cell.layer.borderColor = UIColor.black.cgColor
+            let grayColor2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)//custom color (even lighter gray)
+            cell.backgroundColor = grayColor2
+            cell.layer.borderColor = grayColor2.cgColor
             cell.layer.borderWidth = 1
             cell.layer.cornerRadius = 8
             cell.clipsToBounds = true
@@ -84,10 +85,20 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // note that indexPath.section is used rather than indexPath.row
         print("You tapped cell number \(indexPath.section).")
+        if indexPath.section == decisionItemCount - 1 { //if it's the add button,
+            self.tableView.beginUpdates()
+            decisionItemCount += 1
+            let index = IndexSet([indexPath.section])
+            self.tableView.insertSections(index, with: .none) //insert a section right above the add button with a top down animation
+            self.tableView.endUpdates()
+        }
     }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         //the height of the post, to be implemented later
-        return 50
+         if indexPath.section == decisionItemCount - 1 {
+            return 25 //the add button is this height
+         }  else {
+            return 50
+        }
     }
 }
