@@ -1,0 +1,6 @@
+framework module Pods_Decide {
+  umbrella header "Pods-Decide-umbrella.h"
+
+  export *
+  module * { export * }
+}
