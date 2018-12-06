@@ -100,6 +100,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
         if editingStyle == .delete && indexPath.section != decisionItemCount - 1{
             self.tableView.beginUpdates()
             decisionItemCount -= 1
+            self.tableView.deleteRow(
             self.tableView.deleteSections(index, with: .none)
             self.tableView.endUpdates()
         }
