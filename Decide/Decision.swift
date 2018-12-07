@@ -13,6 +13,7 @@ class Decision {
     var decisionItemList: [DecisionItem] = []
 }
 class DecisionItem: UITableViewCell {
+    @IBOutlet weak var descriptionBox: UITextField!
     //some iboutlet textview which will be the description
 }
 

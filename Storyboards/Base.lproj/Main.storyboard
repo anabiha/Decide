@@ -65,7 +65,23 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="IK6-ma-def" id="czh-Dj-DKP">
                                             <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Description" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="64u-iq-LRT">
+                                                    <rect key="frame" x="10" y="10" width="95" height="24"/>
+                                                    <nil key="textColor"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="64u-iq-LRT" firstAttribute="leading" secondItem="czh-Dj-DKP" secondAttribute="leading" constant="10" id="LYA-Kz-PSB"/>
+                                                <constraint firstItem="64u-iq-LRT" firstAttribute="top" secondItem="czh-Dj-DKP" secondAttribute="top" constant="10" id="dEN-ad-xcv"/>
+                                                <constraint firstAttribute="bottom" secondItem="64u-iq-LRT" secondAttribute="bottom" constant="10" id="lCF-SG-P6W"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="descriptionBox" destination="64u-iq-LRT" id="fzz-EK-nmK"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="addButtonCell" id="Atu-WF-tg1">
                                         <rect key="frame" x="0.0" y="72" width="335" height="44"/>
