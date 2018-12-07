@@ -97,10 +97,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     //handles deletion of rows
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         let index = IndexSet([indexPath.section])
-        if editingStyle == .delete && indexPath.section != decisionItemCount - 1{
+        if editingStyle == .delete && indexPath.section != decisionItemCount - 1 {
             self.tableView.beginUpdates()
             decisionItemCount -= 1
-            self.tableView.deleteRow(
             self.tableView.deleteSections(index, with: .none)
             self.tableView.endUpdates()
         }

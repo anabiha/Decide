@@ -52,8 +52,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.textLabel?.text = "100"
         
         // add border and color
-        cell.backgroundColor = UIColor.white
-        cell.layer.borderColor = UIColor.black.cgColor
+        let grayColor = UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1)//custom color (pretty light gray)
+        cell.backgroundColor = grayColor
+        cell.layer.borderColor = grayColor.cgColor
         cell.layer.borderWidth = 1
         cell.layer.cornerRadius = 8
         cell.clipsToBounds = true
