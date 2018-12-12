@@ -15,5 +15,6 @@ class Decision {
 class DecisionItem: UITableViewCell {
     @IBOutlet weak var descriptionBox: UITextField!
     //some iboutlet textview which will be the description
+    //we have to implement this class w a configure function??
 }
 

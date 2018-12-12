@@ -70,7 +70,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
             return cell
             
         } else { //if it's not the add item button.... (basically everything else)
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
+            let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
             let grayColor2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)//custom color (even lighter gray)
             cell.backgroundColor = grayColor2
             cell.layer.borderColor = grayColor2.cgColor
