@@ -11,6 +11,7 @@
 		35105AD72185EE2F00C93FE8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35105AD52185EE2F00C93FE8 /* Main.storyboard */; };
 		35105AD92185EE3000C93FE8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35105AD82185EE3000C93FE8 /* Assets.xcassets */; };
 		35105ADC2185EE3000C93FE8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35105ADA2185EE3000C93FE8 /* LaunchScreen.storyboard */; };
+		3533898A21C3EDBE001DFCB9 /* MGDecideHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3533898921C3EDBE001DFCB9 /* MGDecideHelper.swift */; };
 		354A800821AF0FE400B54A47 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 354A800721AF0FE400B54A47 /* GoogleService-Info.plist */; };
 		354A800A21AF116700B54A47 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 354A800921AF116700B54A47 /* Login.storyboard */; };
 		354A800C21AF127700B54A47 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A800B21AF127700B54A47 /* LoginViewController.swift */; };
@@ -43,6 +44,7 @@
 		35105AD82185EE3000C93FE8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35105ADB2185EE3000C93FE8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		35105ADD2185EE3000C93FE8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3533898921C3EDBE001DFCB9 /* MGDecideHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MGDecideHelper.swift; sourceTree = "<group>"; };
 		354A800721AF0FE400B54A47 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		354A800921AF116700B54A47 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
 		354A800B21AF127700B54A47 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				355A8B2A21B0235200D12638 /* User.swift */,
 				355A8B2E21B0254800D12638 /* CreateUsernameViewController.swift */,
 				355A8B3021B027D600D12638 /* UserService.swift */,
+				3533898921C3EDBE001DFCB9 /* MGDecideHelper.swift */,
 			);
 			path = Decide;
 			sourceTree = "<group>";
@@ -314,6 +317,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3533898A21C3EDBE001DFCB9 /* MGDecideHelper.swift in Sources */,
 				354A800C21AF127700B54A47 /* LoginViewController.swift in Sources */,
 				65C4297A218FDD4000B7768C /* ProfileViewController.swift in Sources */,
 				65C5F0DD21934F3E00E426BB /* MainTabBarController.swift in Sources */,
