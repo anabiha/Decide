@@ -84,10 +84,32 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // note that indexPath.section is used rather than indexPath.row
         print("You tapped cell number \(indexPath.section).")
+        
+        if indexPath.section == decisionItemCount - 1 { //if it's the add button,
+            self.tableView.beginUpdates()
+            decisionItemCount += 1
+            let index = IndexSet([indexPath.section])
+            self.tableView.insertSections(index, with: .none) //insert a section right above the add button with a top down animation
+            self.tableView.endUpdates()
+        }
     }
-    
+    //handles deletion of rows
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        let index = IndexSet([indexPath.section])
+        if editingStyle == .delete && indexPath.section != decisionItemCount - 1 {
+            self.tableView.beginUpdates()
+            decisionItemCount -= 1
+            self.tableView.deleteSections(index, with: .none)
+            self.tableView.endUpdates()
+        }
+        
+    }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         //the height of the post, to be implemented later
-        return 50
+         if indexPath.section == decisionItemCount - 1 {
+            return 25 //the add button is this height
+         }  else {
+            return 50
+        }
     }
 }
