@@ -7,7 +7,7 @@
 //
 
 import UIKit
-class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITableViewDataSource {
+class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITableViewDataSource, UITextFieldDelegate {
     
     @IBOutlet weak var decisionTitle: UITextField!
     @IBOutlet weak var tableView: UITableView!
@@ -20,8 +20,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.register(DecisionItem.self, forCellReuseIdentifier: cellReuseIdentifier)
-          self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: addButtonCellReuseIdentifier) //this will be the addButton
+//       //this will be the addButton
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
@@ -53,7 +52,8 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if indexPath.section == decisionItemCount - 1 { //if the selected row is the add row. note that indexPath.section is used rather than indexPath.row
-            let cell: UITableViewCell = self.tableView.dequeueReusableCell(withIdentifier: addButtonCellReuseIdentifier) as UITableViewCell! // add button will be a normal cell
+            print("Add button created")
+            let cell: UITableViewCell = self.tableView.dequeueReusableCell(withIdentifier: addButtonCellReuseIdentifier) as UITableViewCell!// add button will be a normal cell
             
             //addbutton aesthetics
             cell.textLabel?.text = "+ Add an item"
@@ -70,7 +70,14 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
             return cell
             
         } else { //if it's not the add item button.... (basically everything else)
+            print("DecisionItem created")
             let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
+            //cell.configure(text: "", placeholder: "Type something!")
+//            cell.descriptionBox?.delegate = self
+//            if cell.descriptionBox == nil
+//            {
+//                print("WHY IS IT NIL????")
+//            }
             let grayColor2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)//custom color (even lighter gray)
             cell.backgroundColor = grayColor2
             cell.layer.borderColor = grayColor2.cgColor
@@ -84,18 +91,19 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // note that indexPath.section is used rather than indexPath.row
-        print("You tapped cell number \(indexPath.section).")
-        
         if indexPath.section == decisionItemCount - 1 { //if it's the add button,
+            print("You tapped the add button located at: \(indexPath.section).")
             self.tableView.beginUpdates()
             decisionItemCount += 1
             let index = IndexSet([indexPath.section])
             self.tableView.insertSections(index, with: .none) //insert a section right above the add button with a top down animation
             self.tableView.endUpdates()
+        } else {
+            print("You tapped a decision item row located at: \(indexPath.section).")
         }
     }
     //handles deletion of rows
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let index = IndexSet([indexPath.section])
         if editingStyle == .delete && indexPath.section != decisionItemCount - 1 {
             self.tableView.beginUpdates()
