@@ -7,12 +7,11 @@
 //
 
 import UIKit
-class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITableViewDataSource, UITextFieldDelegate {
+class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITableViewDataSource {
     
     @IBOutlet weak var decisionTitle: UITextField!
     @IBOutlet weak var tableView: UITableView!
     
-    var decision = Decision()
     var decisionItemCount = 2;
     let cellReuseIdentifier = "decisionItemCell"
     let addButtonCellReuseIdentifier = "addButtonCell"
@@ -20,7 +19,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//       //this will be the addButton
+        //DO NOT REGISTER THE CELL CLASSES HERE, ALREADY DONE IN INTERFACEBUILDER!!!!!!!
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
@@ -51,39 +50,17 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if indexPath.section == decisionItemCount - 1 { //if the selected row is the add row. note that indexPath.section is used rather than indexPath.row
+        if indexPath.section == decisionItemCount - 1 { //if the selected row is the add row. also note that indexPath.section is used rather than indexPath.row
             print("Add button created")
-            let cell: UITableViewCell = self.tableView.dequeueReusableCell(withIdentifier: addButtonCellReuseIdentifier) as UITableViewCell!// add button will be a normal cell
-            
-            //addbutton aesthetics
-            cell.textLabel?.text = "+ Add an item"
-            cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15.0)
-            cell.textLabel?.textAlignment = .center
-            // add border and color
-            let grayColor = UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1)//custom color (pretty light gray)
-            cell.backgroundColor = grayColor
-            cell.layer.borderColor = grayColor.cgColor
-            cell.layer.borderWidth = 1
-            cell.layer.cornerRadius = 8
-            cell.clipsToBounds = true
-            
+            let cell: AddButton = self.tableView.dequeueReusableCell(withIdentifier: addButtonCellReuseIdentifier) as! AddButton// add button will be a normal cell
+            cell.configure()
             return cell
             
         } else { //if it's not the add item button.... (basically everything else)
             print("DecisionItem created")
             let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
-            //cell.configure(text: "", placeholder: "Type something!")
-//            cell.descriptionBox?.delegate = self
-//            if cell.descriptionBox == nil
-//            {
-//                print("WHY IS IT NIL????")
-//            }
-            let grayColor2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)//custom color (even lighter gray)
-            cell.backgroundColor = grayColor2
-            cell.layer.borderColor = grayColor2.cgColor
-            cell.layer.borderWidth = 1
-            cell.layer.cornerRadius = 8
-            cell.clipsToBounds = true
+            cell.configure(text: "", placeholder: "Type something!")
+         
             return cell
         }
     }
@@ -113,12 +90,12 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
         }
         
     }
+    //the height of the post, to be implemented later
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        //the height of the post, to be implemented later
          if indexPath.section == decisionItemCount - 1 {
             return 25 //the add button is this height
          }  else {
-            return 50
+            return 80
         }
     }
 }

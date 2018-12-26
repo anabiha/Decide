@@ -66,25 +66,25 @@
                                             <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Description" textAlignment="natural" minimumFontSize="5" translatesAutoresizingMaskIntoConstraints="NO" id="lJz-Bt-pmf">
-                                                    <rect key="frame" x="5" y="5" width="325" height="34"/>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Description" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lJz-Bt-pmf">
+                                                    <rect key="frame" x="160" y="10" width="175" height="24"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="lJz-Bt-pmf" secondAttribute="trailing" constant="5" id="JME-1n-Uf4"/>
-                                                <constraint firstAttribute="bottom" secondItem="lJz-Bt-pmf" secondAttribute="bottom" constant="5" id="PHi-M0-8Ag"/>
-                                                <constraint firstItem="lJz-Bt-pmf" firstAttribute="leading" secondItem="czh-Dj-DKP" secondAttribute="leading" constant="5" id="eka-BZ-xbi"/>
-                                                <constraint firstItem="lJz-Bt-pmf" firstAttribute="top" secondItem="czh-Dj-DKP" secondAttribute="top" constant="5" id="rZx-o7-R5Y"/>
+                                                <constraint firstAttribute="trailing" secondItem="lJz-Bt-pmf" secondAttribute="trailing" id="JME-1n-Uf4"/>
+                                                <constraint firstAttribute="bottom" secondItem="lJz-Bt-pmf" secondAttribute="bottom" constant="10" id="PHi-M0-8Ag"/>
+                                                <constraint firstItem="lJz-Bt-pmf" firstAttribute="leading" secondItem="czh-Dj-DKP" secondAttribute="leading" constant="160" id="eka-BZ-xbi"/>
+                                                <constraint firstItem="lJz-Bt-pmf" firstAttribute="top" secondItem="czh-Dj-DKP" secondAttribute="top" constant="10" id="rZx-o7-R5Y"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="descriptionBox" destination="lJz-Bt-pmf" id="ZzU-4j-GHa"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="addButtonCell" id="Atu-WF-tg1">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="addButtonCell" id="Atu-WF-tg1" customClass="AddButton" customModule="Decide" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="72" width="335" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Atu-WF-tg1" id="4y6-gn-dDF">
