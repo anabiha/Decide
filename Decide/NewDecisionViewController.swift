@@ -98,4 +98,21 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
             return 80
         }
     }
+    
+    //the action called when the cancel button is pressed
+    @IBAction func cancel(_ sender: Any) {
+        let index = 0
+        animateToTab(tabBarController: self.tabBarController!, to: self.tabBarController!.viewControllers![index])
+        self.tabBarController?.selectedIndex = index
+    }
+    //handles animating back to original view
+    func animateToTab(tabBarController: UITabBarController, to viewController: UIViewController){
+        let fromView = tabBarController.selectedViewController?.view
+        let toView = viewController.view
+        
+        if fromView != toView {
+            UIView.transition(from: fromView!, to: toView!, duration: 0.3, options: [.transitionCrossDissolve], completion: nil)
+        }
+      //HAVE TO CHANGE THIS ANIMATION!!!
+    }
 }

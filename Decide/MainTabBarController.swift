@@ -7,26 +7,16 @@
 //
 
 import UIKit
-class MainTabBarController: UITabBarController {
+class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     var previouslySelectedIndex: Int? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         delegate = self
+        delegate = self
         tabBar.unselectedItemTintColor = .black
     }
-   
-    
-    //returns to the previous view if user presses cancel button
-//    @IBAction func cancel(_ sender: Any) { //it's okay if IBAction is not connected
-//        if let index = previouslySelectedIndex {
-//            self.selectedIndex = index
-//        }
-//    }
-    
-}
-extension MainTabBarController: UITabBarControllerDelegate {
+
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         
         if (previouslySelectedIndex == nil) {
@@ -37,19 +27,34 @@ extension MainTabBarController: UITabBarControllerDelegate {
             print("Home button pressed")
             previouslySelectedIndex = tabBarController.selectedIndex //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
             print ("Previously selected index is now: \(previouslySelectedIndex!)")
-            return true
         case 1:
             print ("Add decision button pressed")
-            return true
+         
         case 2:
             print ("Profile button pressed")
             previouslySelectedIndex = tabBarController.selectedIndex //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
             print ("Previously selected index is now: \(previouslySelectedIndex!)")
-            return true
+        
         default:
             print("Unexpected tab bar item pressed")
+        }
+        return animateToTab(tabBarController: tabBarController, to: viewController)
+    }
+    
+    //animates transitions between tab bars
+    func animateToTab(tabBarController: UITabBarController, to viewController: UIViewController) -> Bool {
+        let fromView = selectedViewController?.view
+        let toView = viewController.view
+        
+        if fromView != toView {
+            UIView.transition(from: fromView!, to: toView!, duration: 0.3, options: [.transitionCrossDissolve], completion: nil)
+            return true
+        } else {
             return false
         }
+        //HAVE TO CHANGE THIS ANIMATION!!!
+        
     }
+    
 }
 

@@ -19,11 +19,11 @@ class DecisionItem: UITableViewCell {
     var decisionItemTitle: String = ""
     
     public func configure(text: String?, placeholder: String) { //sets everything in the cell up
-        descriptionBox?.text = text
-        descriptionBox?.placeholder = placeholder
-        descriptionBox?.accessibilityValue = text
-        descriptionBox?.accessibilityLabel = placeholder
-        descriptionBox?.setLeftPaddingPoints(15);
+        descriptionBox.text = text
+        descriptionBox.placeholder = placeholder
+        descriptionBox.accessibilityValue = text
+        descriptionBox.accessibilityLabel = placeholder
+        descriptionBox.setLeftPaddingPoints(15); //see UITextField extension below
         selectionStyle = .none//disables the "selected" animation when someone clicks on the cell, but still allows for interaction with the descriptionBox
         //setting the colors of the descriptionBox and row
         let grayColor2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)//custom color (even lighter gray)
