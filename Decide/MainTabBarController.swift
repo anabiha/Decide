@@ -16,13 +16,6 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         delegate = self
         tabBar.unselectedItemTintColor = .black
     }
-//    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-//        if (previouslySelectedIndex == 1 && tabBarController.selectedIndex != 1) {
-//            print("New Decision was reset upon exit")
-//            let nav = self.viewControllers![1] as? UINavigationController
-//            nav!.popViewController(animated: false)
-//        }
-//    }
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         
         if (previouslySelectedIndex == nil) {
@@ -30,8 +23,13 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         }
         
         //completes the animation. Returns false if user presses the same tab twice (no animation, obviously)
-        let complete = animateToTab(tabBarController: tabBarController, to: viewController)
-        
+        var complete: Bool
+        if (viewController.tabBarItem.tag == 1) {
+            complete = animateToTab(toIndex: 1) //initiate slide up animation if new decision is pressed
+            //also note that the tab bar is hidden in this view
+        } else {
+            complete = true
+        }
         //switch statement used to change previouslySelectedIndex
         switch viewController.tabBarItem.tag {
         case 0:
@@ -52,19 +50,42 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         return complete
     }
     
-    //animates transitions between tab bars
-    func animateToTab(tabBarController: UITabBarController, to viewController: UIViewController) -> Bool {
-        let fromView = selectedViewController?.view
-        let toView = viewController.view
+   //slide up animation!!!
+    func animateToTab(toIndex: Int) -> Bool {
+        guard let tabViewControllers = viewControllers,
+            let selectedVC = selectedViewController else { return false}
         
-        if fromView != toView {
-            UIView.transition(from: fromView!, to: toView!, duration: 0.3, options: [.transitionCrossDissolve], completion: nil)
-            return true
-        } else {
-            return false
-        }
-        //HAVE TO CHANGE THIS ANIMATION!!!
+        guard let fromView = selectedVC.view,
+            let toView = tabViewControllers[toIndex].view,
+            let fromIndex = tabViewControllers.index(of: selectedVC),
+            fromIndex != toIndex else { return false}
         
+        
+        // Add the toView to the tab bar view
+        fromView.superview?.addSubview(toView)
+        
+        // Position toView off screen (above subview)
+        let screenHeight = UIScreen.main.bounds.size.height
+        let offset = -screenHeight
+        toView.center = CGPoint(x: fromView.center.x, y: toView.center.y - offset)
+        
+        // Disable interaction during animation
+        view.isUserInteractionEnabled = false
+        
+        UIView.animate(withDuration: 0.3,
+                       delay: 0.1,
+                       options: .curveEaseOut,
+                       animations: {
+                        // Slide the views by -offset
+                        toView.center = CGPoint(x: toView.center.x, y: toView.center.y  + offset)
+                        
+        }, completion: { finished in
+            // Remove the old view from the tabbar view.
+            fromView.removeFromSuperview()
+            self.selectedIndex = toIndex
+            self.view.isUserInteractionEnabled = true
+        })
+        return true
     }
     
 }

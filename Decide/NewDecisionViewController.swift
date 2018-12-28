@@ -54,13 +54,13 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
         if indexPath.section == decisionItemCount - 1 { //if the selected row is the add row. also note that indexPath.section is used rather than indexPath.row
             print("Add button created")
             let cell: AddButton = self.tableView.dequeueReusableCell(withIdentifier: addButtonCellReuseIdentifier) as! AddButton// add button will be a normal cell
-            cell.configure()
+            cell.configure() //refer to decision class
             return cell
             
         } else { //if it's not the add item button.... (basically everything else)
             print("DecisionItem created")
             let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
-            cell.configure(text: "", placeholder: "Type something!")
+            cell.configure(text: "", placeholder: "Type something!") //refer to decision class
             return cell
         }
     }
@@ -70,11 +70,13 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
         // note that indexPath.section is used rather than indexPath.row
         if indexPath.section == decisionItemCount - 1 { //if it's the add button,
             print("You tapped the add button located at: \(indexPath.section).")
-            self.tableView.beginUpdates()
-            decisionItemCount += 1
-            let index = IndexSet([indexPath.section])
-            self.tableView.insertSections(index, with: .none) //insert a section right above the add button with a top down animation
-            self.tableView.endUpdates()
+            UIView.animate(withDuration: 0.2, delay: 0.15, options: .curveEaseIn, animations: {
+                self.tableView.beginUpdates()
+                self.decisionItemCount += 1
+                let index = IndexSet([indexPath.section])
+                self.tableView.insertSections(index, with: .none) //insert a section right above the add button with a top down animation
+                self.tableView.endUpdates()
+            })
         } else {
             print("You tapped a decision item row located at: \(indexPath.section).")
         }
@@ -102,8 +104,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     //the action called when the cancel button is pressed
     @IBAction func cancel(_ sender: Any) {
         let index = (self.tabBarController as! MainTabBarController).previouslySelectedIndex!
-        animateToTab(tabBarController: self.tabBarController!, to: self.tabBarController!.viewControllers![index])
-        self.tabBarController?.selectedIndex = index
+        
+        animateToTab(toIndex: index) //changing of tab bar item is handled here as well
+        self.tabBarController!.selectedIndex = index
         //reset the viewcontroller
         let vc = storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
         self.navigationController?.setViewControllers([vc],animated:true)
@@ -115,21 +118,55 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
             let cell = tableView.cellForRow(at: IndexPath(row: 0, section: section)) as! DecisionItem
             decision.decisionItemList.append(cell)
         }
-        let index = 0
-        animateToTab(tabBarController: self.tabBarController!, to: self.tabBarController!.viewControllers![index])
-        self.tabBarController?.selectedIndex = index
+        
+        animateToTab(toIndex: 0) //changing of tab bar item is handled here as well
         //reset the viewcontroller
         let vc = storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
         self.navigationController?.setViewControllers([vc],animated:true)
     }
     //handles animating back to original view
-    func animateToTab(tabBarController: UITabBarController, to viewController: UIViewController){
-        let fromView = tabBarController.selectedViewController?.view
-        let toView = viewController.view
+    func animateToTab(toIndex: Int){
+        let fromView = self.tabBarController!.selectedViewController?.view
+        let toView = self.tabBarController!.viewControllers![toIndex].view
         
         if fromView != toView {
-            UIView.transition(from: fromView!, to: toView!, duration: 0.3, options: [.transitionCrossDissolve], completion: nil)
+            UIView.transition(from: fromView!, to: toView!, duration: 0.3, options: [.transitionCrossDissolve], completion:nil)
         }
       //HAVE TO CHANGE THIS ANIMATION!!!
     }
+//    func animateToTab(toIndex: Int){
+//        let tabBar = self.tabBarController!
+//        guard let tabViewControllers = tabBar.viewControllers,
+//            let selectedVC = tabBar.selectedViewController else { return }
+//
+//        guard let fromView = selectedVC.view,
+//            let toView = tabViewControllers[toIndex].view,
+//            let fromIndex = tabViewControllers.index(of: selectedVC),
+//            fromIndex != toIndex else { return }
+//
+//
+//        // Add the toView to the tab bar view
+//        toView.superview?.addSubview(fromView)
+//
+//        // Position fromView on screen
+//        let screenHeight = UIScreen.main.bounds.size.height
+//        let offset = -screenHeight
+//        fromView.center = CGPoint(x: toView.center.x, y: fromView.center.y)
+//        // Disable interaction during animation
+//        tabBar.view.isUserInteractionEnabled = false
+//
+//        UIView.animate(withDuration: 0.3,
+//                       delay: 0.1,
+//                       options: .curveEaseOut,
+//                       animations: {
+//                        // Slide the views by -offset
+//                        fromView.center = CGPoint(x: toView.center.x, y: fromView.center.y + offset)
+//
+//        }, completion: { finished in
+////             Remove the old view from the tabbar view.
+//            fromView.removeFromSuperview()
+//            tabBar.selectedIndex = toIndex
+//            tabBar.view.isUserInteractionEnabled = true
+//        })
+//    }
 }
