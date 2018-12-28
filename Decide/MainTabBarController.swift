@@ -22,23 +22,28 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         if (previouslySelectedIndex == nil) {
             previouslySelectedIndex = tabBarController.selectedIndex
         }
+        
+        //completes the animation. Returns false if user presses the same tab twice (no animation, obviously)
+        let complete = animateToTab(tabBarController: tabBarController, to: viewController)
+        
+        //switch statement used to change previouslySelectedIndex
         switch viewController.tabBarItem.tag {
         case 0:
+            previouslySelectedIndex = viewController.tabBarItem.tag //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
             print("Home button pressed")
-            previouslySelectedIndex = tabBarController.selectedIndex //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
             print ("Previously selected index is now: \(previouslySelectedIndex!)")
-        case 1:
+        case 1: //don't change previously selected if they press newdecision
             print ("Add decision button pressed")
-         
+            print ("Previously selected index is still: \(previouslySelectedIndex!)")
         case 2:
+            previouslySelectedIndex = viewController.tabBarItem.tag //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
             print ("Profile button pressed")
-            previouslySelectedIndex = tabBarController.selectedIndex //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
             print ("Previously selected index is now: \(previouslySelectedIndex!)")
         
         default:
             print("Unexpected tab bar item pressed")
         }
-        return animateToTab(tabBarController: tabBarController, to: viewController)
+        return complete
     }
     
     //animates transitions between tab bars

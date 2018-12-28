@@ -101,7 +101,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     
     //the action called when the cancel button is pressed
     @IBAction func cancel(_ sender: Any) {
-        let index = 0
+        let index = (self.tabBarController as! MainTabBarController).previouslySelectedIndex!
         animateToTab(tabBarController: self.tabBarController!, to: self.tabBarController!.viewControllers![index])
         self.tabBarController?.selectedIndex = index
     }
