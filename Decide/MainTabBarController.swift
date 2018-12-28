@@ -16,7 +16,13 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         delegate = self
         tabBar.unselectedItemTintColor = .black
     }
-
+//    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+//        if (previouslySelectedIndex == 1 && tabBarController.selectedIndex != 1) {
+//            print("New Decision was reset upon exit")
+//            let nav = self.viewControllers![1] as? UINavigationController
+//            nav!.popViewController(animated: false)
+//        }
+//    }
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         
         if (previouslySelectedIndex == nil) {

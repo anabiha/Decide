@@ -12,6 +12,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     @IBOutlet weak var decisionTitle: UITextField!
     @IBOutlet weak var tableView: UITableView!
     
+    var decision = Decision()
     var decisionItemCount = 2;
     let cellReuseIdentifier = "decisionItemCell"
     let addButtonCellReuseIdentifier = "addButtonCell"
@@ -60,7 +61,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
             print("DecisionItem created")
             let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
             cell.configure(text: "", placeholder: "Type something!")
-         
             return cell
         }
     }
@@ -104,6 +104,23 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
         let index = (self.tabBarController as! MainTabBarController).previouslySelectedIndex!
         animateToTab(tabBarController: self.tabBarController!, to: self.tabBarController!.viewControllers![index])
         self.tabBarController?.selectedIndex = index
+        //reset the viewcontroller
+        let vc = storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
+        self.navigationController?.setViewControllers([vc],animated:true)
+    }
+    //action called when the save button is pressed
+    //saves all the cell information
+    @IBAction func save(_ sender: Any) {
+        for section in 0..<decisionItemCount { //saving each cell
+            let cell = tableView.cellForRow(at: IndexPath(row: 0, section: section)) as! DecisionItem
+            decision.decisionItemList.append(cell)
+        }
+        let index = 0
+        animateToTab(tabBarController: self.tabBarController!, to: self.tabBarController!.viewControllers![index])
+        self.tabBarController?.selectedIndex = index
+        //reset the viewcontroller
+        let vc = storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
+        self.navigationController?.setViewControllers([vc],animated:true)
     }
     //handles animating back to original view
     func animateToTab(tabBarController: UITabBarController, to viewController: UIViewController){

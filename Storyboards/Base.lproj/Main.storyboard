@@ -119,7 +119,11 @@
                                 <action selector="cancel:" destination="glv-dQ-3te" id="gzK-Hn-ovM"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="QQf-QU-RIs"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="QQf-QU-RIs">
+                            <connections>
+                                <action selector="save:" destination="glv-dQ-3te" id="IjM-wd-ooB"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="decisionTitle" destination="FLc-rx-En3" id="KJL-EY-P3D"/>
