@@ -51,42 +51,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     }
     
    //slide up animation!!!
-    func animateToTab(toIndex: Int) -> Bool {
-        guard let tabViewControllers = viewControllers,
-            let selectedVC = selectedViewController else { return false}
-        
-        guard let fromView = selectedVC.view,
-            let toView = tabViewControllers[toIndex].view,
-            let fromIndex = tabViewControllers.index(of: selectedVC),
-            fromIndex != toIndex else { return false}
-        
-        
-        // Add the toView to the tab bar view
-        fromView.superview?.addSubview(toView)
-        
-        // Position toView off screen (above subview)
-        let screenHeight = UIScreen.main.bounds.size.height
-        let offset = -screenHeight
-        toView.center = CGPoint(x: fromView.center.x, y: toView.center.y - offset)
-        
-        // Disable interaction during animation
-        view.isUserInteractionEnabled = false
-        
-        UIView.animate(withDuration: 0.3,
-                       delay: 0.1,
-                       options: .curveEaseOut,
-                       animations: {
-                        // Slide the views by -offset
-                        toView.center = CGPoint(x: toView.center.x, y: toView.center.y  + offset)
-                        
-        }, completion: { finished in
-            // Remove the old view from the tabbar view.
-            fromView.removeFromSuperview()
-            self.selectedIndex = toIndex
-            self.view.isUserInteractionEnabled = true
-        })
-        return true
-    }
+    
     
 }
 

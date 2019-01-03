@@ -7,6 +7,7 @@
 //
 
 import UIKit
+
 class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITableViewDataSource {
     
     @IBOutlet weak var decisionTitle: UITextField!
@@ -125,48 +126,14 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
         self.navigationController?.setViewControllers([vc],animated:true)
     }
     //handles animating back to original view
-    func animateToTab(toIndex: Int){
-        let fromView = self.tabBarController!.selectedViewController?.view
-        let toView = self.tabBarController!.viewControllers![toIndex].view
-        
-        if fromView != toView {
-            UIView.transition(from: fromView!, to: toView!, duration: 0.3, options: [.transitionCrossDissolve], completion:nil)
-        }
-      //HAVE TO CHANGE THIS ANIMATION!!!
-    }
 //    func animateToTab(toIndex: Int){
-//        let tabBar = self.tabBarController!
-//        guard let tabViewControllers = tabBar.viewControllers,
-//            let selectedVC = tabBar.selectedViewController else { return }
+//        let fromView = self.tabBarController!.selectedViewController?.view
+//        let toView = self.tabBarController!.viewControllers![toIndex].view
 //
-//        guard let fromView = selectedVC.view,
-//            let toView = tabViewControllers[toIndex].view,
-//            let fromIndex = tabViewControllers.index(of: selectedVC),
-//            fromIndex != toIndex else { return }
-//
-//
-//        // Add the toView to the tab bar view
-//        toView.superview?.addSubview(fromView)
-//
-//        // Position fromView on screen
-//        let screenHeight = UIScreen.main.bounds.size.height
-//        let offset = -screenHeight
-//        fromView.center = CGPoint(x: toView.center.x, y: fromView.center.y)
-//        // Disable interaction during animation
-//        tabBar.view.isUserInteractionEnabled = false
-//
-//        UIView.animate(withDuration: 0.3,
-//                       delay: 0.1,
-//                       options: .curveEaseOut,
-//                       animations: {
-//                        // Slide the views by -offset
-//                        fromView.center = CGPoint(x: toView.center.x, y: fromView.center.y + offset)
-//
-//        }, completion: { finished in
-////             Remove the old view from the tabbar view.
-//            fromView.removeFromSuperview()
-//            tabBar.selectedIndex = toIndex
-//            tabBar.view.isUserInteractionEnabled = true
-//        })
+//        if fromView != toView {
+//            UIView.transition(from: fromView!, to: toView!, duration: 0.3, options: [.transitionCrossDissolve], completion:nil)
+//        }
+//      //HAVE TO CHANGE THIS ANIMATION!!!
 //    }
 }
+
