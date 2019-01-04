@@ -21,7 +21,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.register(DecisionItem.self, forCellReuseIdentifier: cellReuseIdentifier)
-          self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: addButtonCellReuseIdentifier) //this will be the addButton
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: addButtonCellReuseIdentifier) //this will be the addButton
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
