@@ -11,12 +11,13 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     
     @IBOutlet weak var decisionTitle: UITextField!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var cellView: UIView!
     
     var decision = Decision()
     var decisionItemCount = 2;
     let cellReuseIdentifier = "decisionItemCell"
     let addButtonCellReuseIdentifier = "addButtonCell"
-    let cellSpacingHeight: CGFloat = 15
+    let cellSpacingHeight: CGFloat = 12
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,9 +71,11 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
             return cell
             
         } else { //if it's not the add item button.... (basically everything else)
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
-            cell.backgroundColor = UIColor.white
-            cell.layer.borderColor = UIColor.black.cgColor
+            let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
+            let grayColor2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)//custom color (even lighter gray)
+            cell.addSubview(cell.descriptionBox)
+            cell.backgroundColor = grayColor2
+            cell.layer.borderColor = grayColor2.cgColor
             cell.layer.borderWidth = 1
             cell.layer.cornerRadius = 8
             cell.clipsToBounds = true
