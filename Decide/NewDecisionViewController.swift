@@ -111,7 +111,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
        
         //reset the viewcontroller
         let vc = storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
-//        self.navigationController?.setViewControllers([vc],animated:false)
     }
     //action called when the save button is pressed
     //saves all the cell information
