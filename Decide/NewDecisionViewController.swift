@@ -106,11 +106,12 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     @IBAction func cancel(_ sender: Any) {
         let index = (self.tabBarController as! MainTabBarController).previouslySelectedIndex!
         
+        //animate action of going back, switching tabs is also handled in animate
         animateToTab(toIndex: index) //changing of tab bar item is handled here as well
-        self.tabBarController!.selectedIndex = index
+       
         //reset the viewcontroller
         let vc = storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
-        self.navigationController?.setViewControllers([vc],animated:true)
+//        self.navigationController?.setViewControllers([vc],animated:false)
     }
     //action called when the save button is pressed
     //saves all the cell information
@@ -119,11 +120,11 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
             let cell = tableView.cellForRow(at: IndexPath(row: 0, section: section)) as! DecisionItem
             decision.decisionItemList.append(cell)
         }
-        
+        //animate the action of going back, switching tabs is also handled in animated
         animateToTab(toIndex: 0) //changing of tab bar item is handled here as well
         //reset the viewcontroller
         let vc = storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
-        self.navigationController?.setViewControllers([vc],animated:true)
+//        self.navigationController?.setViewControllers([vc],animated:true)
     }
     //handles animating back to original view
 //    func animateToTab(toIndex: Int){
