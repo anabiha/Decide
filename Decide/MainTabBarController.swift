@@ -16,6 +16,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         delegate = self
         tabBar.unselectedItemTintColor = .black
     }
+    
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         
         if (previouslySelectedIndex == nil) {
@@ -23,9 +24,9 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         }
         
         //completes the animation. Returns false if user presses the same tab twice (no animation, obviously)
-        var complete: Bool
+        var complete: Bool = false
         if (viewController.tabBarItem.tag == 1) {
-            complete = animateToTab(toIndex: 1) //initiate slide up animation if new decision is pressed
+           animateToTab(toIndex: 1) //initiate slide up animation if new decision is pressed
             //also note that the tab bar is hidden in this view
         } else {
             complete = true
