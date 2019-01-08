@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 protocol Animate {
     func animateToTab(toIndex: Int) -> Bool
+   
 }
 extension MainTabBarController: Animate {
     func animateToTab(toIndex: Int) -> Bool {
@@ -44,15 +45,17 @@ extension MainTabBarController: Animate {
                         print("toView is at : \(toView.center.x), \(toView.center.y) after the animation")
         }, completion: { finished in
             // Remove the old view from the tabbar view.
-            fromView.removeFromSuperview()
+//            fromView.removeFromSuperview() removed, because when returning to page it must remain
             self.selectedIndex = toIndex
             self.view.isUserInteractionEnabled = true
         })
+        
+   
         return true
     }
 }
 extension NewDecisionViewController: Animate {
-    func animateToTab(toIndex: Int)-> Bool {
+    func animateToTab(toIndex: Int) -> Bool{
         let tabBar = self.tabBarController!
         
         guard let tabViewControllers = tabBar.viewControllers,
@@ -61,16 +64,14 @@ extension NewDecisionViewController: Animate {
         guard let fromView = selectedVC.view,
             let toView = tabViewControllers[toIndex].view,
             let fromIndex = tabViewControllers.index(of: selectedVC),
-            fromIndex != toIndex else { return false }
+            fromIndex != toIndex else { return false}
         
-        
-        // Add the toView to the tab bar view
         toView.superview?.addSubview(fromView)
         
         // Position fromView on screen
         let screenHeight = UIScreen.main.bounds.size.height
-        let offset = -screenHeight
-        fromView.center = CGPoint(x: fromView.center.x, y: fromView.center.y)
+        let offset = screenHeight
+        fromView.center = CGPoint(x: toView.center.x, y: toView.center.y)
         print("fromView is at: \(fromView.center.x), \(fromView.center.y)")
         print("offset is \(offset)")
         
@@ -83,15 +84,17 @@ extension NewDecisionViewController: Animate {
                        options: .curveEaseIn,
                        animations: {
                         // Slide the views by -offset
-                        fromView.center = CGPoint(x: fromView.center.x, y: fromView.center.y - offset)
+                    fromView.center = CGPoint(x: fromView.center.x, y: fromView.center.y + offset + 200)
         }, completion: { finished in
             print("fromView is at: \(fromView.center.x), \(fromView.center.y) after the animation")
             //             Remove the old view from the tabbar view.
-            fromView.removeFromSuperview()
+            //fromView.removeFromSuperview()
             tabBar.selectedIndex = toIndex
             tabBar.view.isUserInteractionEnabled = true
         })
-        return true
+      
+            return true
     }
+
 
 }
