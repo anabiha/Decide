@@ -107,10 +107,12 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
         let index = (self.tabBarController as! MainTabBarController).previouslySelectedIndex!
         
         animateToTab(toIndex: index) //changing of tab bar item is handled here as well
+        
         self.tabBarController!.selectedIndex = index
         //reset the viewcontroller
-        let vc = storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
-        self.navigationController?.setViewControllers([vc],animated:true)
+       let vc = storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
+        
+       self.navigationController?.setViewControllers([vc],animated:true)
     }
     //action called when the save button is pressed
     //saves all the cell information

@@ -76,10 +76,11 @@ extension NewDecisionViewController: Animate {
         
         // Disable interaction during animation
         tabBar.view.isUserInteractionEnabled = false
+    
         
-        UIView.animate(withDuration: 2,
+        UIView.animate(withDuration: 0.2,
                        delay: 0.1,
-                       options: .curveEaseOut,
+                       options: .curveEaseIn,
                        animations: {
                         // Slide the views by -offset
                         fromView.center = CGPoint(x: fromView.center.x, y: fromView.center.y - offset)
