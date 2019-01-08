@@ -24,12 +24,10 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         }
         
         //completes the animation. Returns false if user presses the same tab twice (no animation, obviously)
-        var complete: Bool = false
+       
         if (viewController.tabBarItem.tag == 1) {
            animateToTab(toIndex: 1) //initiate slide up animation if new decision is pressed
             //also note that the tab bar is hidden in this view
-        } else {
-            complete = true
         }
         //switch statement used to change previouslySelectedIndex
         switch viewController.tabBarItem.tag {
@@ -48,7 +46,8 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         default:
             print("Unexpected tab bar item pressed")
         }
-        return complete
+        
+        return true
     }
     
    //slide up animation!!!
