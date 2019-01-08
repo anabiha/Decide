@@ -108,18 +108,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
         
         //animate action of going back, switching tabs is also handled in animate
         animateToTab(toIndex: index) //changing of tab bar item is handled here as well
-<<<<<<< HEAD
-        
-        self.tabBarController!.selectedIndex = index
-        //reset the viewcontroller
-       let vc = storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
-        
-       self.navigationController?.setViewControllers([vc],animated:true)
-=======
-       
-        //reset the viewcontroller
-        let vc = storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
->>>>>>> 5477d6a9ba6249fd3e8cf519470dbbf4e114c9ef
+        //self.tabBarController!.selectedIndex = index
     }
     //action called when the save button is pressed
     //saves all the cell information

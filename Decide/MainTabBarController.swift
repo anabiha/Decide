@@ -23,8 +23,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
             previouslySelectedIndex = tabBarController.selectedIndex
         }
         
-        //completes the animation. Returns false if user presses the same tab twice (no animation, obviously)
-       
+        
         if (viewController.tabBarItem.tag == 1) {
            animateToTab(toIndex: 1) //initiate slide up animation if new decision is pressed
             //also note that the tab bar is hidden in this view
