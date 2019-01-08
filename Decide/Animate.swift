@@ -9,19 +9,17 @@
 import Foundation
 import UIKit
 protocol Animate {
-    func animateToTab(toIndex: Int) -> Bool
-   
+    func animateToTab(toIndex: Int)
 }
 extension MainTabBarController: Animate {
-    func animateToTab(toIndex: Int) -> Bool {
+    func animateToTab(toIndex: Int){
         guard let tabViewControllers = viewControllers,
-            let selectedVC = selectedViewController else { return false}
+            let selectedVC = selectedViewController else { return }
         
         guard let fromView = selectedVC.view,
             let toView = tabViewControllers[toIndex].view,
             let fromIndex = tabViewControllers.index(of: selectedVC),
-            fromIndex != toIndex else { return false}
-        
+            fromIndex != toIndex else { return }
         
         // Add the toView to the tab bar view
         fromView.superview?.addSubview(toView)
@@ -49,24 +47,20 @@ extension MainTabBarController: Animate {
             self.selectedIndex = toIndex
             self.view.isUserInteractionEnabled = true
         })
-        
-   
-        return true
+      
     }
 }
 extension NewDecisionViewController: Animate {
-    func animateToTab(toIndex: Int) -> Bool{
+    func animateToTab(toIndex: Int) {
         let tabBar = self.tabBarController!
         
         guard let tabViewControllers = tabBar.viewControllers,
-            let selectedVC = tabBar.selectedViewController else { return false}
+            let selectedVC = tabBar.selectedViewController else { return }
         
         guard let fromView = selectedVC.view,
             let toView = tabViewControllers[toIndex].view,
             let fromIndex = tabViewControllers.index(of: selectedVC),
-            fromIndex != toIndex else { return false}
-        
-        toView.superview?.addSubview(fromView)
+            fromIndex != toIndex else { return }
         
         // Position fromView on screen
         let screenHeight = UIScreen.main.bounds.size.height
@@ -92,9 +86,5 @@ extension NewDecisionViewController: Animate {
             tabBar.selectedIndex = toIndex
             tabBar.view.isUserInteractionEnabled = true
         })
-      
-            return true
     }
-
-
 }

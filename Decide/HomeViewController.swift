@@ -22,7 +22,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     // MARK: - Table View delegate methods
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 10
     }
