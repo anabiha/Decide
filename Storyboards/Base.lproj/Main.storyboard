@@ -21,7 +21,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="veritical_background" translatesAutoresizingMaskIntoConstraints="NO" id="zBC-ET-pZG">
                                 <rect key="frame" x="0.0" y="20" width="375" height="598"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="StandardProfilePic" translatesAutoresizingMaskIntoConstraints="NO" id="j41-7N-Z25">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="StandardProfilePic" translatesAutoresizingMaskIntoConstraints="NO" id="j41-7N-Z25">
                                 <rect key="frame" x="62.5" y="81" width="250" height="250"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="250" id="scE-uA-Jpq"/>
@@ -31,10 +31,8 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="j41-7N-Z25" firstAttribute="centerX" secondItem="zBC-ET-pZG" secondAttribute="centerX" id="AmO-YF-2BO"/>
                             <constraint firstItem="zBC-ET-pZG" firstAttribute="top" secondItem="gaU-4t-ODd" secondAttribute="top" id="ISB-TF-mV8"/>
                             <constraint firstItem="zBC-ET-pZG" firstAttribute="leading" secondItem="gaU-4t-ODd" secondAttribute="leading" id="gpt-ge-AWK"/>
-                            <constraint firstItem="j41-7N-Z25" firstAttribute="top" secondItem="gaU-4t-ODd" secondAttribute="top" constant="61" id="vfN-Zg-Qv5"/>
                             <constraint firstItem="gaU-4t-ODd" firstAttribute="bottom" secondItem="zBC-ET-pZG" secondAttribute="bottom" id="xNp-Nl-rnp"/>
                             <constraint firstItem="gaU-4t-ODd" firstAttribute="trailing" secondItem="zBC-ET-pZG" secondAttribute="trailing" id="yKd-gv-Div"/>
                         </constraints>
