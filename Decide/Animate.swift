@@ -80,13 +80,18 @@ extension NewDecisionViewController: Animate {
                     fromView.center = CGPoint(x: fromView.center.x, y: fromView.center.y + offset)
         }, completion: { finished in
             print("fromView is at: \(fromView.center.x), \(fromView.center.y) after the animation")
-            //             Remove the old view from the tabbar view.
-           
+            
+            //select the next view
             tabBar.selectedIndex = toIndex
+            //Remove the old view from the tabbar view.
             fromView.removeFromSuperview()
+            
             tabBar.view.isUserInteractionEnabled = true
+            
+            //reset view controller
             let vc = self.storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
-            self.tabBarController!.viewControllers![1].navigationController?.setViewControllers([vc], animated: false)
+            let nc = self.tabBarController!.viewControllers?[1] as! UINavigationController
+            nc.viewControllers[0] = vc
         })
     }
 }
