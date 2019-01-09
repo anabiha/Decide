@@ -7,6 +7,7 @@
 //
 
 import UIKit
+
 class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITableViewDataSource {
     
     @IBOutlet weak var decisionTitle: UITextField!
@@ -21,8 +22,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.register(DecisionItem.self, forCellReuseIdentifier: cellReuseIdentifier)
-          self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: addButtonCellReuseIdentifier) //this will be the addButton
+        //DO NOT REGISTER THE CELL CLASSES HERE, ALREADY DONE IN INTERFACEBUILDER!!!!!!!
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
@@ -53,25 +53,16 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if indexPath.section == decisionItemCount - 1 { //if the selected row is the add row. note that indexPath.section is used rather than indexPath.row
-            let cell: UITableViewCell = self.tableView.dequeueReusableCell(withIdentifier: addButtonCellReuseIdentifier) as UITableViewCell! // add button will be a normal cell
-            
-            //addbutton aesthetics
-            cell.textLabel?.text = "+ Add an item"
-            cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 15.0)
-            cell.textLabel?.textAlignment = .center
-            // add border and color
-            let grayColor = UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1)//custom color (pretty light gray)
-            cell.backgroundColor = grayColor
-            cell.layer.borderColor = grayColor.cgColor
-            cell.layer.borderWidth = 1
-            cell.layer.cornerRadius = 8
-            cell.clipsToBounds = true
-            
+        if indexPath.section == decisionItemCount - 1 { //if the selected row is the add row. also note that indexPath.section is used rather than indexPath.row
+            print("Add button created")
+            let cell: AddButton = self.tableView.dequeueReusableCell(withIdentifier: addButtonCellReuseIdentifier) as! AddButton// add button will be a normal cell
+            cell.configure() //refer to decision class
             return cell
             
         } else { //if it's not the add item button.... (basically everything else)
+            print("DecisionItem created")
             let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
+<<<<<<< HEAD
             let grayColor2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)//custom color (even lighter gray)
             cell.addSubview(cell.descriptionBox)
             cell.backgroundColor = grayColor2
@@ -79,6 +70,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
             cell.layer.borderWidth = 1
             cell.layer.cornerRadius = 8
             cell.clipsToBounds = true
+=======
+            cell.configure(text: "", placeholder: "Type something!") //refer to decision class
+>>>>>>> Daniel
             return cell
         }
     }
@@ -86,18 +80,21 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // note that indexPath.section is used rather than indexPath.row
-        print("You tapped cell number \(indexPath.section).")
-        
         if indexPath.section == decisionItemCount - 1 { //if it's the add button,
-            self.tableView.beginUpdates()
-            decisionItemCount += 1
-            let index = IndexSet([indexPath.section])
-            self.tableView.insertSections(index, with: .none) //insert a section right above the add button with a top down animation
-            self.tableView.endUpdates()
+            print("You tapped the add button located at: \(indexPath.section).")
+            UIView.animate(withDuration: 0.2, delay: 0.15, options: .curveEaseIn, animations: {
+                self.tableView.beginUpdates()
+                self.decisionItemCount += 1
+                let index = IndexSet([indexPath.section])
+                self.tableView.insertSections(index, with: .none) //insert a section right above the add button with a top down animation
+                self.tableView.endUpdates()
+            })
+        } else {
+            print("You tapped a decision item row located at: \(indexPath.section).")
         }
     }
     //handles deletion of rows
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let index = IndexSet([indexPath.section])
         if editingStyle == .delete && indexPath.section != decisionItemCount - 1 {
             self.tableView.beginUpdates()
@@ -107,12 +104,45 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
         }
         
     }
+    //the height of the post, to be implemented later
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        //the height of the post, to be implemented later
          if indexPath.section == decisionItemCount - 1 {
             return 25 //the add button is this height
          }  else {
-            return 50
+            return 80
         }
     }
+    
+    //the action called when the cancel button is pressed
+    @IBAction func cancel(_ sender: Any) {
+        let index = (self.tabBarController as! MainTabBarController).previouslySelectedIndex!
+        
+        //animate action of going back, switching tabs is also handled in animate
+        animateToTab(toIndex: index) //changing of tab bar item is handled here as well
+        //self.tabBarController!.selectedIndex = index
+    }
+    //action called when the save button is pressed
+    //saves all the cell information
+    @IBAction func save(_ sender: Any) {
+        for section in 0..<decisionItemCount { //saving each cell
+            let cell = tableView.cellForRow(at: IndexPath(row: 0, section: section)) as! DecisionItem
+            decision.decisionItemList.append(cell)
+        }
+        //animate the action of going back, switching tabs is also handled in animated
+        animateToTab(toIndex: 0) //changing of tab bar item is handled here as well
+        //reset the viewcontroller
+        let vc = storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
+//        self.navigationController?.setViewControllers([vc],animated:true)
+    }
+    //handles animating back to original view
+//    func animateToTab(toIndex: Int){
+//        let fromView = self.tabBarController!.selectedViewController?.view
+//        let toView = self.tabBarController!.viewControllers![toIndex].view
+//
+//        if fromView != toView {
+//            UIView.transition(from: fromView!, to: toView!, duration: 0.3, options: [.transitionCrossDissolve], completion:nil)
+//        }
+//      //HAVE TO CHANGE THIS ANIMATION!!!
+//    }
 }
+
