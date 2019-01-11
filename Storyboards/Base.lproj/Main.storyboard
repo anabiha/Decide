@@ -20,7 +20,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="gaU-4t-ODd"/>
                     </view>
-                    <tabBarItem key="tabBarItem" tag="2" title="" image="ProfileNew" selectedImage="ProfileNew" id="PFe-w1-kOW">
+                    <tabBarItem key="tabBarItem" tag="2" title="" image="GrayProfileButton" selectedImage="ProfileNew" id="PFe-w1-kOW">
                         <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                     </tabBarItem>
                 </viewController>
@@ -36,6 +36,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
                         <segue destination="xpL-5J-QEJ" kind="relationship" relationship="viewControllers" id="TYc-8c-s9B"/>
@@ -180,8 +181,9 @@
         <scene sceneID="pm8-pf-1nG">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xpL-5J-QEJ" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="HomeNew" id="fPW-M5-cQ4">
+                    <tabBarItem key="tabBarItem" title="" image="GreyFireButton" id="fPW-M5-cQ4">
                         <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
+                        <color key="badgeColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                     </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Ft6-3T-kq3">
@@ -201,7 +203,7 @@
         <scene sceneID="BbW-nW-DIR">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="voE-PO-wgR" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" tag="1" title="" image="AddNew" id="Cx1-tI-Zxd">
+                    <tabBarItem key="tabBarItem" tag="1" title="" image="GreyAddButton" id="Cx1-tI-Zxd">
                         <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                     </tabBarItem>
                     <toolbarItems/>
@@ -220,8 +222,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="AddNew" width="25" height="25"/>
-        <image name="HomeNew" width="25" height="25"/>
+        <image name="GrayProfileButton" width="116.16000366210938" height="115.68000030517578"/>
+        <image name="GreyAddButton" width="122.40000152587891" height="122.40000152587891"/>
+        <image name="GreyFireButton" width="123.83999633789062" height="124.31999969482422"/>
         <image name="ProfileNew" width="25" height="25"/>
     </resources>
+    <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>
