@@ -15,7 +15,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-<<<<<<< HEAD
+
         
         //whenever the MGDecideHelper recieves an image, this is where the photo upload will be uploaded later on
         decideHelper.completionHandler = {image in
@@ -25,9 +25,9 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         }
         
          delegate = self
-=======
+
         delegate = self
->>>>>>> Daniel
+
         tabBar.unselectedItemTintColor = .black
         
     }
@@ -49,18 +49,18 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
             previouslySelectedIndex = viewController.tabBarItem.tag //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
             print("Home button pressed")
             print ("Previously selected index is now: \(previouslySelectedIndex!)")
-<<<<<<< HEAD
+
             return true
         case 1:
             
             decideHelper.presentActionSheet(from: self)
             return true
             
-=======
+
         case 1: //don't change previously selected if they press newdecision
             print ("Add decision button pressed")
             print ("Previously selected index is still: \(previouslySelectedIndex!)")
->>>>>>> Daniel
+
         case 2:
             previouslySelectedIndex = viewController.tabBarItem.tag //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
             print ("Profile button pressed")

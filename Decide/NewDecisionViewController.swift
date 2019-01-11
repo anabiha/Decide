@@ -22,12 +22,12 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
-<<<<<<< HEAD
+
         //DO NOT REGISTER THE CELL CLASSES HERE, ALREADY DONE IN INTERFACEBUILDER!!!!!!!
-=======
+
         self.tableView.register(DecisionItem.self, forCellReuseIdentifier: cellReuseIdentifier)
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: addButtonCellReuseIdentifier) //this will be the addButton
->>>>>>> e6f3537276f6c96d35377d6fedb027775ab21fc0
+
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
@@ -67,7 +67,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
         } else { //if it's not the add item button.... (basically everything else)
             print("DecisionItem created")
             let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
-<<<<<<< HEAD
+
             let grayColor2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)//custom color (even lighter gray)
             cell.addSubview(cell.descriptionBox)
             cell.backgroundColor = grayColor2
@@ -75,9 +75,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
             cell.layer.borderWidth = 1
             cell.layer.cornerRadius = 8
             cell.clipsToBounds = true
-=======
+
             cell.configure(text: "", placeholder: "Type something!") //refer to decision class
->>>>>>> Daniel
+            
             return cell
         }
     }
