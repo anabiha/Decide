@@ -48,7 +48,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell:UITableViewCell = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as UITableViewCell!
         
         // note that indexPath.section is used rather than indexPath.row
-//        cell.textLabel?.text = "100"
         
         // add border and color
         let grayColor = UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1)//custom color (pretty light gray)

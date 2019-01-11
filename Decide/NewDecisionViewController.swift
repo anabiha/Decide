@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITableViewDataSource {
+class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var decisionTitle: UITextField!
     @IBOutlet weak var tableView: UITableView!
@@ -26,9 +26,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
     }
-    //some function that, once tapped, saves the title and all decisions
     
-   
     func numberOfSections(in tableView: UITableView) -> Int {
         return decisionItemCount
     }
@@ -51,13 +49,11 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
     }
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         if indexPath.section == decisionItemCount - 1 { //if the selected row is the add row. also note that indexPath.section is used rather than indexPath.row
             print("Add button created")
             let cell: AddButton = self.tableView.dequeueReusableCell(withIdentifier: addButtonCellReuseIdentifier) as! AddButton// add button will be a normal cell
             cell.configure() //refer to decision class
             return cell
-            
         } else { //if it's not the add item button.... (basically everything else)
             print("DecisionItem created")
             let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
@@ -98,20 +94,18 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
          if indexPath.section == decisionItemCount - 1 {
             return 25 //the add button is this height
          }  else {
-            return 80
+            return 50
         }
     }
     
     //the action called when the cancel button is pressed
     @IBAction func cancel(_ sender: Any) {
         let index = (self.tabBarController as! MainTabBarController).previouslySelectedIndex!
-        
         //animate action of going back, switching tabs is also handled in animate
         animateToTab(toIndex: index) //changing of tab bar item is handled here as well
-        //self.tabBarController!.selectedIndex = index
     }
     //action called when the save button is pressed
-    //saves all the cell information
+    //saves all the cell information NOT DONE
     @IBAction func save(_ sender: Any) {
         for section in 0..<decisionItemCount { //saving each cell
             let cell = tableView.cellForRow(at: IndexPath(row: 0, section: section)) as! DecisionItem
@@ -119,19 +113,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate,  UITable
         }
         //animate the action of going back, switching tabs is also handled in animated
         animateToTab(toIndex: 0) //changing of tab bar item is handled here as well
-        //reset the viewcontroller
-        let vc = storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
-//        self.navigationController?.setViewControllers([vc],animated:true)
     }
-    //handles animating back to original view
-//    func animateToTab(toIndex: Int){
-//        let fromView = self.tabBarController!.selectedViewController?.view
-//        let toView = self.tabBarController!.viewControllers![toIndex].view
-//
-//        if fromView != toView {
-//            UIView.transition(from: fromView!, to: toView!, duration: 0.3, options: [.transitionCrossDissolve], completion:nil)
-//        }
-//      //HAVE TO CHANGE THIS ANIMATION!!!
-//    }
 }
 

@@ -23,7 +23,6 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
             previouslySelectedIndex = tabBarController.selectedIndex
         }
         
-        
         if (viewController.tabBarItem.tag == 1) {
            animateToTab(toIndex: 1) //initiate slide up animation if new decision is pressed
             //also note that the tab bar is hidden in this view
@@ -45,7 +44,6 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         default:
             print("Unexpected tab bar item pressed")
         }
-        
         return true
     }
     
