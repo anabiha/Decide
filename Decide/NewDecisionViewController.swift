@@ -25,6 +25,11 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
+        
+        // Set automatic dimensions for row height
+        // Swift 4.2 onwards
+        tableView.estimatedRowHeight = 50
+        tableView.rowHeight = UITableView.automaticDimension
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -57,7 +62,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         } else { //if it's not the add item button.... (basically everything else)
             print("DecisionItem created")
             let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
-            cell.configure(text: "", placeholder: "Type something!") //refer to decision class
+            cell.configure(text: "") //refer to decision class
             return cell
         }
     }
@@ -94,8 +99,10 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
          if indexPath.section == decisionItemCount - 1 {
             return 25 //the add button is this height
          }  else {
-            return 50
+    
+            return UITableView.automaticDimension
         }
+       
     }
     
     //the action called when the cancel button is pressed
@@ -114,5 +121,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         //animate the action of going back, switching tabs is also handled in animated
         animateToTab(toIndex: 0) //changing of tab bar item is handled here as well
     }
+    
+   
 }
 
