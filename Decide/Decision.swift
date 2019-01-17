@@ -16,23 +16,27 @@ class Decision {
 class DecisionItem: UITableViewCell, UITextViewDelegate {
     
     @IBOutlet weak var descriptionBox: UITextView!
+    @IBOutlet weak var addImage: UIButton!
+    
     var decisionItemTitle: String = ""
     
+   
     public func configure(text: String?) { //sets everything in the cell up
         
         descriptionBox.delegate = self //important
         descriptionBox.text = text
         descriptionBox.font = UIFont.boldSystemFont(ofSize: 14.0)
-        descriptionBox.accessibilityValue = text
-       // descriptionBox.setLeftPaddingPoints(15); //see UITextField extension below
+        
         selectionStyle = .none//disables the "selected" animation when someone clicks on the cell, but still allows for interaction with the descriptionBox
         //setting the colors of the descriptionBox and row
-        let grayColor2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)//custom color (even lighter gray)
-        descriptionBox.backgroundColor = grayColor2
+        descriptionBox.backgroundColor = UIColor.white
         descriptionBox.layer.cornerRadius = 15
         
+        addImage.imageView?.contentMode = .scaleAspectFit
+        
         backgroundColor = UIColor.white
-        layer.borderColor = UIColor.white.cgColor
+        layer.borderColor = UIColor.clear.cgColor
+        
         layer.borderWidth = 1
         layer.cornerRadius = 15
         clipsToBounds = true
@@ -48,6 +52,10 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
             UIView.setAnimationsEnabled(true)
         }
     }
+    //restricts number of characters
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        return textView.text.count + (text.count - range.length) <= 100
+    }
 }
 extension UITableViewCell { //this is how our cell accesses its own tableview
     /// Search up the view hierarchy of the table view cell to find the containing table view
@@ -57,7 +65,6 @@ extension UITableViewCell { //this is how our cell accesses its own tableview
             while !(table is UITableView) && table != nil {
                 table = table?.superview
             }
-            
             return table as? UITableView
         }
     }
@@ -70,9 +77,10 @@ class AddButton: UITableViewCell {
         textLabel?.font = UIFont.boldSystemFont(ofSize: 15.0)
         textLabel?.textAlignment = .center
         // add border and color
-        let grayColor = UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1)//custom color (pretty light gray)
-        backgroundColor = grayColor
-        layer.borderColor = grayColor.cgColor
+        selectionStyle = .none
+        
+        backgroundColor = UIColor.white
+        layer.borderColor = UIColor.clear.cgColor
         layer.borderWidth = 1
         layer.cornerRadius = 8
         clipsToBounds = true
