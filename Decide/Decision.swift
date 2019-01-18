@@ -42,7 +42,7 @@ class DecisionItem: UITableViewCell, UITextFieldDelegate {
         
     }
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        textFieldDidChange(textField: textField)
+        textFieldDidChange(textField)
         return true
     }
     func textFieldDidChange(_ textField: UITextField) { //FIX

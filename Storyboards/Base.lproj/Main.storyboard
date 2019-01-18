@@ -17,7 +17,28 @@
                     <view key="view" contentMode="scaleToFill" id="B2x-Gq-ZCd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="imageedit_2_7506025929" translatesAutoresizingMaskIntoConstraints="NO" id="KVa-p9-qt9">
+                                <rect key="frame" x="0.0" y="20" width="375" height="598"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pmU-R4-cnO">
+                                <rect key="frame" x="62.5" y="120" width="250" height="250"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="250" id="d5B-zF-dEO"/>
+                                    <constraint firstAttribute="width" constant="250" id="qFD-v6-pAP"/>
+                                </constraints>
+                                <state key="normal" image="StandardProfilePic"/>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="KVa-p9-qt9" firstAttribute="top" secondItem="gaU-4t-ODd" secondAttribute="top" id="DPo-JY-zgX"/>
+                            <constraint firstItem="pmU-R4-cnO" firstAttribute="top" secondItem="gaU-4t-ODd" secondAttribute="top" constant="100" id="IRO-8j-r6H"/>
+                            <constraint firstItem="pmU-R4-cnO" firstAttribute="centerX" secondItem="KVa-p9-qt9" secondAttribute="centerX" id="fAa-pE-zsG"/>
+                            <constraint firstItem="gaU-4t-ODd" firstAttribute="bottom" secondItem="KVa-p9-qt9" secondAttribute="bottom" id="gHn-Yx-cn2"/>
+                            <constraint firstItem="gaU-4t-ODd" firstAttribute="trailing" secondItem="KVa-p9-qt9" secondAttribute="trailing" id="pfD-vP-bVS"/>
+                            <constraint firstItem="KVa-p9-qt9" firstAttribute="leading" secondItem="gaU-4t-ODd" secondAttribute="leading" id="vac-zd-RHM"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="gaU-4t-ODd"/>
                     </view>
                     <tabBarItem key="tabBarItem" tag="2" title="" image="GrayProfileButton" selectedImage="ProfileNew" id="PFe-w1-kOW">
@@ -26,7 +47,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Re2-FG-UKl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1066" y="246"/>
+            <point key="canvasLocation" x="1064.8" y="245.12743628185908"/>
         </scene>
         <!--Main Tab Bar Controller-->
         <scene sceneID="IUK-VO-wek">
@@ -226,6 +247,8 @@
         <image name="GreyAddButton" width="122.40000152587891" height="122.40000152587891"/>
         <image name="GreyFireButton" width="123.83999633789062" height="124.31999969482422"/>
         <image name="ProfileNew" width="25" height="25"/>
+        <image name="StandardProfilePic" width="354.75" height="323.25"/>
+        <image name="imageedit_2_7506025929" width="375" height="800"/>
     </resources>
     <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>
