@@ -18,13 +18,21 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     let cellReuseIdentifier = "decisionItemCell"
     let addButtonCellReuseIdentifier = "addButtonCell"
     let cellSpacingHeight: CGFloat = 12
-    
+    //Background is an IMAGEVIEW
     override func viewDidLoad() {
         super.viewDidLoad()
         //DO NOT REGISTER THE CELL CLASSES HERE, ALREADY DONE IN INTERFACEBUILDER!!!!!!!
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.tableFooterView = UIView()
+        tableView.tableFooterView = UIView() //hides unused cells
+        tableView.backgroundColor = UIColor.clear
+        
+        // Set automatic dimensions for row height
+        tableView.estimatedRowHeight = 60
+        tableView.rowHeight = UITableView.automaticDimension
+        
+         //keeps some space between bottom of screen and the bottom of the tableview
+        tableView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: tableView.frame.size.height - 300, right: 0)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -47,17 +55,18 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         headerView.backgroundColor = UIColor.clear
         return headerView
     }
+    
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == decisionItemCount - 1 { //if the selected row is the add row. also note that indexPath.section is used rather than indexPath.row
             print("Add button created")
             let cell: AddButton = self.tableView.dequeueReusableCell(withIdentifier: addButtonCellReuseIdentifier) as! AddButton// add button will be a normal cell
-            cell.configure() //refer to decision class
+            cell.configure() //refer to decision file
             return cell
         } else { //if it's not the add item button.... (basically everything else)
             print("DecisionItem created")
             let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
-            cell.configure(text: "", placeholder: "Type something!") //refer to decision class
+            cell.configure(text: "") //refer to decision file
             return cell
         }
     }
@@ -67,12 +76,19 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         // note that indexPath.section is used rather than indexPath.row
         if indexPath.section == decisionItemCount - 1 { //if it's the add button,
             print("You tapped the add button located at: \(indexPath.section).")
-            UIView.animate(withDuration: 0.2, delay: 0.15, options: .curveEaseIn, animations: {
+            UIView.animate(withDuration: 0.15, delay: 0.00, options: .curveEaseIn, animations: {
                 self.tableView.beginUpdates()
                 self.decisionItemCount += 1
                 let index = IndexSet([indexPath.section])
                 self.tableView.insertSections(index, with: .none) //insert a section right above the add button with a top down animation
                 self.tableView.endUpdates()
+                
+                //scrolls to bottom if there are too many rows to fit on screen
+                //FIX FIX FIX, need to find a way to find height of the tableview currently on screen
+                if (tableView.contentSize.height > UIScreen.main.bounds.size.height -  (self.navigationController?.navigationBar.frame.size.height)!) {
+                    self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                }
+                
             })
         } else {
             print("You tapped a decision item row located at: \(indexPath.section).")
@@ -87,14 +103,13 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             self.tableView.deleteSections(index, with: .none)
             self.tableView.endUpdates()
         }
-        
     }
     //the height of the post, to be implemented later
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
          if indexPath.section == decisionItemCount - 1 {
             return 25 //the add button is this height
-         }  else {
-            return 50
+         } else {
+            return UITableView.automaticDimension
         }
     }
     
@@ -114,5 +129,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         //animate the action of going back, switching tabs is also handled in animated
         animateToTab(toIndex: 0) //changing of tab bar item is handled here as well
     }
+    
+   
 }
 

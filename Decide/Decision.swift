@@ -41,9 +41,12 @@ class DecisionItem: UITableViewCell, UITextFieldDelegate {
         
         
     }
+<<<<<<< HEAD
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         textFieldDidChange(textField)
         return true
+=======
+>>>>>>> 617a7d286e740e13b4805929a4509c191881d4ff
     }
     func textFieldDidChange(_ textField: UITextField) { //FIX
         let fixedWidth = textField.frame.size.width
@@ -81,3 +84,4 @@ extension UITextField: UITextFieldDelegate { //allows padding of UITextFields
         self.rightViewMode = .always
     }
 }
+
