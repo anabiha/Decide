@@ -20,7 +20,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     
     var decisionItemTitle: String = ""
     
-   
+    
     public func configure(text: String?) { //sets everything in the cell up
         
         descriptionBox.delegate = self //important
@@ -42,7 +42,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         clipsToBounds = true
     }
     func textViewDidChange(_ textView: UITextView) {
-      
+        
         
         let startHeight = textView.frame.size.height
         let fixedWidth = textView.frame.size.width
