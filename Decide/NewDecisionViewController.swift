@@ -13,6 +13,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet weak var decisionTitle: UITextField!
     @IBOutlet weak var tableView: UITableView!
     
+    var descriptions: [String] = []
     var decision = Decision()
     var decisionItemCount = 2;
     let cellReuseIdentifier = "decisionItemCell"
@@ -64,9 +65,17 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             cell.configure() //refer to decision file
             return cell
         } else { //if it's not the add item button.... (basically everything else)
+            //FIX
             print("DecisionItem created")
             let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
-            cell.configure(text: "") //refer to decision file
+            let index = indexPath.section
+            if descriptions.count < index + 1 {
+               descriptions.append(cell.descriptionBox.text)
+            } else {
+                descriptions[index] = cell.descriptionBox.text
+            }
+           //FIX THIS...TRYING TO APPEND OLD TEXT TO DESCRIPTIONS
+            cell.configure(text: descriptions[indexPath.section]) //refer to decision file
             return cell
         }
     }
@@ -94,10 +103,12 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             print("You tapped a decision item row located at: \(indexPath.section).")
         }
     }
+  
     //handles deletion of rows
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let index = IndexSet([indexPath.section])
         if editingStyle == .delete && indexPath.section != decisionItemCount - 1 {
+            descriptions.remove(at: indexPath.section)
             self.tableView.beginUpdates()
             decisionItemCount -= 1
             self.tableView.deleteSections(index, with: .none)
@@ -116,6 +127,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     //the action called when the cancel button is pressed
     @IBAction func cancel(_ sender: Any) {
         let index = (self.tabBarController as! MainTabBarController).previouslySelectedIndex!
+        descriptions = []
         //animate action of going back, switching tabs is also handled in animate
         animateToTab(toIndex: index) //changing of tab bar item is handled here as well
     }
@@ -129,7 +141,5 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         //animate the action of going back, switching tabs is also handled in animated
         animateToTab(toIndex: 0) //changing of tab bar item is handled here as well
     }
-    
-   
 }
 

@@ -42,6 +42,8 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         clipsToBounds = true
     }
     func textViewDidChange(_ textView: UITextView) {
+      
+        
         let startHeight = textView.frame.size.height
         let fixedWidth = textView.frame.size.width
         let newSize =  textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
@@ -54,7 +56,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     }
     //restricts number of characters
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        return textView.text.count + (text.count - range.length) <= 100
+        return textView.text.count + (text.count - range.length) <= 125
     }
 }
 extension UITableViewCell { //this is how our cell accesses its own tableview
