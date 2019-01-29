@@ -78,6 +78,7 @@ class AddButton: UITableViewCell {
         textLabel?.text = "+ Add an item"
         textLabel?.font = UIFont.boldSystemFont(ofSize: 15.0)
         textLabel?.textAlignment = .center
+        textLabel?.textColor = UIColor(red: 0/255.0, green: 122/255.0, blue: 255/255.0, alpha: 1)
         // add border and color
         selectionStyle = .none
         
@@ -86,6 +87,20 @@ class AddButton: UITableViewCell {
         layer.borderWidth = 1
         layer.cornerRadius = 8
         clipsToBounds = true
+    }
+    public func fadeToGrey() {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.backgroundColor = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 0.75)
+            self.textLabel?.textColor = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 0.75)
+        }, completion: nil)
+        
+    }
+    public func fadeToWhite() {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.backgroundColor = UIColor.white
+            self.textLabel?.textColor = UIColor(red: 0/255.0, green: 122/255.0, blue: 255/255.0, alpha: 1)
+        }, completion: nil)
+       
     }
 }
 
