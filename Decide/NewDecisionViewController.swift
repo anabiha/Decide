@@ -15,11 +15,11 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     var descriptions: [String] = []
     var decision = Decision()
     var cellCount = 2 //current number of cells
-    let maxCellCount = 5 //max number of cells
+    let maxCellCount = 9 //max number of cells
     let cellReuseIdentifier = "decisionItemCell"
     let addButtonCellReuseIdentifier = "addButtonCell"
     let cellSpacingHeight: CGFloat = 12
-   
+    
     //Background is an IMAGEVIEW
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +33,10 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.rowHeight = UITableView.automaticDimension
          //keeps some space between bottom of screen and the bottom of the tableview
         tableView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: tableView.frame.size.height - 300, right: 0)
+        //makes navigation bar clear
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        
     }
     func numberOfSections(in tableView: UITableView) -> Int {
         return cellCount
@@ -86,7 +90,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                     self.tableView.endUpdates()
                 }, completion: { finished in //ensures that color change happens AFTER cell addition
                     if self.cellCount == self.maxCellCount { //make button grey if no more can be added
-                        (self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as! AddButton).fadeToGrey()
+                        let greyBackground = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 0.75)
+                        let greyText = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 0.75)
+                        (self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as! AddButton).fade(backgroundTo: greyBackground, textTo: greyText)
                     }
                 })
             } //don't add anything if cell count > maxCellCount
@@ -110,7 +116,8 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                     self.tableView.endUpdates()
                 }, completion: { finished in //ensures that color change happens AFTER cell removal
                     if self.cellCount == self.maxCellCount - 1 { //if it was previously filled, make add button white again
-                        (self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as! AddButton).fadeToWhite()
+                        let blueText = UIColor(red: 0/255.0, green: 122/255.0, blue: 255/255.0, alpha: 1)
+                        (self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as! AddButton).fade(backgroundTo: UIColor.white, textTo: blueText)
                     }
                 })
                 

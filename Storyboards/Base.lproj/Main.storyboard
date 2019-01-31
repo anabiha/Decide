@@ -81,7 +81,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yOl-bh-KXq">
-                                <rect key="frame" x="20" y="79" width="335" height="588"/>
+                                <rect key="frame" x="20" y="64" width="335" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="center" selectionStyle="default" indentationWidth="10" reuseIdentifier="decisionItemCell" id="IK6-ma-def" customClass="DecisionItem" customModule="Decide" customModuleProvider="target">
@@ -123,7 +123,7 @@
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="addButtonCell" id="Atu-WF-tg1" customClass="AddButton" customModule="Decide" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="72" width="335" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Atu-WF-tg1" id="4y6-gn-dDF">
+                                        <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Atu-WF-tg1" id="4y6-gn-dDF">
                                             <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
@@ -138,7 +138,7 @@
                             <constraint firstItem="yOl-bh-KXq" firstAttribute="bottom" secondItem="WIR-KR-om7" secondAttribute="bottom" id="Hzj-ed-eOO"/>
                             <constraint firstItem="yOl-bh-KXq" firstAttribute="leading" secondItem="WIR-KR-om7" secondAttribute="leading" constant="20" id="WTF-1P-ZqB"/>
                             <constraint firstAttribute="bottomMargin" secondItem="yOl-bh-KXq" secondAttribute="bottom" id="WwY-e3-li1"/>
-                            <constraint firstItem="yOl-bh-KXq" firstAttribute="top" secondItem="WIR-KR-om7" secondAttribute="top" constant="15" id="hBz-Wb-7OK"/>
+                            <constraint firstItem="yOl-bh-KXq" firstAttribute="top" secondItem="WIR-KR-om7" secondAttribute="top" id="hBz-Wb-7OK"/>
                             <constraint firstItem="WIR-KR-om7" firstAttribute="trailing" secondItem="yOl-bh-KXq" secondAttribute="trailing" constant="20" id="kJ7-Gh-aqO"/>
                             <constraint firstItem="WIR-KR-om7" firstAttribute="trailing" secondItem="8Ai-Fd-Oun" secondAttribute="trailing" id="nZT-UV-JLa"/>
                             <constraint firstItem="8Ai-Fd-Oun" firstAttribute="leading" secondItem="WIR-KR-om7" secondAttribute="leading" id="p3L-qG-WWF"/>

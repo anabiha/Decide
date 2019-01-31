@@ -20,7 +20,6 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     
     var decisionItemTitle: String = ""
     
-    
     public func configure(text: String?) { //sets everything in the cell up
         
         descriptionBox.delegate = self //important
@@ -42,8 +41,6 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         clipsToBounds = true
     }
     func textViewDidChange(_ textView: UITextView) {
-        
-        
         let startHeight = textView.frame.size.height
         let fixedWidth = textView.frame.size.width
         let newSize =  textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
@@ -88,19 +85,12 @@ class AddButton: UITableViewCell {
         layer.cornerRadius = 8
         clipsToBounds = true
     }
-    public func fadeToGrey() {
+    public func fade(backgroundTo bgColor: UIColor, textTo textColor: UIColor) {
         UIView.animate(withDuration: 0.2, delay: 0, options: .transitionCrossDissolve, animations: {
-            self.backgroundColor = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 0.75)
-            self.textLabel?.textColor = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 0.75)
+            self.backgroundColor = bgColor
+            self.textLabel?.textColor = textColor
         }, completion: nil)
-        
     }
-    public func fadeToWhite() {
-        UIView.animate(withDuration: 0.2, delay: 0, options: .transitionCrossDissolve, animations: {
-            self.backgroundColor = UIColor.white
-            self.textLabel?.textColor = UIColor(red: 0/255.0, green: 122/255.0, blue: 255/255.0, alpha: 1)
-        }, completion: nil)
-       
-    }
+   
 }
 
