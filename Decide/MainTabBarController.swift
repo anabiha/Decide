@@ -7,49 +7,48 @@
 //
 
 import UIKit
-class MainTabBarController: UITabBarController {
+class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     var previouslySelectedIndex: Int? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         delegate = self
+        delegate = self
         tabBar.unselectedItemTintColor = .black
     }
-   
     
-    //returns to the previous view if user presses cancel button
-//    @IBAction func cancel(_ sender: Any) { //it's okay if IBAction is not connected
-//        if let index = previouslySelectedIndex {
-//            self.selectedIndex = index
-//        }
-//    }
-    
-}
-extension MainTabBarController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         
         if (previouslySelectedIndex == nil) {
             previouslySelectedIndex = tabBarController.selectedIndex
         }
+        
+        if (viewController.tabBarItem.tag == 1) {
+           animateToTab(toIndex: 1) //initiate slide up animation if new decision is pressed
+            //also note that the tab bar is hidden in this view
+        }
+        //switch statement used to change previouslySelectedIndex
         switch viewController.tabBarItem.tag {
         case 0:
+            previouslySelectedIndex = viewController.tabBarItem.tag //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
             print("Home button pressed")
-            previouslySelectedIndex = tabBarController.selectedIndex //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
             print ("Previously selected index is now: \(previouslySelectedIndex!)")
-            return true
-        case 1:
+        case 1: //don't change previously selected if they press newdecision
             print ("Add decision button pressed")
-            return true
+            print ("Previously selected index is still: \(previouslySelectedIndex!)")
         case 2:
+            previouslySelectedIndex = viewController.tabBarItem.tag //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
             print ("Profile button pressed")
-            previouslySelectedIndex = tabBarController.selectedIndex //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
             print ("Previously selected index is now: \(previouslySelectedIndex!)")
-            return true
+        
         default:
             print("Unexpected tab bar item pressed")
-            return false
         }
+        return true
     }
+    
+   //slide up animation!!!
+    
+    
 }
 
