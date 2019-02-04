@@ -16,7 +16,6 @@ class Decision {
 class DecisionItem: UITableViewCell, UITextViewDelegate {
     
     @IBOutlet weak var descriptionBox: UITextView!
-    @IBOutlet weak var addImage: UIButton!
     
     var decisionItemTitle: String = ""
     
@@ -24,22 +23,24 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         
         descriptionBox.delegate = self //important
         descriptionBox.text = text
-        descriptionBox.font = UIFont.boldSystemFont(ofSize: 14.0)
+        descriptionBox.font = UIFont.boldSystemFont(ofSize: 15.0)
         
         selectionStyle = .none//disables the "selected" animation when someone clicks on the cell, but still allows for interaction with the descriptionBox
         //setting the colors of the descriptionBox and row
-        descriptionBox.backgroundColor = UIColor.white
-        descriptionBox.layer.cornerRadius = 15
+        let grayColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)//custom color (pretty light grey)
+        descriptionBox.backgroundColor = grayColor
+        descriptionBox.layer.cornerRadius = 10
+        descriptionBox.layer.borderColor = UIColor.white.cgColor
+        descriptionBox.layer.borderWidth = 3
         
-        addImage.imageView?.contentMode = .scaleAspectFit
-        
-        backgroundColor = UIColor.white
+        backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor
         
         layer.borderWidth = 1
-        layer.cornerRadius = 15
+//        layer.cornerRadius = 15
         clipsToBounds = true
     }
+    //changes cell height while text is changing
     func textViewDidChange(_ textView: UITextView) {
         let startHeight = textView.frame.size.height
         let fixedWidth = textView.frame.size.width
@@ -55,7 +56,32 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         return textView.text.count + (text.count - range.length) <= 125
     }
+    public func fade(backgroundTo bgColor: UIColor) {
+        UIView.animate(withDuration: 0.3, delay: 0.1, options: .transitionCrossDissolve, animations: {
+            self.descriptionBox.backgroundColor = bgColor
+        }, completion: nil)
+    }
+    
+    public func shakeError() {
+        let grayColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)//custom color (pretty light grey)
+        let errorRed = UIColor(red: 244/255, green: 66/255, blue: 66/255, alpha: 0.7)
+        fade(backgroundTo: errorRed)
+        self.shake()
+        fade(backgroundTo: grayColor)
+    }
 }
+extension UIView { //allows shaking of cells
+    func shake() {
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.duration = 0.08
+        animation.repeatCount = 3
+        animation.autoreverses = true
+        animation.fromValue = NSValue(cgPoint: CGPoint(x: self.center.x - 12, y: self.center.y))
+        animation.toValue = NSValue(cgPoint: CGPoint(x: self.center.x + 12, y: self.center.y))
+        self.layer.add(animation, forKey: "position")
+    }
+}
+
 extension UITableViewCell { //this is how our cell accesses its own tableview
     /// Search up the view hierarchy of the table view cell to find the containing table view
     var tableView: UITableView? {
@@ -68,6 +94,7 @@ extension UITableViewCell { //this is how our cell accesses its own tableview
         }
     }
 }
+
 
 class AddButton: UITableViewCell {
     public func configure() { //sets everything in the cell up
@@ -86,10 +113,22 @@ class AddButton: UITableViewCell {
         clipsToBounds = true
     }
     public func fade(backgroundTo bgColor: UIColor, textTo textColor: UIColor) {
-        UIView.animate(withDuration: 0.2, delay: 0, options: .transitionCrossDissolve, animations: {
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
             self.backgroundColor = bgColor
             self.textLabel?.textColor = textColor
         }, completion: nil)
+    }
+    override var frame: CGRect {
+        get {
+            return super.frame
+        }
+        set (newFrame) {
+            let inset: CGFloat = 10
+            var frame = newFrame
+            frame.origin.x += inset
+            frame.size.width -= 2 * inset
+            super.frame = frame
+        }
     }
    
 }

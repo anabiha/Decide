@@ -14,8 +14,8 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     
     var descriptions: [String] = []
     var decision = Decision()
-    var cellCount = 2 //current number of cells
-    let maxCellCount = 9 //max number of cells
+    var cellCount = 3 //current number of cells, start at 3
+    let maxCellCount = 5 //max number of cells, should be an odd number
     let cellReuseIdentifier = "decisionItemCell"
     let addButtonCellReuseIdentifier = "addButtonCell"
     let cellSpacingHeight: CGFloat = 12
@@ -108,22 +108,26 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let index = IndexSet([indexPath.section])
             if editingStyle == .delete {
-                descriptions.remove(at: indexPath.section)
-                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
-                    self.tableView.beginUpdates()
-                    self.cellCount -= 1
-                    self.tableView.deleteSections(index, with: .right)
-                    self.tableView.endUpdates()
-                }, completion: { finished in //ensures that color change happens AFTER cell removal
-                    if self.cellCount == self.maxCellCount - 1 { //if it was previously filled, make add button white again
-                        let blueText = UIColor(red: 0/255.0, green: 122/255.0, blue: 255/255.0, alpha: 1)
-                        (self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as! AddButton).fade(backgroundTo: UIColor.white, textTo: blueText)
-                    }
-                })
-                
+                if cellCount > 3 { //allow deletion as long as there will be 3 cells afterwards
+                    descriptions.remove(at: indexPath.section)
+                    UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+                        self.tableView.beginUpdates()
+                        self.cellCount -= 1
+                        self.tableView.deleteSections(index, with: .right)
+                        self.tableView.endUpdates()
+                    }, completion: { finished in //ensures that color change happens AFTER cell removal
+                        if self.cellCount == self.maxCellCount - 1 { //if it was previously greyed due to too many cells, make add button white again
+                            let blueText = UIColor(red: 0/255.0, green: 122/255.0, blue: 255/255.0, alpha: 1)
+                            (self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as! AddButton).fade(backgroundTo: UIColor.white, textTo: blueText)
+                        }
+                    })
+                } else {
+                    let cell = tableView.cellForRow(at: IndexPath(row: 0, section: indexPath.section)) as! DecisionItem
+                    cell.shakeError()
+                }
             }
     }
-    //the height of the post, to be implemented later
+    //the height of the post
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
          if indexPath.section == cellCount - 1 {
             return 25 //the add button is this height
@@ -141,12 +145,28 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     //action called when the save button is pressed
     //saves all the cell information NOT DONE
     @IBAction func save(_ sender: Any) {
-        for section in 0..<cellCount { //saving each cell
+        var blankCellList: [Int] = []
+        
+        for section in 0..<cellCount - 1 { //check to see if any are empty
             let cell = tableView.cellForRow(at: IndexPath(row: 0, section: section)) as! DecisionItem
-            decision.decisionItemList.append(cell)
+            if cell.descriptionBox.text == "" {
+                blankCellList.append(section) //add its section if empty
+            }
         }
-        //animate the action of going back, switching tabs is also handled in animated
-        animateToTab(toIndex: 0) //changing of tab bar item is handled here as well
+        
+        if blankCellList.count == 0 {
+            for section in 0..<cellCount - 1 { //saving each cell
+                let cell = tableView.cellForRow(at: IndexPath(row: 0, section: section)) as! DecisionItem
+                decision.decisionItemList.append(cell)
+            }
+            //animate the action of going back, switching tabs is also handled in animated
+            animateToTab(toIndex: 0) //changing of tab bar item is handled here as well
+        } else {
+            for section in 0..<blankCellList.count {
+                let cell = tableView.cellForRow(at: IndexPath(row: 0, section: blankCellList[section])) as! DecisionItem
+                cell.shakeError()
+            }
+        }
     }
 }
 
