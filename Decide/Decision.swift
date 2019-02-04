@@ -23,7 +23,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         
         descriptionBox.delegate = self //important
         descriptionBox.text = text
-        descriptionBox.font = UIFont.boldSystemFont(ofSize: 15.0)
+        descriptionBox.font = UIFont.boldSystemFont(ofSize: 25.0)
         
         selectionStyle = .none//disables the "selected" animation when someone clicks on the cell, but still allows for interaction with the descriptionBox
         //setting the colors of the descriptionBox and row
@@ -32,13 +32,10 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         descriptionBox.layer.cornerRadius = 10
         descriptionBox.layer.borderColor = UIColor.white.cgColor
         descriptionBox.layer.borderWidth = 3
-        
+        descriptionBox.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
         backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor
-        
-        layer.borderWidth = 1
-//        layer.cornerRadius = 15
-        clipsToBounds = true
+        clipsToBounds = true //important
     }
     //changes cell height while text is changing
     func textViewDidChange(_ textView: UITextView) {
@@ -47,15 +44,16 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         let newSize =  textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
         if (startHeight != newSize.height) {
             UIView.setAnimationsEnabled(false) // Disable animations
-            tableView?.beginUpdates()
-            tableView?.endUpdates()
+            self.tableView?.beginUpdates()
+            self.tableView?.endUpdates()
             UIView.setAnimationsEnabled(true)
         }
     }
     //restricts number of characters
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        return textView.text.count + (text.count - range.length) <= 125
+        return textView.text.count + (text.count - range.length) <= 65
     }
+    //shifts color of background
     public func fade(backgroundTo bgColor: UIColor) {
         UIView.animate(withDuration: 0.3, delay: 0.1, options: .transitionCrossDissolve, animations: {
             self.descriptionBox.backgroundColor = bgColor
@@ -113,7 +111,7 @@ class AddButton: UITableViewCell {
         clipsToBounds = true
     }
     public func fade(backgroundTo bgColor: UIColor, textTo textColor: UIColor) {
-        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+        UIView.animate(withDuration: 0.05, delay: 0, options: .transitionCrossDissolve, animations: {
             self.backgroundColor = bgColor
             self.textLabel?.textColor = textColor
         }, completion: nil)
