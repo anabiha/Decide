@@ -8,16 +8,19 @@
 
 import UIKit
 
-class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     
+    
     var descriptions: [String] = []
     var decision = Decision()
-    var cellCount = 3 //current number of cells, start at 3
-    let maxCellCount = 5 //max number of cells, should be an odd number
+    var cellCount = 4 //current number of cells, start at 3
+    let maxCellCount = 6 //max number of cells, should be an even number
     let cellReuseIdentifier = "decisionItemCell"
     let addButtonCellReuseIdentifier = "addButtonCell"
+    let questionBarCellReuseIdentifier = "questionBarCell"
+    var question: String = ""
     let cellSpacingHeight: CGFloat = 12
     
     //Background is an IMAGEVIEW
@@ -38,6 +41,8 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         navigationController?.navigationBar.shadowImage = UIImage()
         
     }
+  
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return cellCount
     }
@@ -64,52 +69,62 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             let cell: AddButton = self.tableView.dequeueReusableCell(withIdentifier: addButtonCellReuseIdentifier) as! AddButton// add button will be a normal cell
             cell.configure() //refer to decision file
             return cell
-        } else { //if it's not the add item button.... (basically everything else)
+        } else if indexPath.section == 0 {
+            print("QuestionBar created")
+            let cell: QuestionBar = self.tableView.dequeueReusableCell(withIdentifier: questionBarCellReuseIdentifier) as! QuestionBar// add button will be a normal cell
+            if question == "" {
+                question = cell.questionBar.text ?? ""
+            }
+            cell.configure(text: question) //refer to decision file
+            return cell
+        } else { //if it's not the add item button
             print("DecisionItem created")
             let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
-            if descriptions.count < indexPath.section + 1 {
+            if descriptions.count < indexPath.section {
                descriptions.append(cell.descriptionBox.text)
             } else {
-                descriptions[indexPath.section] = cell.descriptionBox.text
+                descriptions[indexPath.section - 1] = cell.descriptionBox.text
             }
-            cell.configure(text: descriptions[indexPath.section]) //refer to decision file
+            cell.configure(text: descriptions[indexPath.section - 1]) //refer to decision file
             return cell
         }
     }
-    // method to run when table view cell is tapped
+    // method to run when table view cell is tapped, used for add button here
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // note that indexPath.section is used rather than indexPath.row
         if indexPath.section == cellCount - 1 { //if it's the last cell, usually the add button but not always...
             print("You tapped the add button located at: \(indexPath.section).\n")
             let index = IndexSet([indexPath.section])
             if cellCount < maxCellCount { //decision cells + add button <= maxCellCount
-                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+                UIView.animate(withDuration: 0.15, delay: 0, options: [.transitionCrossDissolve, .curveEaseIn], animations: {
                     self.tableView.beginUpdates()
                     self.tableView.insertSections(index, with: .none) //insert a section right above the add button with a top down animation
                     self.cellCount += 1
                     self.tableView.endUpdates()
                     //make button grey if no more can be added, notice that it isn't under completion since we want it to start before cell is completely inserted
                     if self.cellCount == self.maxCellCount {
-                        let greyBackground = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 0.75)
-                        let greyText = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 0.75)
-                        (self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as! AddButton).fade(backgroundTo: greyBackground, textTo: greyText)
+                        (self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as! AddButton).fadeToGrey()
                     }
-                }, completion: nil)
+                }, completion: { finished in
+                    
+                })
             } //don't add anything if cell count > maxCellCount
+        } else if indexPath.section == 0 {
+            print("You tapped the question bar located at: \(indexPath.section).\n")
         } else {
             print("You tapped a decision item row located at: \(indexPath.section).\n")
         }
     }
-    //prevents deleting of add button
+    //prevents deleting of add button or questionbar
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return !(indexPath.section == cellCount - 1)
+        return !(indexPath.section == cellCount - 1 || indexPath.section == 0)
     }
     //handles deletion of rows
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let index = IndexSet([indexPath.section])
         if editingStyle == .delete {
-            if cellCount > 3 { //allow deletion as long as there will be 3 cells afterwards
-                descriptions.remove(at: indexPath.section)
+            if cellCount > 4 { //allow deletion as long as there will be 3 cells afterwards
+                descriptions.remove(at: indexPath.section - 1)
                 UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
                     self.tableView.beginUpdates()
                     self.cellCount -= 1
@@ -117,8 +132,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                     self.tableView.endUpdates()
                 }, completion: { finished in //ensures that color change happens AFTER cell removal
                     if self.cellCount == self.maxCellCount - 1 { //if it was previously greyed due to too many cells, make add button white again
-                        let blueText = UIColor(red: 0/255.0, green: 122/255.0, blue: 255/255.0, alpha: 1)
-                        (self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as! AddButton).fade(backgroundTo: UIColor.white, textTo: blueText)
+                        (self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as! AddButton).fadeToNormal()
                     }
                 })
             }
@@ -132,6 +146,15 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             return UITableView.automaticDimension
         }
     }
+    func tableView(_ tableView: UITableView,
+                   leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let addPicture = UIContextualAction(style: .normal, title:  "Add picture", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+            print("Add picture")
+        })
+        addPicture.backgroundColor = .orange
+        return UISwipeActionsConfiguration(actions: [addPicture])
+    }
+   
     //the action called when the cancel button is pressed
     @IBAction func cancel(_ sender: Any) {
         let index = (self.tabBarController as! MainTabBarController).previouslySelectedIndex!
@@ -144,24 +167,30 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     @IBAction func save(_ sender: Any) {
         var blankCellList: [Int] = []
         
-        for section in 0..<cellCount - 1 { //check to see if any are empty
+        for section in 1..<cellCount - 1 { //check to see if any are empty
             let cell = tableView.cellForRow(at: IndexPath(row: 0, section: section)) as! DecisionItem
             if cell.descriptionBox.text == "" {
                 blankCellList.append(section) //add its section if empty
             }
         }
         //find a way to send the decision to profileviewcontroller, maybe a segue
-        if blankCellList.count == 0 {
-            for section in 0..<cellCount - 1 { //saving each cell
+        let questionBar = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! QuestionBar
+        if blankCellList.count == 0 && questionBar.questionBar.text != ""{
+            for section in 1..<cellCount - 1 { //saving each cell
                 let cell = tableView.cellForRow(at: IndexPath(row: 0, section: section)) as! DecisionItem
                 decision.decisionItemList.append(cell)
             }
             //animate the action of going back, switching tabs is also handled in animated
             animateToTab(toIndex: 0) //changing of tab bar item is handled here as well
         } else {
-            for section in 0..<blankCellList.count {
-                let cell = tableView.cellForRow(at: IndexPath(row: 0, section: blankCellList[section])) as! DecisionItem
-                cell.shakeError()
+            if blankCellList.count != 0 {
+                for section in 0..<blankCellList.count {
+                    let cell = tableView.cellForRow(at: IndexPath(row: 0, section: blankCellList[section])) as! DecisionItem
+                    cell.shakeError()
+                }
+            }
+            if questionBar.questionBar.text == "" {
+                questionBar.shakeError()
             }
         }
     }
