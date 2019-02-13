@@ -18,8 +18,8 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var descriptionBox: UITextView!
     let normalBGColor: UIColor = UIColor.white
     let normalBorderColor: CGColor = UIColor.black.cgColor
+    var textViewPlaceholder: UILabel!
     public func configure(text: String?) { //sets everything in the cell up
-        
         descriptionBox.delegate = self //important
         descriptionBox.text = text
         descriptionBox.font = UIFont.boldSystemFont(ofSize: 25.0)
@@ -33,12 +33,29 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         descriptionBox.layer.cornerRadius = 10
         descriptionBox.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
         
+        textViewPlaceholder = UILabel()
+        textViewPlaceholder.font = UIFont.boldSystemFont(ofSize: 25.0)
+        textViewPlaceholder.textColor = UIColor.lightGray
+        textViewPlaceholder.text = "Option: "
+        textViewPlaceholder.sizeToFit()
+        textViewPlaceholder.isHidden = !descriptionBox.text.isEmpty
+        textViewPlaceholder.frame.origin = CGPoint(x: 12, y: (descriptionBox.font?.pointSize)! / 2 - 3)
+        descriptionBox.addSubview(textViewPlaceholder)
+        
         backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor
         clipsToBounds = true //important
     }
+//    override func layoutSubviews() {
+//        super.layoutSubviews()
+//
+//        if #available(iOS 10, *) {
+//            UIView.animate(withDuration: 1) { self.contentView.layoutIfNeeded() }
+//        }
+//    }
     //changes cell height while text is changing
     func textViewDidChange(_ textView: UITextView) { //this only works because "scrolling" was disabled in interface builder
+        textViewPlaceholder.isHidden = !descriptionBox.text.isEmpty
         let startHeight = textView.frame.size.height
         let fixedWidth = textView.frame.size.width
         let newSize =  textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
@@ -99,17 +116,15 @@ class AddButton: UITableViewCell {
     let normalTextColor = UIColor.white
     let greyBG = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 0.75)
     let greyText = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 1)
-    public func configure() { //sets everything in the cell up
+    public func configure(BGColor: UIColor, TextColor: UIColor) { //sets everything in the cell up
         //addbutton aesthetics
         textLabel?.text = "+ Add an item"
         textLabel?.font = UIFont.boldSystemFont(ofSize: 15.0)
         textLabel?.textAlignment = .center
-        textLabel?.textColor = normalTextColor
+        textLabel?.textColor = TextColor
         // add border and color
         selectionStyle = .none
-        
-       
-        backgroundColor = normalBGColor
+        backgroundColor = BGColor
         layer.borderColor = UIColor.clear.cgColor
         layer.borderWidth = 1
         layer.cornerRadius = 8
@@ -117,7 +132,7 @@ class AddButton: UITableViewCell {
     }
     
     public func fade(backgroundTo bgColor: UIColor, textTo textColor: UIColor) {
-        UIView.animate(withDuration: 0.05, delay: 0, options: .transitionCrossDissolve, animations: {
+        UIView.animate(withDuration: 0.15, delay: 0, options: [.transitionCrossDissolve, .curveEaseOut], animations: {
             self.backgroundColor = bgColor
             self.textLabel?.textColor = textColor
         }, completion: nil)
@@ -155,7 +170,7 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
         questionBar.font = UIFont.boldSystemFont(ofSize: 34.0)
         questionBar.backgroundColor = normalBGColor
         questionBar.layer.borderColor = UIColor.clear.cgColor
-        questionBar.textContainerInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 10)
+        questionBar.textContainerInset = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 10)
         questionBar.layer.cornerRadius = 10
         selectionStyle = .none
         backgroundColor = UIColor.clear
@@ -164,11 +179,11 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
         textViewPlaceholder = UILabel() //places a UILabel over the question bar to make a placeholder
         textViewPlaceholder.font = UIFont.boldSystemFont(ofSize: 34.0)
         textViewPlaceholder.textColor = UIColor.lightGray
-        textViewPlaceholder.text = "Ask a question"
+        textViewPlaceholder.text = "Ask a question..."
         textViewPlaceholder.sizeToFit()
         textViewPlaceholder.isHidden = !questionBar.text.isEmpty
         questionBar.addSubview(textViewPlaceholder)
-        textViewPlaceholder.frame.origin = CGPoint(x: 5, y: (questionBar.font?.pointSize)! / 2 - 7)
+        textViewPlaceholder.frame.origin = CGPoint(x: 5, y: (questionBar.font?.pointSize)! / 2 - 12)
         
         clipsToBounds = true
     }

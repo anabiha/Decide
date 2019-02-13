@@ -8,18 +8,18 @@
 
 import UIKit
 
-class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
+class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    
     
     var descriptions: [String] = []
     var decision = Decision()
     var cellCount = 4 //current number of cells, start at 3
-    let maxCellCount = 6 //max number of cells, should be an even number
+    let maxCellCount = 10 //max number of cells, should be an even number
     let cellReuseIdentifier = "decisionItemCell"
     let addButtonCellReuseIdentifier = "addButtonCell"
     let questionBarCellReuseIdentifier = "questionBarCell"
+    let decisionItemOffset: Int = 1
     var question: String = ""
     let cellSpacingHeight: CGFloat = 12
     
@@ -36,13 +36,13 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.rowHeight = UITableView.automaticDimension
          //keeps some space between bottom of screen and the bottom of the tableview
         tableView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: tableView.frame.size.height - 300, right: 0)
+        
         //makes navigation bar clear
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
         
     }
   
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         return cellCount
     }
@@ -61,13 +61,25 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         headerView.backgroundColor = UIColor.clear
         return headerView
     }
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return !(indexPath.section == 0 || indexPath.section == cellCount - 1)
+    }
+   
+    func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to toIndexPath: IndexPath) {
+        let temp: String = descriptions[toIndexPath.section - decisionItemOffset]
+        descriptions[toIndexPath.section - decisionItemOffset] = descriptions[fromIndexPath.section - decisionItemOffset]
+        descriptions[fromIndexPath.section - decisionItemOffset] = temp
+    }
+    
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == cellCount - 1 { //if the selected row is the add row.
             //also note that indexPath.section is used rather than indexPath.row
             print("Add button created")
             let cell: AddButton = self.tableView.dequeueReusableCell(withIdentifier: addButtonCellReuseIdentifier) as! AddButton// add button will be a normal cell
-            cell.configure() //refer to decision file
+            let bgColor = cell.backgroundColor ?? cell.normalBGColor
+            let textColor = (cell.textLabel?.textColor == nil || cell.textLabel?.textColor == UIColor.black ? cell.normalTextColor : cell.textLabel?.textColor)
+            cell.configure(BGColor: bgColor, TextColor: textColor!) //refer to decision file
             return cell
         } else if indexPath.section == 0 {
             print("QuestionBar created")
@@ -83,9 +95,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             if descriptions.count < indexPath.section {
                descriptions.append(cell.descriptionBox.text)
             } else {
-                descriptions[indexPath.section - 1] = cell.descriptionBox.text
+                descriptions[indexPath.section - decisionItemOffset] = cell.descriptionBox.text
             }
-            cell.configure(text: descriptions[indexPath.section - 1]) //refer to decision file
+            cell.configure(text: descriptions[indexPath.section - decisionItemOffset]) //refer to decision file
             return cell
         }
     }
@@ -96,18 +108,16 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             print("You tapped the add button located at: \(indexPath.section).\n")
             let index = IndexSet([indexPath.section])
             if cellCount < maxCellCount { //decision cells + add button <= maxCellCount
-                UIView.animate(withDuration: 0.15, delay: 0, options: [.transitionCrossDissolve, .curveEaseIn], animations: {
+               
+                UIView.animate(withDuration: 0.15, delay: 0, animations: {
                     self.tableView.beginUpdates()
-                    self.tableView.insertSections(index, with: .none) //insert a section right above the add button with a top down animation
+                    self.tableView.insertSections(index, with: .fade) //insert a section right above the add button with a top down animation
                     self.cellCount += 1
                     self.tableView.endUpdates()
-                    //make button grey if no more can be added, notice that it isn't under completion since we want it to start before cell is completely inserted
                     if self.cellCount == self.maxCellCount {
                         (self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as! AddButton).fadeToGrey()
                     }
-                }, completion: { finished in
-                    
-                })
+                }, completion: nil)
             } //don't add anything if cell count > maxCellCount
         } else if indexPath.section == 0 {
             print("You tapped the question bar located at: \(indexPath.section).\n")

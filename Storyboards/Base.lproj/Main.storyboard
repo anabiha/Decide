@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="9ag-aP-xxy">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,14 +15,14 @@
             <objects>
                 <viewController title="ProfileViewController" id="Qsh-eX-iTn" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="B2x-Gq-ZCd">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="imageedit_2_7506025929" translatesAutoresizingMaskIntoConstraints="NO" id="KVa-p9-qt9">
-                                <rect key="frame" x="0.0" y="20" width="375" height="598"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="685"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pmU-R4-cnO">
-                                <rect key="frame" x="62.5" y="120" width="250" height="250"/>
+                                <rect key="frame" x="62.666666666666657" y="144" width="249.99999999999997" height="250"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="250" id="d5B-zF-dEO"/>
                                     <constraint firstAttribute="width" constant="250" id="qFD-v6-pAP"/>
@@ -74,14 +74,14 @@
             <objects>
                 <viewController storyboardIdentifier="NewDecisionViewController" hidesBottomBarWhenPushed="YES" id="glv-dQ-3te" customClass="NewDecisionViewController" customModule="Decide" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="skA-mO-84H">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Background" translatesAutoresizingMaskIntoConstraints="NO" id="8Ai-Fd-Oun">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yOl-bh-KXq">
-                                <rect key="frame" x="20" y="64" width="335" height="603"/>
+                                <rect key="frame" x="20" y="88" width="335" height="690"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="questionBarCell" id="qrw-Yf-HBz" customClass="QuestionBar" customModule="Decide" customModuleProvider="target">
@@ -149,9 +149,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="8Ai-Fd-Oun" firstAttribute="top" secondItem="skA-mO-84H" secondAttribute="top" id="1Xd-z7-gk3"/>
-                            <constraint firstItem="WIR-KR-om7" firstAttribute="bottom" secondItem="8Ai-Fd-Oun" secondAttribute="bottom" id="5mq-Db-YbF"/>
+                            <constraint firstAttribute="bottom" secondItem="8Ai-Fd-Oun" secondAttribute="bottom" id="5mq-Db-YbF"/>
                             <constraint firstItem="yOl-bh-KXq" firstAttribute="leading" secondItem="WIR-KR-om7" secondAttribute="leading" constant="20" id="WTF-1P-ZqB"/>
-                            <constraint firstItem="yOl-bh-KXq" firstAttribute="bottom" secondItem="WIR-KR-om7" secondAttribute="bottom" id="WaR-9b-KFz"/>
+                            <constraint firstItem="yOl-bh-KXq" firstAttribute="bottom" secondItem="skA-mO-84H" secondAttribute="bottom" constant="-34" id="WaR-9b-KFz"/>
                             <constraint firstItem="WIR-KR-om7" firstAttribute="trailing" secondItem="yOl-bh-KXq" secondAttribute="trailing" constant="20" id="kJ7-Gh-aqO"/>
                             <constraint firstItem="WIR-KR-om7" firstAttribute="trailing" secondItem="8Ai-Fd-Oun" secondAttribute="trailing" id="nZT-UV-JLa"/>
                             <constraint firstItem="8Ai-Fd-Oun" firstAttribute="leading" secondItem="WIR-KR-om7" secondAttribute="leading" id="p3L-qG-WWF"/>
@@ -185,11 +185,11 @@
             <objects>
                 <viewController title="Home" id="ppY-en-lAw" customClass="HomeViewController" customModule="Decide" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5gs-X6-wLW">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yeX-9j-FZC">
-                                <rect key="frame" x="20" y="64" width="335" height="554"/>
+                                <rect key="frame" x="20" y="88" width="335" height="641"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="feedCell" id="ChM-Bf-MpZ">
@@ -232,7 +232,7 @@
                     </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Ft6-3T-kq3">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -253,7 +253,7 @@
                     </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="cyT-i0-HTb">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
