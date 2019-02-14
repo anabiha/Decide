@@ -50,7 +50,7 @@ class User: Codable {
         
         if writeToUserDefaults {
             
-            if let data = try? JSONEncoder().encode(user) {
+            if (try? JSONEncoder().encode(user)) != nil {
                 
              //   UserDefaults.standard.set(data, forKey: Constants.UserDefaults.currentUser)
                 
