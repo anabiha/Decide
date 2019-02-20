@@ -40,7 +40,6 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
             previouslySelectedIndex = viewController.tabBarItem.tag //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
             print ("Profile button pressed")
             print ("Previously selected index is now: \(previouslySelectedIndex!)")
-        
         default:
             print("Unexpected tab bar item pressed")
         }

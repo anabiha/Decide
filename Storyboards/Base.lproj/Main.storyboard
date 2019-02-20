@@ -92,7 +92,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="eBD-WZ-GQJ">
-                                                    <rect key="frame" x="10" y="0.0" width="315" height="44"/>
+                                                    <rect key="frame" x="15" y="0.0" width="305" height="44"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="done"/>
@@ -100,9 +100,9 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="eBD-WZ-GQJ" secondAttribute="bottom" id="8OK-lK-uz4"/>
-                                                <constraint firstAttribute="trailing" secondItem="eBD-WZ-GQJ" secondAttribute="trailing" constant="10" id="eaS-Ec-Jzk"/>
+                                                <constraint firstAttribute="trailing" secondItem="eBD-WZ-GQJ" secondAttribute="trailing" constant="15" id="eaS-Ec-Jzk"/>
                                                 <constraint firstItem="eBD-WZ-GQJ" firstAttribute="top" secondItem="x1v-fy-pSa" secondAttribute="top" id="ut2-l3-jy6"/>
-                                                <constraint firstItem="eBD-WZ-GQJ" firstAttribute="leading" secondItem="x1v-fy-pSa" secondAttribute="leading" constant="10" id="xee-Ec-7g7"/>
+                                                <constraint firstItem="eBD-WZ-GQJ" firstAttribute="leading" secondItem="x1v-fy-pSa" secondAttribute="leading" constant="15" id="xee-Ec-7g7"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -117,7 +117,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="nOo-zx-Dca">
-                                                    <rect key="frame" x="10" y="0.0" width="315" height="44"/>
+                                                    <rect key="frame" x="15" y="0.0" width="305" height="44"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -125,14 +125,14 @@
                                                 </textView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="nOo-zx-Dca" firstAttribute="leading" secondItem="czh-Dj-DKP" secondAttribute="leading" constant="10" id="2JG-qW-aH4"/>
+                                                <constraint firstItem="nOo-zx-Dca" firstAttribute="leading" secondItem="czh-Dj-DKP" secondAttribute="leading" constant="15" id="2JG-qW-aH4"/>
                                                 <constraint firstItem="nOo-zx-Dca" firstAttribute="top" secondItem="czh-Dj-DKP" secondAttribute="top" id="KbF-LF-gS5"/>
-                                                <constraint firstAttribute="trailing" secondItem="nOo-zx-Dca" secondAttribute="trailing" constant="10" id="Z0e-Zw-y2z"/>
+                                                <constraint firstAttribute="trailing" secondItem="nOo-zx-Dca" secondAttribute="trailing" constant="15" id="Z0e-Zw-y2z"/>
                                                 <constraint firstAttribute="bottom" secondItem="nOo-zx-Dca" secondAttribute="bottom" id="phA-uD-dkb"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="descriptionBox" destination="nOo-zx-Dca" id="kHH-AI-kUD"/>
+                                            <outlet property="descriptionBox" destination="nOo-zx-Dca" id="DSk-Yn-sFP"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="addButtonCell" id="Atu-WF-tg1" customClass="AddButton" customModule="Decide" customModuleProvider="target">
@@ -268,7 +268,7 @@
     </scenes>
     <resources>
         <image name="AddNew" width="25" height="25"/>
-        <image name="Background" width="216" height="460.79998779296875"/>
+        <image name="Background" width="700" height="1395"/>
         <image name="GreyFireButton" width="123.83999633789062" height="124.31999969482422"/>
         <image name="HomeNew" width="25" height="25"/>
         <image name="ProfileNew" width="25" height="25"/>
