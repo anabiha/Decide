@@ -137,7 +137,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                     }
                 })
                 print("REMOVED decisionItem at index: \(indexPath.section)")
-                seeTableLayout()
+               
             }
         }
     }
@@ -199,19 +199,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             }
         }
     }
-    func seeTableLayout() {
-        print("TABLEVIEW LAYOUT: ", terminator: "")
-        for section in 0..<cellCount {
-            let index = IndexPath(row: 0, section: section)
-            let cell = self.tableView.cellForRow(at: index)
-            if cell is QuestionBar {
-                print("QuestionBar, ", terminator: "")
-            } else if cell is DecisionItem {
-                print("DecisionItem, ", terminator: "")
-            } else {
-                print("AddButton")
-            }
-        }
-    }
+   
 }
 
