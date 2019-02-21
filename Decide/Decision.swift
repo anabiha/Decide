@@ -113,7 +113,10 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         } else {
            return textView.text.count + (text.count - range.length) <= 65
         }
-}
+    }
+    override func prepareForReuse() {
+        textViewPlaceholder.removeFromSuperview()
+    }
     //shifts color of background
     public func fade(backgroundTo bgColor: UIColor, borderTo borderColor: CGColor) {
         UIView.animate(withDuration: 0.4, delay: 0.1, options: .transitionCrossDissolve, animations: {
@@ -263,5 +266,8 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
     }
     public func shakeError() {
         self.shake()
+    }
+    override func prepareForReuse() {
+        textViewPlaceholder.removeFromSuperview()
     }
 }
