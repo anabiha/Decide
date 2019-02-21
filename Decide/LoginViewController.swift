@@ -21,10 +21,7 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
-
-        
-
+    
     }
     
     
@@ -63,8 +60,7 @@ extension LoginViewController: FUIAuthDelegate {
         userRef.observeSingleEvent(of: .value, with: { [unowned self] (snapshot) in
           
             if let user = User(snapshot: snapshot) { //if old user
-                
-//                 self.performSegue(withIdentifier: "toCreateUsername", sender: self)
+            
                 self.performSegue(withIdentifier: "toCreateUsername", sender: self)
                 User.setCurrent(user)
 
