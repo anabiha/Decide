@@ -65,7 +65,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         if indexPath.section == cellCount - 1 { //if the selected row is the add row.
             //also note that indexPath.section is used rather than indexPath.row
             
-            
             let cell: AddButton = self.tableView.dequeueReusableCell(withIdentifier: addButtonCellReuseIdentifier) as! AddButton// add button will be a normal cell
            
             let bgColor = cell.backgroundColor ?? cell.normalBGColor
@@ -76,12 +75,18 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         } else if indexPath.section == 0 {
             
             let cell: QuestionBar = self.tableView.dequeueReusableCell(withIdentifier: questionBarCellReuseIdentifier) as! QuestionBar// add button will be a normal cell
+            if let placeholder = cell.textViewPlaceholder {
+                placeholder.removeFromSuperview()
+            }
             cell.decisionHandler = decision
             cell.configure(text: decision.getTitle()) //refer to decision file
             print("CREATED questionBar at index: \(indexPath.section), with question: \(decision.getTitle() == "" ? "\"\"" : decision.getTitle())")
             return cell
         } else { //if it's not the add item button
             let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
+            if let placeholder = cell.textViewPlaceholder {
+                placeholder.removeFromSuperview()
+            }
             cell.decisionHandler = decision
             let text = decision.getDecision(at: indexPath.section)
             cell.configure(text: text, index: indexPath.section)
