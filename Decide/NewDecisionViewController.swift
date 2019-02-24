@@ -143,6 +143,10 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                 })
                 print("REMOVED decisionItem at index: \(indexPath.section)")
                
+            } else {
+                    if let cell = tableView.cellForRow(at: indexPath) as? DecisionItem {
+                        cell.shakeError() //DOESNT WORK
+                }
             }
         }
     }
