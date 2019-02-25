@@ -56,9 +56,6 @@
                     <tabBarItem key="tabBarItem" tag="2" title="" image="ProfileNew" selectedImage="ProfileNew" id="PFe-w1-kOW">
                         <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                     </tabBarItem>
-                    <connections>
-                        <outlet property="logoutButton" destination="Erw-ep-8T9" id="vEt-r9-6YH"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Re2-FG-UKl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
