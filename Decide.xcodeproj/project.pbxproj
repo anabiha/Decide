@@ -21,6 +21,7 @@
 		65ABA2EF21DE82F10012446A /* Animate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABA2EE21DE82F10012446A /* Animate.swift */; };
 		65C4297A218FDD4000B7768C /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C42979218FDD4000B7768C /* ProfileViewController.swift */; };
 		65C55A722220446300C3EDFF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C55A712220446300C3EDFF /* Main.storyboard */; };
+		65C55A7422236B3800C3EDFF /* NewDecision.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C55A7322236B3800C3EDFF /* NewDecision.storyboard */; };
 		65C5F0DD21934F3E00E426BB /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5F0DC21934F3E00E426BB /* MainTabBarController.swift */; };
 		65F21E6E218F594F00A74B52 /* NewDecisionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F21E6C218F527A00A74B52 /* NewDecisionViewController.swift */; };
 		B14A058F58E3E44900DBD1D0 /* Pods_Decide.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9A6D4B7F112FA74F23CEEB /* Pods_Decide.framework */; };
@@ -44,6 +45,7 @@
 		65ABA2EE21DE82F10012446A /* Animate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animate.swift; sourceTree = "<group>"; };
 		65C42979218FDD4000B7768C /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		65C55A712220446300C3EDFF /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../.Trash/Main.storyboard; sourceTree = "<group>"; };
+		65C55A7322236B3800C3EDFF /* NewDecision.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = NewDecision.storyboard; path = Decide/NewDecision.storyboard; sourceTree = SOURCE_ROOT; };
 		65C5F0DC21934F3E00E426BB /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		65F21E6C218F527A00A74B52 /* NewDecisionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDecisionViewController.swift; sourceTree = "<group>"; };
 		BF3503CA55741D1DBCF832B8 /* Pods-Decide.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Decide.release.xcconfig"; path = "Pods/Target Support Files/Pods-Decide/Pods-Decide.release.xcconfig"; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				65C55A712220446300C3EDFF /* Main.storyboard */,
+				65C55A7322236B3800C3EDFF /* NewDecision.storyboard */,
 				354A800921AF116700B54A47 /* Login.storyboard */,
 			);
 			path = Storyboards;
@@ -195,6 +198,7 @@
 				35105ADC2185EE3000C93FE8 /* LaunchScreen.storyboard in Resources */,
 				65C55A722220446300C3EDFF /* Main.storyboard in Resources */,
 				354A800821AF0FE400B54A47 /* GoogleService-Info.plist in Resources */,
+				65C55A7422236B3800C3EDFF /* NewDecision.storyboard in Resources */,
 				35105AD92185EE3000C93FE8 /* Assets.xcassets in Resources */,
 				354A800A21AF116700B54A47 /* Login.storyboard in Resources */,
 			);

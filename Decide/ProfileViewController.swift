@@ -26,14 +26,13 @@ class ProfileViewController: UIViewController {
         
         try! Auth.auth().signOut()
         
-        if let storyboard = self.storyboard {
+        if let storyboard = self.storyboard{
             
             let vc = storyboard.instantiateViewController(withIdentifier: "Login")
             
             self.present(vc, animated: true, completion: nil)
             
-            
-        }
+            }
         
     
     }
