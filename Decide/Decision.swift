@@ -168,12 +168,12 @@ class AddButton: UITableViewCell {
         textLabel?.font = UIFont.boldSystemFont(ofSize: 15.0)
         textLabel?.textAlignment = .center
         textLabel?.textColor = TextColor
-        // add border and color
         selectionStyle = .none
         backgroundColor = BGColor
         layer.borderColor = UIColor.clear.cgColor
-        layer.borderWidth = 1
+        layer.borderWidth = 2
         layer.cornerRadius = 8
+        
         clipsToBounds = true
     }
     
