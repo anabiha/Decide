@@ -13,8 +13,6 @@ import FirebaseAuth
 
 class ProfileViewController: UIViewController {
     
-    @IBOutlet weak var logoutButton: UIButton!
-    
     override func viewDidLoad() {
         
        super.viewDidLoad()
@@ -26,13 +24,15 @@ class ProfileViewController: UIViewController {
         
         try! Auth.auth().signOut()
         
-        if let storyboard = self.storyboard{
+        let storyboard = UIStoryboard(name: "Login", bundle:nil)
+        
+        if let initialViewController = storyboard.instantiateInitialViewController() {
             
-            let vc = storyboard.instantiateViewController(withIdentifier: "Login")
+            self.view.window?.rootViewController = initialViewController
+            self.view.window?.makeKeyAndVisible()
             
-            self.present(vc, animated: true, completion: nil)
-            
-            }
+        }
+        
         
     
     }
