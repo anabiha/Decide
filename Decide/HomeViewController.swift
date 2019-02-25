@@ -19,10 +19,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.backgroundColor = UIColor.clear
     }
     
     // MARK: - Table View delegate methods
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 10
     }
@@ -46,14 +46,14 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell:UITableViewCell = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as UITableViewCell!
+        let cell: UITableViewCell = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as UITableViewCell!
         
         // note that indexPath.section is used rather than indexPath.row
-        cell.textLabel?.text = "100"
         
         // add border and color
-        cell.backgroundColor = UIColor.white
-        cell.layer.borderColor = UIColor.black.cgColor
+        let grayColor = UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1)//custom color (pretty light gray)
+        cell.backgroundColor = grayColor
+        cell.layer.borderColor = grayColor.cgColor
         cell.layer.borderWidth = 1
         cell.layer.cornerRadius = 8
         cell.clipsToBounds = true

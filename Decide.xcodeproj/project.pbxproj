@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		35105AD22185EE2F00C93FE8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35105AD12185EE2F00C93FE8 /* AppDelegate.swift */; };
-		35105AD72185EE2F00C93FE8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35105AD52185EE2F00C93FE8 /* Main.storyboard */; };
 		35105AD92185EE3000C93FE8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35105AD82185EE3000C93FE8 /* Assets.xcassets */; };
 		35105ADC2185EE3000C93FE8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35105ADA2185EE3000C93FE8 /* LaunchScreen.storyboard */; };
 		354A800821AF0FE400B54A47 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 354A800721AF0FE400B54A47 /* GoogleService-Info.plist */; };
@@ -19,7 +18,10 @@
 		355A8B3121B027D600D12638 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A8B3021B027D600D12638 /* UserService.swift */; };
 		653912AE219E13920003C0B6 /* Decision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653912AD219E13920003C0B6 /* Decision.swift */; };
 		65622ECA21960B1F00C96D0D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65622EC921960B1F00C96D0D /* HomeViewController.swift */; };
+		65ABA2EF21DE82F10012446A /* Animate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABA2EE21DE82F10012446A /* Animate.swift */; };
 		65C4297A218FDD4000B7768C /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C42979218FDD4000B7768C /* ProfileViewController.swift */; };
+		65C55A722220446300C3EDFF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C55A712220446300C3EDFF /* Main.storyboard */; };
+		65C55A7422236B3800C3EDFF /* NewDecision.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C55A7322236B3800C3EDFF /* NewDecision.storyboard */; };
 		65C5F0DD21934F3E00E426BB /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5F0DC21934F3E00E426BB /* MainTabBarController.swift */; };
 		65F21E6E218F594F00A74B52 /* NewDecisionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F21E6C218F527A00A74B52 /* NewDecisionViewController.swift */; };
 		B14A058F58E3E44900DBD1D0 /* Pods_Decide.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9A6D4B7F112FA74F23CEEB /* Pods_Decide.framework */; };
@@ -29,7 +31,6 @@
 		0C9A6D4B7F112FA74F23CEEB /* Pods_Decide.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Decide.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		35105ACE2185EE2F00C93FE8 /* Decide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Decide.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35105AD12185EE2F00C93FE8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		35105AD62185EE2F00C93FE8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		35105AD82185EE3000C93FE8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35105ADB2185EE3000C93FE8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		35105ADD2185EE3000C93FE8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -41,7 +42,10 @@
 		355A8B3021B027D600D12638 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		653912AD219E13920003C0B6 /* Decision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decision.swift; sourceTree = "<group>"; };
 		65622EC921960B1F00C96D0D /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		65ABA2EE21DE82F10012446A /* Animate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animate.swift; sourceTree = "<group>"; };
 		65C42979218FDD4000B7768C /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		65C55A712220446300C3EDFF /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../.Trash/Main.storyboard; sourceTree = "<group>"; };
+		65C55A7322236B3800C3EDFF /* NewDecision.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = NewDecision.storyboard; path = Decide/NewDecision.storyboard; sourceTree = SOURCE_ROOT; };
 		65C5F0DC21934F3E00E426BB /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		65F21E6C218F527A00A74B52 /* NewDecisionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDecisionViewController.swift; sourceTree = "<group>"; };
 		BF3503CA55741D1DBCF832B8 /* Pods-Decide.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Decide.release.xcconfig"; path = "Pods/Target Support Files/Pods-Decide/Pods-Decide.release.xcconfig"; sourceTree = "<group>"; };
@@ -100,10 +104,11 @@
 				354A800721AF0FE400B54A47 /* GoogleService-Info.plist */,
 				35105ADA2185EE3000C93FE8 /* LaunchScreen.storyboard */,
 				35105ADD2185EE3000C93FE8 /* Info.plist */,
+				355A8B3021B027D600D12638 /* UserService.swift */,
 				354A800B21AF127700B54A47 /* LoginViewController.swift */,
 				355A8B2A21B0235200D12638 /* User.swift */,
 				355A8B2E21B0254800D12638 /* CreateUsernameViewController.swift */,
-				355A8B3021B027D600D12638 /* UserService.swift */,
+				65ABA2EE21DE82F10012446A /* Animate.swift */,
 			);
 			path = Decide;
 			sourceTree = "<group>";
@@ -111,7 +116,8 @@
 		653912B2219E22E00003C0B6 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				35105AD52185EE2F00C93FE8 /* Main.storyboard */,
+				65C55A712220446300C3EDFF /* Main.storyboard */,
+				65C55A7322236B3800C3EDFF /* NewDecision.storyboard */,
 				354A800921AF116700B54A47 /* Login.storyboard */,
 			);
 			path = Storyboards;
@@ -156,11 +162,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0940;
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = AyPeDa;
 				TargetAttributes = {
 					35105ACD2185EE2F00C93FE8 = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -189,10 +196,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				35105ADC2185EE3000C93FE8 /* LaunchScreen.storyboard in Resources */,
+				65C55A722220446300C3EDFF /* Main.storyboard in Resources */,
 				354A800821AF0FE400B54A47 /* GoogleService-Info.plist in Resources */,
+				65C55A7422236B3800C3EDFF /* NewDecision.storyboard in Resources */,
 				35105AD92185EE3000C93FE8 /* Assets.xcassets in Resources */,
 				354A800A21AF116700B54A47 /* Login.storyboard in Resources */,
-				35105AD72185EE2F00C93FE8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,20 +284,13 @@
 				653912AE219E13920003C0B6 /* Decision.swift in Sources */,
 				65622ECA21960B1F00C96D0D /* HomeViewController.swift in Sources */,
 				355A8B2F21B0254800D12638 /* CreateUsernameViewController.swift in Sources */,
+				65ABA2EF21DE82F10012446A /* Animate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		35105AD52185EE2F00C93FE8 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				35105AD62185EE2F00C93FE8 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		35105ADA2185EE3000C93FE8 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -352,7 +353,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -406,7 +407,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -419,14 +420,17 @@
 			baseConfigurationReference = D3662C2BE9CC9C962C839A73 /* Pods-Decide.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3EMU544M8V;
+				DEVELOPMENT_TEAM = 5SWG32R39H;
 				INFOPLIST_FILE = Decide/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.AyPeDa.Decide;
+				PRODUCT_BUNDLE_IDENTIFIER = com.daniel.Decide;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -436,14 +440,17 @@
 			baseConfigurationReference = BF3503CA55741D1DBCF832B8 /* Pods-Decide.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3EMU544M8V;
+				DEVELOPMENT_TEAM = 5SWG32R39H;
 				INFOPLIST_FILE = Decide/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.AyPeDa.Decide;
+				PRODUCT_BUNDLE_IDENTIFIER = com.daniel.Decide;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

@@ -17,14 +17,12 @@ typealias FIRUser = FirebaseAuth.User
 class LoginViewController: UIViewController {
 
     @IBOutlet weak var logInButton: UIButton!
+  
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
-
-        
-
+    
     }
     
     
@@ -63,11 +61,12 @@ extension LoginViewController: FUIAuthDelegate {
         userRef.observeSingleEvent(of: .value, with: { [unowned self] (snapshot) in
           
             if let user = User(snapshot: snapshot) { //if old user
-                
+            
+                self.performSegue(withIdentifier: "toCreateUsername", sender: self)
                 User.setCurrent(user)
-                
+
                 let storyboard = UIStoryboard(name: "Main", bundle: .main)
-                
+
                 if let initialViewController = storyboard.instantiateInitialViewController() {
                     self.view.window?.rootViewController = initialViewController
                     self.view.window?.makeKeyAndVisible()
