@@ -21,27 +21,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if Auth.auth().currentUser != nil { // if user is signed in
             
-            let storyboard = UIStoryboard(name: "Main", bundle: .main)
+            let initialViewController = UIStoryboard.initialViewController(for: .main)
+            window?.rootViewController = initialViewController
+            window?.makeKeyAndVisible()
             
-            if let initialViewController = storyboard.instantiateInitialViewController() {
-                
-                window?.rootViewController = initialViewController
-                
-                window?.makeKeyAndVisible()
-                
-            }
             
         } else { // no user is signed in
             
-            let storyboard = UIStoryboard(name: "Login", bundle: .main)
-            
-            if let initialViewController = storyboard.instantiateInitialViewController() {
-                
-                window?.rootViewController = initialViewController
-                
-                window?.makeKeyAndVisible()
-                
-            }
+            let initialViewController = UIStoryboard.initialViewController(for: .login)
+            window?.rootViewController = initialViewController
+            window?.makeKeyAndVisible()
             
         }
         

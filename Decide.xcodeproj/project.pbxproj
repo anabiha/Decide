@@ -16,12 +16,13 @@
 		355A8B2B21B0235200D12638 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A8B2A21B0235200D12638 /* User.swift */; };
 		355A8B2F21B0254800D12638 /* CreateUsernameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A8B2E21B0254800D12638 /* CreateUsernameViewController.swift */; };
 		355A8B3121B027D600D12638 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A8B3021B027D600D12638 /* UserService.swift */; };
+		35916AAD2226119400126476 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35916AAC2226119400126476 /* Constants.swift */; };
+		35916AAF222611E600126476 /* Storyboard+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35916AAE222611E600126476 /* Storyboard+Utility.swift */; };
+		35F1010D222464F50074DA6F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35F1010B222464F50074DA6F /* Main.storyboard */; };
 		653912AE219E13920003C0B6 /* Decision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653912AD219E13920003C0B6 /* Decision.swift */; };
 		65622ECA21960B1F00C96D0D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65622EC921960B1F00C96D0D /* HomeViewController.swift */; };
 		65ABA2EF21DE82F10012446A /* Animate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABA2EE21DE82F10012446A /* Animate.swift */; };
 		65C4297A218FDD4000B7768C /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C42979218FDD4000B7768C /* ProfileViewController.swift */; };
-		65C55A722220446300C3EDFF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C55A712220446300C3EDFF /* Main.storyboard */; };
-		65C55A7422236B3800C3EDFF /* NewDecision.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65C55A7322236B3800C3EDFF /* NewDecision.storyboard */; };
 		65C5F0DD21934F3E00E426BB /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5F0DC21934F3E00E426BB /* MainTabBarController.swift */; };
 		65F21E6E218F594F00A74B52 /* NewDecisionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F21E6C218F527A00A74B52 /* NewDecisionViewController.swift */; };
 		B14A058F58E3E44900DBD1D0 /* Pods_Decide.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9A6D4B7F112FA74F23CEEB /* Pods_Decide.framework */; };
@@ -40,12 +41,13 @@
 		355A8B2A21B0235200D12638 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		355A8B2E21B0254800D12638 /* CreateUsernameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUsernameViewController.swift; sourceTree = "<group>"; };
 		355A8B3021B027D600D12638 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		35916AAC2226119400126476 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		35916AAE222611E600126476 /* Storyboard+Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Storyboard+Utility.swift"; sourceTree = "<group>"; };
+		35F1010C222464F50074DA6F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		653912AD219E13920003C0B6 /* Decision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decision.swift; sourceTree = "<group>"; };
 		65622EC921960B1F00C96D0D /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		65ABA2EE21DE82F10012446A /* Animate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animate.swift; sourceTree = "<group>"; };
 		65C42979218FDD4000B7768C /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
-		65C55A712220446300C3EDFF /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../.Trash/Main.storyboard; sourceTree = "<group>"; };
-		65C55A7322236B3800C3EDFF /* NewDecision.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = NewDecision.storyboard; path = Decide/NewDecision.storyboard; sourceTree = SOURCE_ROOT; };
 		65C5F0DC21934F3E00E426BB /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		65F21E6C218F527A00A74B52 /* NewDecisionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDecisionViewController.swift; sourceTree = "<group>"; };
 		BF3503CA55741D1DBCF832B8 /* Pods-Decide.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Decide.release.xcconfig"; path = "Pods/Target Support Files/Pods-Decide/Pods-Decide.release.xcconfig"; sourceTree = "<group>"; };
@@ -109,6 +111,8 @@
 				355A8B2A21B0235200D12638 /* User.swift */,
 				355A8B2E21B0254800D12638 /* CreateUsernameViewController.swift */,
 				65ABA2EE21DE82F10012446A /* Animate.swift */,
+				35916AAC2226119400126476 /* Constants.swift */,
+				35916AAE222611E600126476 /* Storyboard+Utility.swift */,
 			);
 			path = Decide;
 			sourceTree = "<group>";
@@ -116,8 +120,7 @@
 		653912B2219E22E00003C0B6 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				65C55A712220446300C3EDFF /* Main.storyboard */,
-				65C55A7322236B3800C3EDFF /* NewDecision.storyboard */,
+				35F1010B222464F50074DA6F /* Main.storyboard */,
 				354A800921AF116700B54A47 /* Login.storyboard */,
 			);
 			path = Storyboards;
@@ -195,10 +198,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35F1010D222464F50074DA6F /* Main.storyboard in Resources */,
 				35105ADC2185EE3000C93FE8 /* LaunchScreen.storyboard in Resources */,
-				65C55A722220446300C3EDFF /* Main.storyboard in Resources */,
 				354A800821AF0FE400B54A47 /* GoogleService-Info.plist in Resources */,
-				65C55A7422236B3800C3EDFF /* NewDecision.storyboard in Resources */,
 				35105AD92185EE3000C93FE8 /* Assets.xcassets in Resources */,
 				354A800A21AF116700B54A47 /* Login.storyboard in Resources */,
 			);
@@ -284,7 +286,9 @@
 				653912AE219E13920003C0B6 /* Decision.swift in Sources */,
 				65622ECA21960B1F00C96D0D /* HomeViewController.swift in Sources */,
 				355A8B2F21B0254800D12638 /* CreateUsernameViewController.swift in Sources */,
+				35916AAF222611E600126476 /* Storyboard+Utility.swift in Sources */,
 				65ABA2EF21DE82F10012446A /* Animate.swift in Sources */,
+				35916AAD2226119400126476 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,6 +301,14 @@
 				35105ADB2185EE3000C93FE8 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		35F1010B222464F50074DA6F /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				35F1010C222464F50074DA6F /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

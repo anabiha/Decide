@@ -21,6 +21,10 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         
+        logInButton.layer.cornerRadius = 10
+        
+        
+        
         super.viewDidLoad()
     
     }
@@ -53,33 +57,29 @@ extension LoginViewController: FUIAuthDelegate {
             
         }
         
+        // check that the FIRUSer returned from authentication is not nil by unwrapping it
         guard let user = authDataResult?.user
             else{ return }
         
-        let userRef = Database.database().reference().child("users").child(user.uid)
-        
-        userRef.observeSingleEvent(of: .value, with: { [unowned self] (snapshot) in
+    
+        UserService.show(forUID: user.uid) { (user) in
           
-            if let user = User(snapshot: snapshot) { //if old user
-            
-                self.performSegue(withIdentifier: "toCreateUsername", sender: self)
+            if let user = user {
+                
+                // handle existing user
                 User.setCurrent(user)
 
-                let storyboard = UIStoryboard(name: "Main", bundle: .main)
-
-                if let initialViewController = storyboard.instantiateInitialViewController() {
-                    self.view.window?.rootViewController = initialViewController
-                    self.view.window?.makeKeyAndVisible()
-                }
+                let initialViewController = UIStoryboard.initialViewController(for: .main)
+                self.view.window?.rootViewController = initialViewController
+                self.view.window?.makeKeyAndVisible()
+            
                 
             } else { //if new user
                 
-                self.performSegue(withIdentifier: "toCreateUsername", sender: self)
+                self.performSegue(withIdentifier: Constants.Segue.toCreateUsername, sender: self)
                 
             }
-            
-        })
-        
+        }
     }
 }
     
