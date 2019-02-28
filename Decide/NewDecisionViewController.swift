@@ -10,6 +10,9 @@ import UIKit
 
 class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIGestureRecognizerDelegate {
     
+    
+    
+    
     @IBOutlet weak var tableView: UITableView!
     var justAdded: Bool = false
     var decision = Decision()
@@ -29,15 +32,16 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.dataSource = self
         tableView.tableFooterView = UIView() //hides unused cells
         tableView.backgroundColor = UIColor.clear
+        
         // Set automatic dimensions for row height
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableView.automaticDimension
          //keeps some space between bottom of screen and the bottom of the tableview
         tableView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 100, right: 0)
-        
+        self.view.backgroundColor = UIColor(red:246/255, green: 246/255, blue: 246/255, alpha: 1)
         //makes navigation bar clear
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        navigationController?.navigationBar.shadowImage = UIImage()
+//        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+//        navigationController?.navigationBar.shadowImage = UIImage()
         
         decision.configure(withSize: cellCount)
     }
@@ -104,13 +108,15 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                 justAdded = true
                 UIView.animate(withDuration: 0.15, delay: 0, animations: {
                     self.tableView.beginUpdates()
+                    self.cellCount += 1
                     self.tableView.insertSections(index, with: .fade) //insert a section right above the add button with a top down animation
                     print("ADDED section at index: \(indexPath.section)")
                     self.decision.insertDecision(at: indexPath.section, with: "")
-                    self.cellCount += 1
                     self.tableView.endUpdates()
                     if self.cellCount == self.maxCellCount {
-                        (self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as! AddButton).fadeToGrey()
+                        if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as? AddButton {
+                            cell.fadeToGrey()
+                        }
                     }
                 }, completion: nil)
                 
@@ -138,7 +144,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                     self.tableView.endUpdates()
                 }, completion: { finished in //ensures that color change happens AFTER cell removal
                     if self.cellCount == self.maxCellCount - 1 { //if it was previously greyed due to too many cells, make add button white again
-                        (self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as! AddButton).fadeToNormal()
+                        if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as? AddButton {
+                            cell.fadeToNormal()
+                        }
                     }
                 })
                 print("REMOVED decisionItem at index: \(indexPath.section)")
@@ -166,16 +174,13 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         addPicture.backgroundColor = .orange
         return UISwipeActionsConfiguration(actions: [addPicture])
     }
-   
-    //the action called when the cancel button is pressed
-    @IBAction func cancel(_ sender: Any) {
+    @IBAction func cancel(_ sender: UIButton) {
+        print("Pressed cancelButton")
         let index = (self.tabBarController as! MainTabBarController).previouslySelectedIndex!
         //animate action of going back, switching tabs is also handled in animate
         animateToTab(toIndex: index) //changing of tab bar item is handled here as well
     }
-    //action called when the save button is pressed
-    //saves all the cell information NOT DONE
-    @IBAction func save(_ sender: Any) {
+    @IBAction func save(_ sender: UIButton) {
         var blankCellList: [Int] = []
         
         for section in 1..<cellCount - 1 { //check to see if any are empty
@@ -208,6 +213,12 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             }
         }
     }
+    
+    //the action called when the cancel button is pressed
+    
+    //action called when the save button is pressed
+    //saves all the cell information NOT DONE
+  
    
 }
 

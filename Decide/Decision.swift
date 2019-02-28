@@ -17,31 +17,51 @@ class Decision: DecisionHandler {
         }
     }
     func setTitle(text: String) {
-        decisionItemList[0] = text
+        if decisionItemList.count > 0 {
+            decisionItemList[0] = text
+        } else {
+            decisionItemList.append(text)
+        }
     }
     func totalCells() -> Int {
         return decisionItemList.count
     }
     func removeDecision(at index: Int) {
-        if index != 0 {
+        if index > 0 && index < decisionItemList.count {
             decisionItemList.remove(at: index)
+        } else {
+            print("DECISION HANDLER func \"removeDecision\" TRIED TO ACCESS OUT OF BOUNDS at index: \(index)")
         }
     }
     func insertDecision(at index: Int, with decision: String) {
-        if index != 0 {
+        if index > 0 && index < decisionItemList.count {
             decisionItemList.insert(decision, at: index)
+        } else {
+            print("DECISION HANDLER func \"insertDecision\" TRIED TO ACCESS OUT OF BOUNDS at index: \(index)")
         }
     }
     func setDecision(at index: Int, with decision: String) {
-        if index != 0 {
+        if index > 0 && index < decisionItemList.count {
             decisionItemList[index] = decision
+        } else {
+            print("DECISION HANDLER func \"setDecision\" TRIED TO ACCESS OUT OF BOUNDS at index: \(index)")
         }
     }
     func getDecision(at index: Int) -> String {
-        return decisionItemList[index]
+        if index > 0 && index < decisionItemList.count {
+            return decisionItemList[index]
+        } else {
+            print("DECISION HANDLER func \"getDecision\" TRIED TO ACCESS OUT OF BOUNDS at index: \(index)")
+            return ""
+        }
     }
     func getTitle() -> String {
-        return decisionItemList[0]
+        if decisionItemList.count > 0 {
+            return decisionItemList[0]
+        } else {
+            print("DECISION HANLDER ATTEMPTED TO RETRIEVE A TITLE THAT DIDN'T EXIST")
+            return ""
+        }
     }
 }
 protocol DecisionHandler {
@@ -56,8 +76,8 @@ protocol DecisionHandler {
 class DecisionItem: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var descriptionBox: UITextView!
     let normalBGColor: UIColor = UIColor.white
-    let normalBorderColor: CGColor = UIColor.white.cgColor
-    let normalTextColor: UIColor = UIColor(red: 125/255, green: 219/255, blue: 211/255, alpha: 1)
+    let normalBorderColor: CGColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
+    let normalTextColor: UIColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8)
     var textViewPlaceholder: UILabel!
     var index: Int = 0
     var decisionHandler: DecisionHandler?
@@ -71,13 +91,13 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         //let grayColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)//custom color (pretty light grey)
         descriptionBox.backgroundColor = normalBGColor
         descriptionBox.layer.borderColor = normalBorderColor
-        descriptionBox.layer.borderWidth = 2
+        descriptionBox.layer.borderWidth = 0.2
         descriptionBox.layer.cornerRadius = 15
         descriptionBox.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
         
         textViewPlaceholder = UILabel()
         textViewPlaceholder.font = UIFont.boldSystemFont(ofSize: 25.0)
-        textViewPlaceholder.textColor = UIColor(red: 230/255, green: 90/255, blue: 90/255, alpha: 1)
+        textViewPlaceholder.textColor = UIColor(red:200/255, green: 200/255, blue: 200/255, alpha: 1)
         textViewPlaceholder.text = "Option: "
         textViewPlaceholder.sizeToFit()
         textViewPlaceholder.isHidden = !descriptionBox.text.isEmpty
@@ -158,8 +178,9 @@ extension UITableViewCell { //this is how our cell accesses its own tableview
 
 class AddButton: UITableViewCell {
     //198, 236, 255
-    let normalBGColor = UIColor.white
-    let normalTextColor = UIColor(red: 255/255, green: 147/255, blue: 33/155, alpha: 1)
+    let normalBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.1)
+    let normalTextColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
+        //UIColor(red: 255/255, green: 147/255, blue: 33/155, alpha: 1)
     let greyBG = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 0.75)
     let greyText = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 1)
     public func configure(BGColor: UIColor, TextColor: UIColor) { //sets everything in the cell up
@@ -173,7 +194,6 @@ class AddButton: UITableViewCell {
         layer.borderColor = UIColor.clear.cgColor
         layer.borderWidth = 2
         layer.cornerRadius = 8
-        
         clipsToBounds = true
     }
     
@@ -209,7 +229,7 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var questionBar: UITextView!
     var textViewPlaceholder: UILabel!
     let normalBGColor = UIColor.clear
-    let normalTextColor = UIColor.white
+    let normalTextColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
     var decisionHandler: DecisionHandler?
     public func configure(text: String) {
         questionBar.delegate = self
@@ -226,7 +246,7 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
         
         textViewPlaceholder = UILabel() //places a UILabel over the question bar to make a placeholder
         textViewPlaceholder.font = UIFont.boldSystemFont(ofSize: 34.0)
-        textViewPlaceholder.textColor = UIColor.white
+        textViewPlaceholder.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
         textViewPlaceholder.text = "Ask a question..."
         textViewPlaceholder.sizeToFit()
         textViewPlaceholder.isHidden = !questionBar.text.isEmpty
