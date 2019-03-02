@@ -26,6 +26,9 @@ class Decision: DecisionHandler {
     func totalCells() -> Int {
         return decisionItemList.count
     }
+    func add(decision: String) {
+        decisionItemList.append(decision)
+    }
     func removeDecision(at index: Int) {
         if index > 0 && index < decisionItemList.count {
             decisionItemList.remove(at: index)
@@ -81,9 +84,8 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     let placeholderColor: UIColor = UIColor(red:200/255, green: 200/255, blue: 200/255, alpha: 0.5)
     let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 25)
     var textViewPlaceholder: UILabel!
-    var index: Int = 0
     var decisionHandler: DecisionHandler?
-    public func configure(text: String?, index: Int) { //sets everything in the cell up
+    public func configure(text: String?) { //sets everything in the cell up
         descriptionBox.delegate = self //important
         descriptionBox.text = text
         descriptionBox.font = normalFont
@@ -107,8 +109,6 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         textViewPlaceholder.frame.origin = CGPoint(x: 12, y: (descriptionBox.font?.pointSize)! / 2 - 3)
         descriptionBox.addSubview(textViewPlaceholder)
         
-        self.index = index
-        
         backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor
         clipsToBounds = true //important
@@ -125,7 +125,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
             self.tableView?.endUpdates()
             UIView.setAnimationsEnabled(true)
         }
-        decisionHandler!.setDecision(at: index, with: descriptionBox.text)
+        decisionHandler!.setDecision(at: getIndexPath()!.section, with: descriptionBox.text)
         
     }
     //restricts number of characters
@@ -149,6 +149,14 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         fade(backgroundTo: errorRed, borderTo: errorRed.cgColor)
         self.shake()
        fade(backgroundTo: normalBGColor, borderTo: normalBorderColor)
+    }
+    func getIndexPath() -> IndexPath? {
+        guard let superView = self.superview as? UITableView else {
+            print("superview is not a UITableView - getIndexPath")
+            return nil
+        }
+        let indexPath = superView.indexPath(for: self)
+        return indexPath
     }
 }
 
@@ -262,7 +270,6 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
     }
     func textViewDidChange(_ textView: UITextView) { //this only works because "scrolling" was disabled in interface builder
         textViewPlaceholder.isHidden = !questionBar.text.isEmpty
-        print("hidden? \(textViewPlaceholder.isHidden)")
         let startHeight = textView.frame.size.height
         let fixedWidth = textView.frame.size.width
         let newSize =  textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))

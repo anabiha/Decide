@@ -58,7 +58,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         self.view.backgroundColor = UIColor(red:250/255, green: 250/255, blue: 250/255, alpha: 1)
         //makes navigation bar clear
         postButton.configure()
-        decision.configure(withSize: cellCount)
+        decision.configure(withSize: cellCount - 1)
     }
   
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -131,7 +131,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             }
             cell.decisionHandler = decision
             let text = decision.getDecision(at: indexPath.section)
-            cell.configure(text: text, index: indexPath.section)
+            cell.configure(text: text)
             print("CREATED decisionItem at index: \(indexPath.section), with description: \(text == "" ? "\"\"" : text)")
             return cell
         }
@@ -149,8 +149,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                     self.cellCount += 1
                     self.tableView.insertSections(index, with: .fade) //insert a section right above the add button with a top down animation
                     print("ADDED section at index: \(indexPath.section)")
-                    self.decision.insertDecision(at: indexPath.section, with: "")
+                    self.decision.add(decision: "")
                     self.tableView.endUpdates()
+                    print("Data: \(self.decision.decisionItemList)")
                     if self.cellCount == self.maxCellCount {
                         if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as? AddButton {
                             cell.fadeToGrey()
@@ -184,6 +185,8 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                     self.tableView.deleteSections(index, with: .right)
                     self.decision.removeDecision(at: indexPath.section)
                     self.tableView.endUpdates()
+                    print("REMOVED decisionItem at index: \(indexPath.section)")
+                    print("Data: \(self.decision.decisionItemList)")
                 }, completion: { finished in //ensures that color change happens AFTER cell removal
                     if self.cellCount == self.maxCellCount - 1 { //if it was previously greyed due to too many cells, make add button white again
                         if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as? AddButton {
@@ -191,8 +194,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                         }
                     }
                 })
-                print("REMOVED decisionItem at index: \(indexPath.section)")
-               
             } else {
                     if let cell = tableView.cellForRow(at: indexPath) as? DecisionItem {
                         cell.shakeError() //DOESNT WORK
@@ -200,6 +201,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             }
         }
     }
+    //animates highlighting of addbutton
     func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
         if indexPath.section == cellCount - 1 && cellCount != maxCellCount {
             if let cell = tableView.cellForRow(at: indexPath) as? AddButton {
@@ -209,7 +211,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             }
         }
     }
-    
+    //animates highlighting of addbutton
     func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
         if indexPath.section == cellCount - 1 && cellCount != maxCellCount {
             if let cell = tableView.cellForRow(at: indexPath) as? AddButton {
