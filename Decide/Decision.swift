@@ -76,7 +76,7 @@ protocol DecisionHandler {
 class DecisionItem: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var descriptionBox: UITextView!
     let normalBGColor: UIColor = UIColor.white
-    let normalBorderColor: CGColor = UIColor.lightGray.withAlphaComponent(0.3).cgColor
+    let normalBorderColor: CGColor = UIColor.lightGray.withAlphaComponent(0.2).cgColor
     let normalTextColor: UIColor = UIColor(red: 84/255, green: 84/255, blue: 84/255, alpha: 1)
     let placeholderColor: UIColor = UIColor(red:200/255, green: 200/255, blue: 200/255, alpha: 0.5)
     let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 25)

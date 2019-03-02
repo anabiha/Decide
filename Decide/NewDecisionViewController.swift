@@ -29,6 +29,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var postButton: PostButton!
+    @IBOutlet weak var cancelButton: UIButton!
     var justAdded: Bool = false
     var decision = Decision()
     var cellCount = 4 //current number of cells, start at 3
@@ -53,7 +54,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableView.automaticDimension
          //keeps some space between bottom of screen and the bottom of the tableview
-        tableView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 100, right: 0)
+        tableView.contentInset = UIEdgeInsets.init(top: 45, left: 0, bottom: 200, right: 0)
         self.view.backgroundColor = UIColor(red:250/255, green: 250/255, blue: 250/255, alpha: 1)
         //makes navigation bar clear
         postButton.configure()
@@ -77,6 +78,23 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         let headerView = UIView()
         headerView.backgroundColor = UIColor.clear
         return headerView
+    }
+    //cool animations when scrolling!
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+       
+        //get rid of button when scrolling down
+        if scrollView.contentOffset.y >= -scrollView.frame.origin.y + 5 {
+                UIView.animate(withDuration: 0.3, delay: 0, options: .transitionCrossDissolve, animations: {
+                    self.cancelButton.isUserInteractionEnabled = false
+                    self.cancelButton.alpha = 0
+                    }, completion: nil)
+        } else {
+            UIView.animate(withDuration: 0.3, delay: 0, options: .transitionCrossDissolve, animations: {
+                self.cancelButton.isUserInteractionEnabled = true
+                self.cancelButton.alpha = 1
+            }, completion: nil)
+        }
+       
     }
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -140,7 +158,11 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                     }
                 }, completion: nil)
                 
-            } //don't add anything if cell count > maxCellCount
+            } else {
+                if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: self.cellCount - 1)) as? AddButton {
+                    cell.shake()
+                }
+            }
         } else if indexPath.section == 0 {
             print("TAPPED questionBar at index: \(indexPath.section)")
         } else {
@@ -177,6 +199,27 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                 }
             }
         }
+    }
+    func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
+        if indexPath.section == cellCount - 1 && cellCount != maxCellCount {
+            if let cell = tableView.cellForRow(at: indexPath) as? AddButton {
+                UIView.animate(withDuration: 0.2, animations: {
+                     cell.backgroundColor = cell.greyBG
+                })
+            }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
+        if indexPath.section == cellCount - 1 && cellCount != maxCellCount {
+            if let cell = tableView.cellForRow(at: indexPath) as? AddButton {
+                UIView.animate(withDuration: 0.2, animations: {
+                    cell.backgroundColor = cell.normalBGColor
+                })
+            }
+        }
+       
+        
     }
     //the height of the post
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
