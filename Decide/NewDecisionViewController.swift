@@ -8,12 +8,27 @@
 
 import UIKit
 
+class PostButton: UIButton {
+    let normalBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.6)
+    let selectedBGColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+    public func configure() {
+        backgroundColor = normalBGColor
+        layer.cornerRadius = 12
+        setTitle("Post", for: .normal)
+        setTitleColor(UIColor.white, for: .normal)
+        setTitleColor(UIColor.lightGray, for: .highlighted)
+        titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 16)
+    }
+    override var isHighlighted: Bool {
+        didSet {
+            backgroundColor = isHighlighted ? selectedBGColor : normalBGColor
+        }
+    }
+}
 class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIGestureRecognizerDelegate {
     
-    
-    
-    
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var postButton: PostButton!
     var justAdded: Bool = false
     var decision = Decision()
     var cellCount = 4 //current number of cells, start at 3
@@ -22,7 +37,8 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     let addButtonCellReuseIdentifier = "addButtonCell"
     let questionBarCellReuseIdentifier = "questionBarCell"
     let decisionItemOffset: Int = 1
-    let cellSpacingHeight: CGFloat = 18
+    let cellSpacingHeight: CGFloat = 14
+    
     
     //Background is an IMAGEVIEW
     override func viewDidLoad() {
@@ -38,11 +54,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.rowHeight = UITableView.automaticDimension
          //keeps some space between bottom of screen and the bottom of the tableview
         tableView.contentInset = UIEdgeInsets.init(top: 0, left: 0, bottom: 100, right: 0)
-        self.view.backgroundColor = UIColor(red:246/255, green: 246/255, blue: 246/255, alpha: 1)
+        self.view.backgroundColor = UIColor(red:250/255, green: 250/255, blue: 250/255, alpha: 1)
         //makes navigation bar clear
-//        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-//        navigationController?.navigationBar.shadowImage = UIImage()
-        
+        postButton.configure()
         decision.configure(withSize: cellCount)
     }
   
@@ -70,10 +84,16 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             //also note that indexPath.section is used rather than indexPath.row
             
             let cell: AddButton = self.tableView.dequeueReusableCell(withIdentifier: addButtonCellReuseIdentifier) as! AddButton// add button will be a normal cell
-           
-            let bgColor = cell.backgroundColor ?? cell.normalBGColor
-            let textColor = (cell.textLabel?.textColor == nil || cell.textLabel?.textColor == UIColor.black ? cell.normalTextColor : cell.textLabel?.textColor)
-            cell.configure(BGColor: bgColor, TextColor: textColor!) //refer to decision file
+            var bgColor: UIColor
+            var textColor: UIColor
+            if cellCount == maxCellCount {
+                bgColor = cell.greyBG
+                textColor = cell.greyText
+            } else {
+                bgColor = cell.normalBGColor
+                textColor = cell.normalTextColor
+            }
+            cell.configure(BGColor: bgColor, TextColor: textColor) //refer to decision file
             print("CREATED addButton at index: \(indexPath.section)")
             return cell
         } else if indexPath.section == 0 {
@@ -180,7 +200,8 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         //animate action of going back, switching tabs is also handled in animate
         animateToTab(toIndex: index) //changing of tab bar item is handled here as well
     }
-    @IBAction func save(_ sender: UIButton) {
+    
+    @IBAction func save(_ sender: PostButton) {
         var blankCellList: [Int] = []
         
         for section in 1..<cellCount - 1 { //check to see if any are empty

@@ -76,28 +76,31 @@ protocol DecisionHandler {
 class DecisionItem: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var descriptionBox: UITextView!
     let normalBGColor: UIColor = UIColor.white
-    let normalBorderColor: CGColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
-    let normalTextColor: UIColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8)
+    let normalBorderColor: CGColor = UIColor.lightGray.withAlphaComponent(0.3).cgColor
+    let normalTextColor: UIColor = UIColor(red: 84/255, green: 84/255, blue: 84/255, alpha: 1)
+    let placeholderColor: UIColor = UIColor(red:200/255, green: 200/255, blue: 200/255, alpha: 0.5)
+    let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 25)
     var textViewPlaceholder: UILabel!
     var index: Int = 0
     var decisionHandler: DecisionHandler?
     public func configure(text: String?, index: Int) { //sets everything in the cell up
         descriptionBox.delegate = self //important
         descriptionBox.text = text
-        descriptionBox.font = UIFont.boldSystemFont(ofSize: 25.0)
+        descriptionBox.font = normalFont
+            //UIFont.boldSystemFont(ofSize: 25.0)
         descriptionBox.textColor = normalTextColor
         selectionStyle = .none//disables the "selected" animation when someone clicks on the cell, but still allows for interaction with the descriptionBox
         //setting the colors of the descriptionBox and row
         //let grayColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)//custom color (pretty light grey)
         descriptionBox.backgroundColor = normalBGColor
         descriptionBox.layer.borderColor = normalBorderColor
-        descriptionBox.layer.borderWidth = 0.2
+        descriptionBox.layer.borderWidth = 2
         descriptionBox.layer.cornerRadius = 15
         descriptionBox.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
         
         textViewPlaceholder = UILabel()
-        textViewPlaceholder.font = UIFont.boldSystemFont(ofSize: 25.0)
-        textViewPlaceholder.textColor = UIColor(red:200/255, green: 200/255, blue: 200/255, alpha: 1)
+        textViewPlaceholder.font = normalFont
+        textViewPlaceholder.textColor = placeholderColor
         textViewPlaceholder.text = "Option: "
         textViewPlaceholder.sizeToFit()
         textViewPlaceholder.isHidden = !descriptionBox.text.isEmpty
@@ -134,7 +137,6 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
            return textView.text.count + (text.count - range.length) <= 65
         }
     }
-    
     //shifts color of background
     public func fade(backgroundTo bgColor: UIColor, borderTo borderColor: CGColor) {
         UIView.animate(withDuration: 0.4, delay: 0.1, options: .transitionCrossDissolve, animations: {
@@ -178,15 +180,16 @@ extension UITableViewCell { //this is how our cell accesses its own tableview
 
 class AddButton: UITableViewCell {
     //198, 236, 255
-    let normalBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.1)
+    let normalBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.2)
     let normalTextColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
         //UIColor(red: 255/255, green: 147/255, blue: 33/155, alpha: 1)
     let greyBG = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 0.75)
     let greyText = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 1)
+    let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 15)
     public func configure(BGColor: UIColor, TextColor: UIColor) { //sets everything in the cell up
         //addbutton aesthetics
         textLabel?.text = "+ Add an item"
-        textLabel?.font = UIFont.boldSystemFont(ofSize: 15.0)
+        textLabel?.font = normalFont
         textLabel?.textAlignment = .center
         textLabel?.textColor = TextColor
         selectionStyle = .none
@@ -230,12 +233,14 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
     var textViewPlaceholder: UILabel!
     let normalBGColor = UIColor.clear
     let normalTextColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
+    let placeholderColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
+    let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 34)
     var decisionHandler: DecisionHandler?
     public func configure(text: String) {
         questionBar.delegate = self
         questionBar.text = text
         questionBar.textColor = normalTextColor
-        questionBar.font = UIFont.boldSystemFont(ofSize: 34.0)
+        questionBar.font = normalFont
         questionBar.backgroundColor = normalBGColor
         questionBar.layer.borderColor = UIColor.clear.cgColor
         questionBar.textContainerInset = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 10)
@@ -245,8 +250,8 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
         layer.borderColor = UIColor.clear.cgColor
         
         textViewPlaceholder = UILabel() //places a UILabel over the question bar to make a placeholder
-        textViewPlaceholder.font = UIFont.boldSystemFont(ofSize: 34.0)
-        textViewPlaceholder.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
+        textViewPlaceholder.font = normalFont
+        textViewPlaceholder.textColor = placeholderColor
         textViewPlaceholder.text = "Ask a question..."
         textViewPlaceholder.sizeToFit()
         textViewPlaceholder.isHidden = !questionBar.text.isEmpty
