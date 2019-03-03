@@ -251,7 +251,7 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
         questionBar.font = normalFont
         questionBar.backgroundColor = normalBGColor
         questionBar.layer.borderColor = UIColor.clear.cgColor
-        questionBar.textContainerInset = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 10)
+        questionBar.textContainerInset = UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 10)
         questionBar.layer.cornerRadius = 10
         selectionStyle = .none
         backgroundColor = UIColor.clear

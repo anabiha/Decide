@@ -12,6 +12,7 @@ class PostButton: UIButton {
     let normalBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.6)
     let selectedBGColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
     public func configure() {
+        frame.size = CGSize(width: 200, height: 80)
         backgroundColor = normalBGColor
         layer.cornerRadius = 12
         setTitle("Post", for: .normal)
@@ -24,12 +25,28 @@ class PostButton: UIButton {
             backgroundColor = isHighlighted ? selectedBGColor : normalBGColor
         }
     }
+    
 }
 class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var postButton: PostButton!
     @IBOutlet weak var cancelButton: UIButton!
+    
+    @IBOutlet weak var cancelButtonHeight: NSLayoutConstraint!
+    @IBOutlet weak var cancelButtonWidth: NSLayoutConstraint!
+    
+    @IBOutlet weak var cancelButtonLeading: NSLayoutConstraint!
+    @IBOutlet weak var cancelButtonTop: NSLayoutConstraint!
+    
+    @IBOutlet weak var cancelPopup: UIView!
+    @IBOutlet weak var popupTitle: UILabel!
+    @IBOutlet weak var popupText: UILabel!
+    @IBOutlet weak var popupButtonLeft: UIButton!
+    @IBOutlet weak var popupButtonRight: UIButton!
+    
+    @IBOutlet weak var dimBackground: UIView!
+    
     var justAdded: Bool = false
     var decision = Decision()
     var cellCount = 4 //current number of cells, start at 3
@@ -39,7 +56,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     let questionBarCellReuseIdentifier = "questionBarCell"
     let decisionItemOffset: Int = 1
     let cellSpacingHeight: CGFloat = 14
-    
+    let screenSize = UIScreen.main.bounds
     
     //Background is an IMAGEVIEW
     override func viewDidLoad() {
@@ -58,7 +75,39 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         self.view.backgroundColor = UIColor(red:250/255, green: 250/255, blue: 250/255, alpha: 1)
         //makes navigation bar clear
         postButton.configure()
+        
+        if screenSize.height <= 667 { //iphone 7 and below
+            cancelButtonHeight.constant = 40
+            cancelButtonWidth.constant = 40
+            cancelButtonLeading.constant = -15
+            cancelButtonTop.constant = 10
+            
+        } else if screenSize.height <= 896 { //iphone X, Xr, All plus models
+            cancelButtonHeight.constant = 60
+            cancelButtonWidth.constant =  60
+            cancelButtonLeading.constant = -20
+            cancelButtonTop.constant = 0
+        }
+        
         decision.configure(withSize: cellCount - 1)
+        
+        dimBackground.alpha = 0
+        dimBackground.isHidden = true
+        dimBackground.backgroundColor = UIColor.black
+        self.view.bringSubviewToFront(dimBackground)
+        self.view.bringSubviewToFront(cancelPopup)
+        
+        popupTitle.font = UIFont(name: "AvenirNext-DemiBold", size: 18)
+        popupText.font = UIFont(name: "AvenirNext-Medium", size: 18)
+        popupText.numberOfLines = 2
+        popupText.textColor = UIColor.lightGray
+        popupTitle.text = "Delete Decision"
+        popupText.text = "Are you sure you want to delete this decision?"
+        cancelPopup.backgroundColor = UIColor.white
+        cancelPopup.alpha = 0
+        cancelPopup.layer.cornerRadius = 15
+        cancelPopup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        cancelPopup.isHidden = true
     }
   
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -239,12 +288,54 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         addPicture.backgroundColor = .orange
         return UISwipeActionsConfiguration(actions: [addPicture])
     }
+    
+    //popup that deletes view controller
+    @IBAction func popupCancel(_ sender: Any) {
+        UIView.animate(withDuration: 0.15, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.cancelPopup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        }, completion: nil)
+        
+        UIView.transition(with: self.cancelPopup, duration: 0.15, options: .transitionCrossDissolve, animations: {
+            self.cancelPopup.alpha = 0
+            self.dimBackground.alpha = 0
+        }, completion: { finished in
+            self.cancelPopup.isHidden = true
+            self.dimBackground.isHidden = true
+            let index = (self.tabBarController as! MainTabBarController).previouslySelectedIndex!
+            self.animateToTab(toIndex: index)
+        })
+    }
+    //animation to dismiss popup
+    @IBAction func popupDismiss(_ sender: Any) {
+        
+        UIView.animate(withDuration: 0.15, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.cancelPopup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        }, completion: nil)
+        
+        UIView.transition(with: self.cancelPopup, duration: 0.15, options: .transitionCrossDissolve, animations: {
+            self.cancelPopup.alpha = 0
+            self.dimBackground.alpha = 0
+        }, completion: { finished in
+            self.cancelPopup.isHidden = true
+            self.dimBackground.isHidden = true
+        })
+        
+    }
+    //cancel button to introduce popup
     @IBAction func cancel(_ sender: UIButton) {
         print("Pressed cancelButton")
-        let index = (self.tabBarController as! MainTabBarController).previouslySelectedIndex!
-        //animate action of going back, switching tabs is also handled in animate
-        animateToTab(toIndex: index) //changing of tab bar item is handled here as well
+        self.cancelPopup.isHidden = false
+        self.dimBackground.isHidden = false
+        //fade it in while also zooming in
+        UIView.transition(with: cancelPopup, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.cancelPopup.alpha = 1
+            self.dimBackground.alpha = 0.5
+        }, completion: nil )
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.cancelPopup.transform = CGAffineTransform(scaleX: 1, y: 1)
+        })
     }
+    
     
     @IBAction func save(_ sender: PostButton) {
         var blankCellList: [Int] = []
