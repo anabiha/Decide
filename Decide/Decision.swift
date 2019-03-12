@@ -103,7 +103,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         textViewPlaceholder = UILabel()
         textViewPlaceholder.font = normalFont
         textViewPlaceholder.textColor = placeholderColor
-        textViewPlaceholder.text = "Option: "
+        textViewPlaceholder.text = "Option"
         textViewPlaceholder.sizeToFit()
         textViewPlaceholder.isHidden = !descriptionBox.text.isEmpty
         textViewPlaceholder.frame.origin = CGPoint(x: 12, y: (descriptionBox.font?.pointSize)! / 2 - 3)
@@ -126,7 +126,6 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
             UIView.setAnimationsEnabled(true)
         }
         decisionHandler!.setDecision(at: getIndexPath()!.section, with: descriptionBox.text)
-        
     }
     //restricts number of characters
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
@@ -144,11 +143,12 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
             self.descriptionBox.layer.borderColor = borderColor
         }, completion: nil)
     }
+    //creates the animation for error
     public func shakeError() {
         let errorRed = UIColor(red: 244/255, green: 66/255, blue: 66/255, alpha: 0.7)
         fade(backgroundTo: errorRed, borderTo: errorRed.cgColor)
         self.shake()
-       fade(backgroundTo: normalBGColor, borderTo: normalBorderColor)
+        fade(backgroundTo: normalBGColor, borderTo: normalBorderColor)
     }
     func getIndexPath() -> IndexPath? {
         guard let superView = self.superview as? UITableView else {
@@ -191,7 +191,7 @@ class AddButton: UITableViewCell {
     let normalBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.2)
     let normalTextColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
         //UIColor(red: 255/255, green: 147/255, blue: 33/155, alpha: 1)
-    let greyBG = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 0.75)
+    let greyBG = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 1)
     let greyText = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 1)
     let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 15)
     public func configure(BGColor: UIColor, TextColor: UIColor) { //sets everything in the cell up
