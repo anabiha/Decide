@@ -20,31 +20,54 @@ class Decision: DecisionHandler {
         }
     }
     func setTitle(text: String) {
-        decisionItemList[0] = text
+        if decisionItemList.count > 0 {
+            decisionItemList[0] = text
+        } else {
+            decisionItemList.append(text)
+        }
     }
     func totalCells() -> Int {
         return decisionItemList.count
     }
+    func add(decision: String) {
+        decisionItemList.append(decision)
+    }
     func removeDecision(at index: Int) {
-        if index != 0 {
+        if index > 0 && index < decisionItemList.count {
             decisionItemList.remove(at: index)
+        } else {
+            print("DECISION HANDLER func \"removeDecision\" TRIED TO ACCESS OUT OF BOUNDS at index: \(index)")
         }
     }
     func insertDecision(at index: Int, with decision: String) {
-        if index != 0 {
+        if index > 0 && index < decisionItemList.count {
             decisionItemList.insert(decision, at: index)
+        } else {
+            print("DECISION HANDLER func \"insertDecision\" TRIED TO ACCESS OUT OF BOUNDS at index: \(index)")
         }
     }
     func setDecision(at index: Int, with decision: String) {
-        if index != 0 {
+        if index > 0 && index < decisionItemList.count {
             decisionItemList[index] = decision
+        } else {
+            print("DECISION HANDLER func \"setDecision\" TRIED TO ACCESS OUT OF BOUNDS at index: \(index)")
         }
     }
     func getDecision(at index: Int) -> String {
-        return decisionItemList[index]
+        if index > 0 && index < decisionItemList.count {
+            return decisionItemList[index]
+        } else {
+            print("DECISION HANDLER func \"getDecision\" TRIED TO ACCESS OUT OF BOUNDS at index: \(index)")
+            return ""
+        }
     }
     func getTitle() -> String {
-        return decisionItemList[0]
+        if decisionItemList.count > 0 {
+            return decisionItemList[0]
+        } else {
+            print("DECISION HANLDER ATTEMPTED TO RETRIEVE A TITLE THAT DIDN'T EXIST")
+            return ""
+        }
     }
 }
 protocol DecisionHandler {
@@ -59,15 +82,17 @@ protocol DecisionHandler {
 class DecisionItem: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var descriptionBox: UITextView!
     let normalBGColor: UIColor = UIColor.white
-    let normalBorderColor: CGColor = UIColor.white.cgColor
-    let normalTextColor: UIColor = UIColor(red: 125/255, green: 219/255, blue: 211/255, alpha: 1)
+    let normalBorderColor: CGColor = UIColor.lightGray.withAlphaComponent(0.2).cgColor
+    let normalTextColor: UIColor = UIColor(red: 84/255, green: 84/255, blue: 84/255, alpha: 1)
+    let placeholderColor: UIColor = UIColor(red:200/255, green: 200/255, blue: 200/255, alpha: 0.5)
+    let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 25)
     var textViewPlaceholder: UILabel!
-    var index: Int = 0
     var decisionHandler: DecisionHandler?
-    public func configure(text: String?, index: Int) { //sets everything in the cell up
+    public func configure(text: String?) { //sets everything in the cell up
         descriptionBox.delegate = self //important
         descriptionBox.text = text
-        descriptionBox.font = UIFont.boldSystemFont(ofSize: 25.0)
+        descriptionBox.font = normalFont
+            //UIFont.boldSystemFont(ofSize: 25.0)
         descriptionBox.textColor = normalTextColor
         selectionStyle = .none//disables the "selected" animation when someone clicks on the cell, but still allows for interaction with the descriptionBox
         //setting the colors of the descriptionBox and row
@@ -79,15 +104,13 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         descriptionBox.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
         
         textViewPlaceholder = UILabel()
-        textViewPlaceholder.font = UIFont.boldSystemFont(ofSize: 25.0)
-        textViewPlaceholder.textColor = UIColor(red: 230/255, green: 90/255, blue: 90/255, alpha: 1)
-        textViewPlaceholder.text = "Option: "
+        textViewPlaceholder.font = normalFont
+        textViewPlaceholder.textColor = placeholderColor
+        textViewPlaceholder.text = "Option"
         textViewPlaceholder.sizeToFit()
         textViewPlaceholder.isHidden = !descriptionBox.text.isEmpty
         textViewPlaceholder.frame.origin = CGPoint(x: 12, y: (descriptionBox.font?.pointSize)! / 2 - 3)
         descriptionBox.addSubview(textViewPlaceholder)
-        
-        self.index = index
         
         backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor
@@ -105,8 +128,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
             self.tableView?.endUpdates()
             UIView.setAnimationsEnabled(true)
         }
-        decisionHandler!.setDecision(at: index, with: descriptionBox.text)
-        
+        decisionHandler!.setDecision(at: getIndexPath()!.section, with: descriptionBox.text)
     }
     //restricts number of characters
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
@@ -117,7 +139,6 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
            return textView.text.count + (text.count - range.length) <= 65
         }
     }
-    
     //shifts color of background
     public func fade(backgroundTo bgColor: UIColor, borderTo borderColor: CGColor) {
         UIView.animate(withDuration: 0.4, delay: 0.1, options: .transitionCrossDissolve, animations: {
@@ -125,11 +146,20 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
             self.descriptionBox.layer.borderColor = borderColor
         }, completion: nil)
     }
+    //creates the animation for error
     public func shakeError() {
         let errorRed = UIColor(red: 244/255, green: 66/255, blue: 66/255, alpha: 0.7)
         fade(backgroundTo: errorRed, borderTo: errorRed.cgColor)
         self.shake()
-       fade(backgroundTo: normalBGColor, borderTo: normalBorderColor)
+        fade(backgroundTo: normalBGColor, borderTo: normalBorderColor)
+    }
+    func getIndexPath() -> IndexPath? {
+        guard let superView = self.superview as? UITableView else {
+            print("superview is not a UITableView - getIndexPath")
+            return nil
+        }
+        let indexPath = superView.indexPath(for: self)
+        return indexPath
     }
 }
 
@@ -161,21 +191,22 @@ extension UITableViewCell { //this is how our cell accesses its own tableview
 
 class AddButton: UITableViewCell {
     //198, 236, 255
-    let normalBGColor = UIColor.white
-    let normalTextColor = UIColor(red: 255/255, green: 147/255, blue: 33/155, alpha: 1)
-    let greyBG = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 0.75)
+    let normalBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.2)
+    let normalTextColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
+        //UIColor(red: 255/255, green: 147/255, blue: 33/155, alpha: 1)
+    let greyBG = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 1)
     let greyText = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 1)
+    let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 15)
     public func configure(BGColor: UIColor, TextColor: UIColor) { //sets everything in the cell up
         //addbutton aesthetics
         textLabel?.text = "+ Add an item"
-        textLabel?.font = UIFont.boldSystemFont(ofSize: 15.0)
+        textLabel?.font = normalFont
         textLabel?.textAlignment = .center
         textLabel?.textColor = TextColor
-        // add border and color
         selectionStyle = .none
         backgroundColor = BGColor
         layer.borderColor = UIColor.clear.cgColor
-        layer.borderWidth = 1
+        layer.borderWidth = 2
         layer.cornerRadius = 8
         clipsToBounds = true
     }
@@ -212,24 +243,26 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var questionBar: UITextView!
     var textViewPlaceholder: UILabel!
     let normalBGColor = UIColor.clear
-    let normalTextColor = UIColor.white
+    let normalTextColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
+    let placeholderColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
+    let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 34)
     var decisionHandler: DecisionHandler?
     public func configure(text: String) {
         questionBar.delegate = self
         questionBar.text = text
         questionBar.textColor = normalTextColor
-        questionBar.font = UIFont.boldSystemFont(ofSize: 34.0)
+        questionBar.font = normalFont
         questionBar.backgroundColor = normalBGColor
         questionBar.layer.borderColor = UIColor.clear.cgColor
-        questionBar.textContainerInset = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 10)
+        questionBar.textContainerInset = UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 10)
         questionBar.layer.cornerRadius = 10
         selectionStyle = .none
         backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor
         
         textViewPlaceholder = UILabel() //places a UILabel over the question bar to make a placeholder
-        textViewPlaceholder.font = UIFont.boldSystemFont(ofSize: 34.0)
-        textViewPlaceholder.textColor = UIColor.white
+        textViewPlaceholder.font = normalFont
+        textViewPlaceholder.textColor = placeholderColor
         textViewPlaceholder.text = "Ask a question..."
         textViewPlaceholder.sizeToFit()
         textViewPlaceholder.isHidden = !questionBar.text.isEmpty
@@ -240,7 +273,6 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
     }
     func textViewDidChange(_ textView: UITextView) { //this only works because "scrolling" was disabled in interface builder
         textViewPlaceholder.isHidden = !questionBar.text.isEmpty
-        print("hidden? \(textViewPlaceholder.isHidden)")
         let startHeight = textView.frame.size.height
         let fixedWidth = textView.frame.size.width
         let newSize =  textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))

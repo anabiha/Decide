@@ -29,8 +29,8 @@ extension MainTabBarController: Animate {
         let offset = -screenHeight
         
         toView.center = CGPoint(x: fromView.center.x, y: toView.center.y - offset)
-        print("offset is \(offset)")
-        print("toView is at : \(toView.center.x), \(toView.center.y)")
+//        print("offset is \(offset)")
+//        print("toView is at : \(toView.center.x), \(toView.center.y)")
         // Disable interaction during animation
         view.isUserInteractionEnabled = false
         
@@ -66,8 +66,8 @@ extension NewDecisionViewController: Animate {
         let screenHeight = UIScreen.main.bounds.size.height
         let offset = screenHeight
         fromView.center = CGPoint(x: toView.center.x, y: toView.center.y)
-        print("fromView is at: \(fromView.center.x), \(fromView.center.y)")
-        print("offset is \(offset)")
+//        print("fromView is at: \(fromView.center.x), \(fromView.center.y)")
+//        print("offset is \(offset)")
         
         // Disable interaction during animation
         tabBar.view.isUserInteractionEnabled = false
