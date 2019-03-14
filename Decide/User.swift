@@ -48,13 +48,14 @@ class User: Codable {
         
     }
     
+
     static func setCurrent(_ user: User, writeToUserDefaults: Bool = false) {
         
         if writeToUserDefaults {
             
-            if (try? JSONEncoder().encode(user)) != nil {
+            if let data = try? JSONEncoder().encode(user) {
                 
-             //   UserDefaults.standard.set(data, forKey: Constants.UserDefaults.currentUser)
+               UserDefaults.standard.set(data, forKey: Constants.UserDefaults.currentUser)
                 
             }
         }

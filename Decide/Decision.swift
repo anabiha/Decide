@@ -8,7 +8,10 @@
 
 import Foundation
 import UIKit
+import FirebaseDatabase.FIRDataSnapshot
+
 class Decision: DecisionHandler {
+    
     var decisionItemList: [String] = []
     
     func configure(withSize size: Int) {

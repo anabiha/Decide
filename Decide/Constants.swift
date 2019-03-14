@@ -16,4 +16,10 @@ struct Constants {
         
     }
     
+    struct UserDefaults {
+        
+        static let currentUser = "currentUser"
+        
+    }
+    
 }
