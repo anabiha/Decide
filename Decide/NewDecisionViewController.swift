@@ -64,6 +64,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet weak var dimBackground: UIView!
     
     var justAdded: Bool = false
+    var selectedIndex = 0
     var decision = Decision() //data manager
     var insets: UIEdgeInsets = UIEdgeInsets.init(top: 45, left: 0, bottom: 0, right: 0) //content inset for tableview
     var cellCount = 4 //current number of cells, start at 4
@@ -117,17 +118,17 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
-    
     //scrolls the tableview upward when the keyboard shows
+    
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             tableView.contentInset = UIEdgeInsets(top: insets.top, left: 0, bottom: keyboardSize.height, right: 0)
+            tableView.contentOffset.y = 150
         }
     }
     @objc func keyboardWillHide(_ notification:Notification) {
             tableView.contentInset = insets
     }
-    
     //returns the number of sections
     func numberOfSections(in tableView: UITableView) -> Int {
         return cellCount
@@ -148,8 +149,8 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         return headerView
     }
     public func configurePopup(_ type: String) {
-        popupTitle.font = UIFont(name: "AvenirNext-DemiBold", size: 18)
-        popupText.font = UIFont(name: "AvenirNext-Medium", size: 18)
+        popupTitle.font = UIFont(name: "AvenirNext-DemiBold", size: 19)
+        popupText.font = UIFont(name: "AvenirNext-Medium", size: 17)
         popupText.textColor = UIColor.lightGray
         popupText.numberOfLines = 2
         cancelPopup.alpha = 0

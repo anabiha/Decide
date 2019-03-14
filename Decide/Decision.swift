@@ -113,6 +113,12 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         layer.borderColor = UIColor.clear.cgColor
         clipsToBounds = true //important
     }
+//    func textViewDidBeginEditing(_ textView: UITextView) {
+//        if let index = self.tableView?.indexPath(for: self) {
+//
+//        }
+//
+//    }
     //changes cell height while text is changing
     func textViewDidChange(_ textView: UITextView) { //this only works because "scrolling" was disabled in interface builder
         textViewPlaceholder.isHidden = !descriptionBox.text.isEmpty
