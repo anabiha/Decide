@@ -14,6 +14,7 @@ class User: Codable {
     let uid: String
     let username: String
     
+    // creates a private static variable to hold the current user
     private static var _current: User?
     
     init(uid: String, username: String) {
@@ -34,6 +35,7 @@ class User: Codable {
         
     }
     
+   
     static var current: User {
         
         guard let currentUser = _current else {
@@ -46,13 +48,14 @@ class User: Codable {
         
     }
     
+
     static func setCurrent(_ user: User, writeToUserDefaults: Bool = false) {
         
         if writeToUserDefaults {
             
-            if (try? JSONEncoder().encode(user)) != nil {
+            if let data = try? JSONEncoder().encode(user) {
                 
-             //   UserDefaults.standard.set(data, forKey: Constants.UserDefaults.currentUser)
+               UserDefaults.standard.set(data, forKey: Constants.UserDefaults.currentUser)
                 
             }
         }

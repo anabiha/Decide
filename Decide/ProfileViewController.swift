@@ -22,18 +22,21 @@ class ProfileViewController: UIViewController {
     
     @IBAction func logOutButton(_ sender: Any) {
         
-        try! Auth.auth().signOut()
-        
-        let storyboard = UIStoryboard(name: "Login", bundle:nil)
-        
-        if let initialViewController = storyboard.instantiateInitialViewController() {
+        if Auth.auth().currentUser != nil {
             
-            self.view.window?.rootViewController = initialViewController
-            self.view.window?.makeKeyAndVisible()
+            do {
+                
+                try Auth.auth().signOut()
+                let storyboard = UIStoryboard(name: "Login", bundle:nil).instantiateInitialViewController()
+                present(storyboard!, animated: true, completion: nil)
+                
+            } catch let error as NSError {
+                
+                print(error.localizedDescription)
+                
+            }
             
         }
-        
-        
     
     }
     

@@ -89,6 +89,11 @@
 			<key>orderHint</key>
 			<integer>11</integer>
 		</dict>
+		<key>TransitionButton.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>12</integer>
+		</dict>
 		<key>leveldb-library.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
