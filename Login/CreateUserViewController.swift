@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseDatabase
 
 class CreateUserViewController: UIViewController {
     
@@ -35,6 +37,12 @@ class CreateUserViewController: UIViewController {
             
         } else {
             
+            //add the username to the database
+            
+            let ref = Database.database().reference().root
+            guard let userKey = Auth.auth().currentUser?.uid else {return}
+            ref.child("users").child(userKey).child("username").setValue(username.text)
+            
             // ask if the user wants to add a profile picture
             let alertController = UIAlertController(title: "Profile Picture", message: "Would you like to add a profile picture?", preferredStyle: .alert)
             
@@ -51,16 +59,26 @@ class CreateUserViewController: UIViewController {
                 
                 photoHelper.presentActionSheet(from: self)
                 
+                //add the profile image to the database
+                
+                // go to home page 
+                let vc = UIStoryboard(type: .main).instantiateInitialViewController()
+                
+                self.present(vc!, animated: true, completion: nil)
+                
             }))
             
-            alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+            alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { action in
+                
+                // if everything is alright, proceed to home page
+                let vc = UIStoryboard(type: .main).instantiateInitialViewController()
+                
+                self.present(vc!, animated: true, completion: nil)
+                
+            }))
             
             present(alertController, animated: true, completion: nil)
             
-            // if everything is alright, proceed to home page
-            let vc = UIStoryboard(type: .main).instantiateInitialViewController()
-            
-            self.present(vc!, animated: true, completion: nil)
             
         }
         

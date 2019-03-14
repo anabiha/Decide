@@ -49,15 +49,12 @@ class SignUpViewController: UIViewController {
                 if error == nil {
                     
                     print("You have successfully signed up")
-                    
-                    ref.child("users").child((user?.user.uid)!).setValue(self.emailTextField.text)
-                    
-                    
+                ref.child("users").child((user?.user.uid)!).setValue(self.emailTextField.text)
                     
                     // goes to the setup page which lets the user take a photo for their profile picture and create a username
-                    let vc = UIStoryboard(type: .main).instantiateInitialViewController()
+                    let viewController = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "createUser") as UIViewController
                     
-                    self.present(vc!, animated: true, completion: nil)
+                    self.present(viewController, animated: false, completion: nil)
                     
                 } else {
                     
