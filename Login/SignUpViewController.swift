@@ -15,11 +15,16 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var signIn: UIButton!
-   
     var defaultFrame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
+    //what to do when view loads (DON'T USE VIEWWILLAPPEAR)
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
+    }
+    //what to do when view is about to disappear
+    override func viewWillDisappear(_ animated: Bool) {
+        self.email.endEditing(true)
+        self.password.endEditing(true)
     }
     func configure() {
         password.isSecureTextEntry = true
@@ -35,23 +40,25 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
         email.layer.cornerRadius = 10
         password.layer.cornerRadius = 10
         
-        defaultFrame = self.view.frame
+         defaultFrame = self.view.frame
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
+     //shifts view up when keyboard comes up
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let rect = signIn.superview!.frame
             if rect.intersects(keyboardSize) {
                 let offsetDist = rect.maxY - keyboardSize.minY + 20
-                self.view.frame = self.view.frame.offsetBy(dx: 0, dy: -offsetDist)
+                self.view.frame = defaultFrame.offsetBy(dx: 0, dy: -offsetDist)
             }
         }
     }
-    
+    //shifts view down when keyboard goes away
     @objc func keyboardWillHide(_ notification:Notification) {
         self.view.frame = defaultFrame
     }
+    //makes the keyboard disappear when pressing return
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if(string == "\n") {
             textField.resignFirstResponder()
@@ -60,23 +67,19 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
             return true
         }
     }
+    //preparing to segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
-        UIView.animate(withDuration: 0.15, animations: {
-            self.email.endEditing(true)
-            self.password.endEditing(true)
-        }) { (finished) in
-            self.email.text = ""
-            self.password.text = ""
-        }
-        switch identifier {
-        case "loginSegue":
-            print("SEGUED to login")
-        case "createUserSegue":
-            print("SEGUED to create user")
-        default:
-            print("unexpected segue identifier")
-        }
+            switch identifier {
+            case "loginSegue":
+                print("SEGUED to login") //clear these fields if going back to login page
+                self.email.text = ""
+                self.password.text = ""
+            case "createUserSegue":
+                print("SEGUED to create user")
+            default:
+                print("unexpected segue identifier")
+            }
     }
     @IBAction func createAccount(_ sender: Any) {
         
@@ -120,12 +123,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
                     self.present(alertController, animated: true, completion: nil)
                     
                 }
-                
-                
             }
-            
         }
-        
     }
-    
 }

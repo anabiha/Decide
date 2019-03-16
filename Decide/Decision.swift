@@ -125,23 +125,14 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     @objc func keyboardWillShow(_ notification:Notification) {
         var rectInTable = CGRect(x: 0, y: 0, width: 0, height: 0)
         var rectInView = CGRect(x: 0, y: 0, width: 0, height: 0)
-        if let index = self.tableView!.indexPath(for: self) {
+        if let index = getIndexPath() {
             rectInTable = self.tableView!.rectForRow(at: index)
             rectInView = self.tableView!.convert(rectInTable, to: self.tableView!.superview)
         }
-        let wholeHeight = UIScreen.main.bounds.size.height
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            
-            
-//
-//                print("Wholerect: \(-wholeHeight/2)")
-//                print("keyboardheight: \(keyboardSize.height)")
-//                print("wholeRect and keyboard together: \(-wholeHeight/2 + keyboardSize.height)")
-//                print("rect min: \(rectInView.minY)")
             print(keyboardSize)
             print(rectInView)
-            print(self.frame.origin)
-                if keyboardSize.contains(rectInView) {
+                if keyboardSize.intersects(rectInView) {
                     self.tableView!.contentInset = UIEdgeInsets(top: 45, left: 0, bottom: keyboardSize.height, right: 0)
                     self.tableView?.contentOffset.y = keyboardSize.height
                 }
@@ -152,12 +143,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         self.tableView!.contentInset = UIEdgeInsets(top: 45, left: 0, bottom: 0, right: 0)
     }
    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-//        if let index = self.tableView!.indexPath(for: self) {
-//            let rectInTable = self.tableView!.rectForRow(at: index)
-//
-//        }
-    }
+   
     //changes cell height while text is changing
     func textViewDidChange(_ textView: UITextView) { //this only works because "scrolling" was disabled in interface builder
         textViewPlaceholder.isHidden = !descriptionBox.text.isEmpty
@@ -195,6 +181,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         self.shake()
         fade(backgroundTo: normalBGColor, borderTo: normalBorderColor)
     }
+    //get cell's indexpath
     func getIndexPath() -> IndexPath? {
         guard let superView = self.superview as? UITableView else {
             print("superview is not a UITableView - getIndexPath")

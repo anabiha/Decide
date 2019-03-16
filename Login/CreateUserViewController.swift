@@ -55,7 +55,7 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
         }
     }
     @IBAction func goToMainScreen(_ sender: Any) {
-        
+        username.endEditing(true)
         // if the user leaves the email field, text field, or both blank, have a popup
         if username.text == "" {
             
@@ -93,7 +93,8 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
                 
                 //add the profile image to the database
                 
-                // go to home page 
+                // go to home page
+                
                 let vc = UIStoryboard(type: .main).instantiateInitialViewController()
                 
                 self.present(vc!, animated: true, completion: nil)

@@ -27,6 +27,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         configure()
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        self.email.endEditing(true)
+        self.password.endEditing(true)
+    }
     
     func configure() {
         
@@ -53,7 +57,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             let rectInView = signUpButton.superview!.convert(rectInStack, to: view)
             if keyboardSize.intersects(rectInView) {
                 let offsetDist = rectInView.maxY - keyboardSize.minY + 10
-                self.view.frame = self.view.frame.offsetBy(dx: 0, dy: -offsetDist)
+                self.view.frame = defaultFrame.offsetBy(dx: 0, dy: -offsetDist)
             }
         }
     }
@@ -70,18 +74,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             return true
         }
     }
+    //func to handle unwinding back to this view from other views
     @IBAction func unwindWithSegue(_ segue: UIStoryboardSegue) {}
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
-        //get rid of the keyboard if it's still there
-        UIView.animate(withDuration: 0.15, animations: {
-            self.email.endEditing(true)
-            self.password.endEditing(true)
-        }) { (finished) in
-            self.email.text = ""
-            self.password.text = ""
-        }
-        
+        //clear text if segueing
+        self.email.text = ""
+        self.password.text = ""
         switch identifier {
         case "signUpSegue":
             print("SEGUED to signup")

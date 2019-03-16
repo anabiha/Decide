@@ -19,6 +19,9 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         configure()
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        self.email.endEditing(true)
+    }
     func configure() {
         email.delegate = self
         resetPassword.layer.cornerRadius = 10
@@ -56,11 +59,7 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
-        UIView.animate(withDuration: 0.15, animations: {
-            self.email.endEditing(true)
-        }) { (finished) in
-            self.email.text = ""
-        }
+        self.email.text = ""
         switch identifier {
         case "loginSegue":
             print("SEGUED to login")
