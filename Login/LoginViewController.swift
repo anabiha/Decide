@@ -78,29 +78,22 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             self.email.endEditing(true)
             self.password.endEditing(true)
         }) { (finished) in
-            switch identifier {
-            case "signUpSegue":
-                print("SEGUED to signup")
-                self.email.text = ""
-                self.password.text = ""
-            case "resetSegue":
-                print("SEGUED to reset password")
-                self.email.text = ""
-                self.password.text = ""
-            case "login":
-                
-            default:
-                print("unexpected segue identifier")
-            }
+            self.email.text = ""
+            self.password.text = ""
         }
-       
-       
-    }
-    func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if identifier == "login" {
+        
+        switch identifier {
+        case "signUpSegue":
+            print("SEGUED to signup")
             
-        } else { return true }
+        case "resetSegue":
+            print("SEGUED to reset password")
+            
+        default:
+            print("unexpected segue identifier")
+        }
     }
+   
     @IBAction func loginAction(_ sender: Any) {
         
         if self.email.text == "" || self.password.text == "" {

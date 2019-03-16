@@ -56,17 +56,14 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
-        UIView.animate(withDuration: 0.1) {
-             self.view.frame = self.defaultFrame
+        UIView.animate(withDuration: 0.15, animations: {
+            self.email.endEditing(true)
+        }) { (finished) in
+            self.email.text = ""
         }
-       
-        email.endEditing(true)
-        email.text = ""
         switch identifier {
         case "loginSegue":
             print("SEGUED to login")
-        case "resetSegue":
-            print("SEGUED to reset password")
         default:
             print("unexpected segue identifier")
         }
