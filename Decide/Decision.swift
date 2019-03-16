@@ -88,6 +88,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 25)
     var textViewPlaceholder: UILabel!
     var decisionHandler: DecisionHandler?
+    
     public func configure(text: String?) { //sets everything in the cell up
         descriptionBox.delegate = self //important
         descriptionBox.text = text
@@ -115,11 +116,47 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor
         clipsToBounds = true //important
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+
     }
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if let index = self.tableView?.indexPath(for: self) {
+    
+    @objc func keyboardWillShow(_ notification:Notification) {
+        var rectInTable = CGRect(x: 0, y: 0, width: 0, height: 0)
+        var rectInView = CGRect(x: 0, y: 0, width: 0, height: 0)
+        if let index = self.tableView!.indexPath(for: self) {
+            rectInTable = self.tableView!.rectForRow(at: index)
+            rectInView = self.tableView!.convert(rectInTable, to: self.tableView!.superview)
+        }
+        let wholeHeight = UIScreen.main.bounds.size.height
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            
+            
+//
+//                print("Wholerect: \(-wholeHeight/2)")
+//                print("keyboardheight: \(keyboardSize.height)")
+//                print("wholeRect and keyboard together: \(-wholeHeight/2 + keyboardSize.height)")
+//                print("rect min: \(rectInView.minY)")
+            print(keyboardSize)
+            print(rectInView)
+            print(self.frame.origin)
+                if keyboardSize.contains(rectInView) {
+                    self.tableView!.contentInset = UIEdgeInsets(top: 45, left: 0, bottom: keyboardSize.height, right: 0)
+                    self.tableView?.contentOffset.y = keyboardSize.height
+                }
             
         }
+    }
+    @objc func keyboardWillHide(_ notification:Notification) {
+        self.tableView!.contentInset = UIEdgeInsets(top: 45, left: 0, bottom: 0, right: 0)
+    }
+   
+    func textViewDidBeginEditing(_ textView: UITextView) {
+//        if let index = self.tableView!.indexPath(for: self) {
+//            let rectInTable = self.tableView!.rectForRow(at: index)
+//
+//        }
     }
     //changes cell height while text is changing
     func textViewDidChange(_ textView: UITextView) { //this only works because "scrolling" was disabled in interface builder

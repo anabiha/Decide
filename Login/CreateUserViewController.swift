@@ -10,18 +10,50 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 
-class CreateUserViewController: UIViewController {
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
-        super.viewWillAppear(true)
-        
-        
-    }
+class CreateUserViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var username: UITextField!
+    @IBOutlet weak var getStarted: UIButton!
+    var defaultFrame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configure()
+    }
+    func configure() {
+        username.delegate = self
+        getStarted.layer.cornerRadius = 10
+        getStarted.layer.masksToBounds = false
+        getStarted.layer.shadowColor = UIColor.lightGray.cgColor
+        getStarted.layer.shadowOpacity = 0.5
+        getStarted.layer.shadowRadius = 10
+        getStarted.layer.shadowOffset = CGSize(width: 7.0, height: 7.0)
+        username.layer.cornerRadius = 10
+        
+        defaultFrame = self.view.frame
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+    }
+    @objc func keyboardWillShow(_ notification:Notification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let rect = getStarted.frame
+            if rect.intersects(keyboardSize) {
+                let offsetDist = rect.maxY - keyboardSize.minY + 80
+                self.view.frame = self.view.frame.offsetBy(dx: 0, dy: -offsetDist)
+            }
+        }
+    }
     
-    
+    @objc func keyboardWillHide(_ notification:Notification) {
+        self.view.frame = defaultFrame
+    }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if(string == "\n") {
+            textField.resignFirstResponder()
+            return false
+        } else {
+            return true
+        }
+    }
     @IBAction func goToMainScreen(_ sender: Any) {
         
         // if the user leaves the email field, text field, or both blank, have a popup

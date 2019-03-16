@@ -14,40 +14,93 @@ import FirebaseAuth
 
 typealias FIRUser = FirebaseAuth.User
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var logInButton: UIButton!
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var signUpButton: UIButton!
+    @IBOutlet weak var forgotPassword: UIButton!
+    var defaultFrame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
     
-    
-    override func viewDidAppear(_ animated: Bool) {
-        
-        makeAesthetic()
-        
-        super.viewDidAppear(animated)
-    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configure()
     }
     
-    func makeAesthetic() {
+    func configure() {
         
+        email.delegate = self
+        password.delegate = self
         password.isSecureTextEntry = true
-        
         logInButton.layer.cornerRadius = 10
-        logInButton.layer.masksToBounds = false
+        logInButton.layer.masksToBounds = true
         logInButton.layer.shadowColor = UIColor.lightGray.cgColor
         logInButton.layer.shadowOpacity = 0.5
         logInButton.layer.shadowRadius = 10
         logInButton.layer.shadowOffset = CGSize(width: 7.0, height: 7.0)
-        
-        
         email.layer.cornerRadius = 10
         password.layer.cornerRadius = 10
         
+        defaultFrame = self.view.frame
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
-    
-    
+    //shifts view up when keyboard comes up
+    @objc func keyboardWillShow(_ notification:Notification) {
+         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let rectInStack = signUpButton.frame
+            let rectInView = signUpButton.superview!.convert(rectInStack, to: view)
+            if keyboardSize.intersects(rectInView) {
+                let offsetDist = rectInView.maxY - keyboardSize.minY + 10
+                self.view.frame = self.view.frame.offsetBy(dx: 0, dy: -offsetDist)
+            }
+        }
+    }
+    //shifts view down when keyboard goes away
+    @objc func keyboardWillHide(_ notification:Notification) {
+        self.view.frame = defaultFrame
+    }
+    //makes the keyboard disappear when pressing return
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if(string == "\n") {
+            textField.resignFirstResponder()
+            return false
+        } else {
+            return true
+        }
+    }
+    @IBAction func unwindWithSegue(_ segue: UIStoryboardSegue) {}
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else { return }
+        //get rid of the keyboard if it's still there
+        UIView.animate(withDuration: 0.15, animations: {
+            self.email.endEditing(true)
+            self.password.endEditing(true)
+        }) { (finished) in
+            switch identifier {
+            case "signUpSegue":
+                print("SEGUED to signup")
+                self.email.text = ""
+                self.password.text = ""
+            case "resetSegue":
+                print("SEGUED to reset password")
+                self.email.text = ""
+                self.password.text = ""
+            case "login":
+                
+            default:
+                print("unexpected segue identifier")
+            }
+        }
+       
+       
+    }
+    func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if identifier == "login" {
+            
+        } else { return true }
+    }
     @IBAction func loginAction(_ sender: Any) {
         
         if self.email.text == "" || self.password.text == "" {
@@ -91,9 +144,6 @@ class LoginViewController: UIViewController {
         }
         
     }
-    
-    
-    
 }
     
 

@@ -115,20 +115,19 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         self.view.bringSubviewToFront(cancelPopup)
         
         //observes whether keyboard is out or not
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
     //scrolls the tableview upward when the keyboard shows
     
-    @objc func keyboardWillShow(_ notification:Notification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            tableView.contentInset = UIEdgeInsets(top: insets.top, left: 0, bottom: keyboardSize.height, right: 0)
-            tableView.contentOffset.y = 150
-        }
-    }
-    @objc func keyboardWillHide(_ notification:Notification) {
-            tableView.contentInset = insets
-    }
+//    @objc func keyboardWillShow(_ notification:Notification) {
+//        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+//            tableView.contentInset = UIEdgeInsets(top: insets.top, left: 0, bottom: keyboardSize.height, right: 0)
+//        }
+//    }
+//    @objc func keyboardWillHide(_ notification:Notification) {
+//            tableView.contentInset = insets
+//    }
     //returns the number of sections
     func numberOfSections(in tableView: UITableView) -> Int {
         return cellCount
