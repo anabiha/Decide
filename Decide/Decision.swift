@@ -13,7 +13,7 @@ import FirebaseDatabase.FIRDataSnapshot
 class Decision: DecisionHandler {
     
     var decisionItemList: [String] = []
-    
+    var activeFieldIndex: IndexPath?
     func configure(withSize size: Int) {
         while decisionItemList.count < size {
             decisionItemList.append("")
@@ -87,8 +87,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     let placeholderColor: UIColor = UIColor(red:200/255, green: 200/255, blue: 200/255, alpha: 0.5)
     let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 25)
     var textViewPlaceholder: UILabel!
-    var decisionHandler: DecisionHandler?
-    
+    var decisionHandler: Decision?
     public func configure(text: String?) { //sets everything in the cell up
         descriptionBox.delegate = self //important
         descriptionBox.text = text
@@ -116,34 +115,15 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor
         clipsToBounds = true //important
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+      
 
     }
-    
-    @objc func keyboardWillShow(_ notification:Notification) {
-        var rectInTable = CGRect(x: 0, y: 0, width: 0, height: 0)
-        var rectInView = CGRect(x: 0, y: 0, width: 0, height: 0)
-        if let index = getIndexPath() {
-            rectInTable = self.tableView!.rectForRow(at: index)
-            rectInView = self.tableView!.convert(rectInTable, to: self.tableView!.superview)
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        if let index = self.tableView!.indexPath(for: self) {
+            decisionHandler!.activeFieldIndex = index
         }
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            print(keyboardSize)
-            print(rectInView)
-                if keyboardSize.intersects(rectInView) {
-                    self.tableView!.contentInset = UIEdgeInsets(top: 45, left: 0, bottom: keyboardSize.height, right: 0)
-                    self.tableView?.contentOffset.y = keyboardSize.height
-                }
-            
-        }
+        return true
     }
-    @objc func keyboardWillHide(_ notification:Notification) {
-        self.tableView!.contentInset = UIEdgeInsets(top: 45, left: 0, bottom: 0, right: 0)
-    }
-   
-   
     //changes cell height while text is changing
     func textViewDidChange(_ textView: UITextView) { //this only works because "scrolling" was disabled in interface builder
         textViewPlaceholder.isHidden = !descriptionBox.text.isEmpty
@@ -275,7 +255,7 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
     let normalTextColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
     let placeholderColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
     let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 34)
-    var decisionHandler: DecisionHandler?
+    var decisionHandler: Decision?
     public func configure(text: String) {
         questionBar.delegate = self
         questionBar.text = text
@@ -325,6 +305,10 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
         } else {
             return true
         }
+    }
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        decisionHandler!.activeFieldIndex = IndexPath(row: 0, section: 0)
+        return true
     }
     public func shakeError() {
         self.shake()

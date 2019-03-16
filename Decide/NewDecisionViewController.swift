@@ -113,21 +113,26 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         //view controller is behind dim background which is behind the popup
         self.view.bringSubviewToFront(dimBackground)
         self.view.bringSubviewToFront(cancelPopup)
-        
-        //observes whether keyboard is out or not
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+     
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
-    //scrolls the tableview upward when the keyboard shows
-    
-//    @objc func keyboardWillShow(_ notification:Notification) {
-//        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-//            tableView.contentInset = UIEdgeInsets(top: insets.top, left: 0, bottom: keyboardSize.height, right: 0)
-//        }
-//    }
-//    @objc func keyboardWillHide(_ notification:Notification) {
-//            tableView.contentInset = insets
-//    }
+    @objc func keyboardDidShow(_ notification:Notification) {
+        if let index = decision.activeFieldIndex {
+            let rectInTable = self.tableView.rectForRow(at: index)
+            let rectInView = self.tableView.convert(rectInTable, to: self.tableView!.superview)
+            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+                if keyboardSize.intersects(rectInView) {
+                    let dist = rectInView.maxY - keyboardSize.minY + 30
+                    self.tableView!.contentInset = UIEdgeInsets(top: insets.top, left: 0, bottom: dist, right: 0)
+                    self.tableView?.contentOffset.y = dist
+                }
+            }
+        }
+    }
+    @objc func keyboardWillHide(_ notification:Notification) {
+        tableView.contentInset = insets
+    }
     //returns the number of sections
     func numberOfSections(in tableView: UITableView) -> Int {
         return cellCount
