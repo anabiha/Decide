@@ -23,17 +23,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var forgotPassword: UIButton!
     var defaultFrame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
     
+    //actions for when view loads
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
     }
+    //hide keyboard and stop editing AFTER this view disappears
     override func viewWillDisappear(_ animated: Bool) {
         self.email.endEditing(true)
         self.password.endEditing(true)
     }
-    
+    //make things aesthetic
     func configure() {
-        
         email.delegate = self
         password.delegate = self
         password.isSecureTextEntry = true
@@ -52,7 +53,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     //shifts view up when keyboard comes up
     @objc func keyboardWillShow(_ notification:Notification) {
-         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let rectInStack = signUpButton.frame
             let rectInView = signUpButton.superview!.convert(rectInStack, to: view)
             if keyboardSize.intersects(rectInView) {
@@ -76,6 +77,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     //func to handle unwinding back to this view from other views
     @IBAction func unwindWithSegue(_ segue: UIStoryboardSegue) {}
+    //preparing to segue to either the sign up page or the reset password page
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
         //clear text if segueing
@@ -84,15 +86,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         switch identifier {
         case "signUpSegue":
             print("SEGUED to signup")
-            
         case "resetSegue":
             print("SEGUED to reset password")
-            
         default:
             print("unexpected segue identifier")
         }
     }
-   
+    //action for logging in
     @IBAction func loginAction(_ sender: Any) {
         
         if self.email.text == "" || self.password.text == "" {
@@ -137,5 +137,5 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
     }
 }
-    
+
 

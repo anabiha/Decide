@@ -15,13 +15,16 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var backToSignIn: UIButton!
     var defaultFrame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
+    //what to do when view loads
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
     }
+    //end editing once this view disappears
     override func viewWillDisappear(_ animated: Bool) {
         self.email.endEditing(true)
     }
+    //make things aesthetic
     func configure() {
         email.delegate = self
         resetPassword.layer.cornerRadius = 10
@@ -33,9 +36,12 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
         email.layer.cornerRadius = 10
         
         defaultFrame = self.view.frame
+        
+        //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
+    //shift view up when keyboard appears
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let rect = backToSignIn.frame
@@ -45,10 +51,11 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
-    
+    //shift view down when keyboard disappearw
     @objc func keyboardWillHide(_ notification:Notification) {
         self.view.frame = defaultFrame
     }
+    //hide keyboard when user pressed return
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if(string == "\n") {
             textField.resignFirstResponder()
@@ -57,6 +64,7 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
             return true
         }
     }
+    //preparing to segue back to login screen
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
         self.email.text = ""
@@ -67,6 +75,7 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
             print("unexpected segue identifier")
         }
     }
+    //action to reset password
     @IBAction func resetPassword(_ sender: Any) {
         
         if self.email.text == "" {
@@ -129,5 +138,5 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-
+    
 }

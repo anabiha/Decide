@@ -26,6 +26,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
         self.email.endEditing(true)
         self.password.endEditing(true)
     }
+    //make things aesthetic
     func configure() {
         password.isSecureTextEntry = true
         email.delegate = self
@@ -67,7 +68,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
             return true
         }
     }
-    //preparing to segue
+    //preparing to segue back to the login page or to the create user page
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
             switch identifier {
@@ -81,6 +82,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
                 print("unexpected segue identifier")
             }
     }
+    //create account
     @IBAction func createAccount(_ sender: Any) {
         
         // if the user leaves the email field, text field, or both blank, have a popup

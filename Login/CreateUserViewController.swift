@@ -15,10 +15,12 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var username: UITextField!
     @IBOutlet weak var getStarted: UIButton!
     var defaultFrame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
+    //what to do when view loads
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
     }
+    //make things aesthetic
     func configure() {
         username.delegate = self
         getStarted.layer.cornerRadius = 10
@@ -30,9 +32,12 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
         username.layer.cornerRadius = 10
         
         defaultFrame = self.view.frame
+        
+        //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
+    //shift view up when keyboard appears
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let rect = getStarted.frame
@@ -42,10 +47,11 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
-    
+    //shift view down when keyboard disappears
     @objc func keyboardWillHide(_ notification:Notification) {
         self.view.frame = defaultFrame
     }
+    //hide keyboard when user presses return key
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if(string == "\n") {
             textField.resignFirstResponder()
@@ -54,6 +60,7 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
             return true
         }
     }
+    //action to go to main screen
     @IBAction func goToMainScreen(_ sender: Any) {
         username.endEditing(true)
         // if the user leaves the email field, text field, or both blank, have a popup

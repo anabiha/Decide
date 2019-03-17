@@ -33,7 +33,7 @@ class CustomButton: UIButton {
         self.normalBGColor = tuple.0
         self.selectedBGColor = tuple.1
     }
-   
+    
     override var isHighlighted: Bool {
         didSet {
             UIView.animate(withDuration: 0.2, animations: {
@@ -86,7 +86,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         // Set automatic dimensions for row height
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableView.automaticDimension
-         //keeps some space between bottom of screen and the bottom of the tableview
+        //keeps some space between bottom of screen and the bottom of the tableview
         tableView.contentInset = insets
         self.view.backgroundColor = UIColor(red:250/255, green: 250/255, blue: 250/255, alpha: 1)
         //configure post button, popup buttons
@@ -113,23 +113,21 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         //view controller is behind dim background which is behind the popup
         self.view.bringSubviewToFront(dimBackground)
         self.view.bringSubviewToFront(cancelPopup)
-     
+        //add keyboard observer, allows for actions when keyboard appears/disappears
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
-    @objc func keyboardDidShow(_ notification:Notification) {
-        if let index = decision.activeFieldIndex {
-            let rectInTable = self.tableView.rectForRow(at: index)
-            let rectInView = self.tableView.convert(rectInTable, to: self.tableView!.superview)
-            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-                if keyboardSize.intersects(rectInView) {
-                    let dist = rectInView.maxY - keyboardSize.minY + 30
-                    self.tableView!.contentInset = UIEdgeInsets(top: insets.top, left: 0, bottom: dist, right: 0)
-                    self.tableView?.contentOffset.y = dist
-                }
-            }
+    //tells cells how large keyboard will be
+    /*
+     Works in conjunction with decisionitem func "shift" which shifts the cell based on the keyboard size
+     whenever a cell is selected
+    */
+    @objc func keyboardWillShow(_ notification:Notification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            decision.keyboardSize = keyboardSize
         }
     }
+    //shift tableview down when keyboard disappears
     @objc func keyboardWillHide(_ notification:Notification) {
         tableView.contentInset = insets
     }
@@ -152,6 +150,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         headerView.backgroundColor = UIColor.clear
         return headerView
     }
+    //configures the popup
     public func configurePopup(_ type: String) {
         popupTitle.font = UIFont(name: "AvenirNext-DemiBold", size: 19)
         popupText.font = UIFont(name: "AvenirNext-Medium", size: 17)
@@ -268,7 +267,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return !(indexPath.section == cellCount - 1 || indexPath.section == 0)
     }
-   
+    
     //handles deletion of rows
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let index = IndexSet([indexPath.section])
@@ -297,8 +296,8 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                     }
                 })
             } else {
-                    if let cell = tableView.cellForRow(at: indexPath) as? DecisionItem {
-                        cell.shakeError() //DOESNT WORK
+                if let cell = tableView.cellForRow(at: indexPath) as? DecisionItem {
+                    cell.shakeError() //DOESNT WORK
                 }
             }
         }
@@ -308,7 +307,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         if indexPath.section == cellCount - 1 && cellCount != maxCellCount {
             if let cell = tableView.cellForRow(at: indexPath) as? AddButton {
                 UIView.animate(withDuration: 0.2, animations: {
-                     cell.backgroundColor = cell.greyBG
+                    cell.backgroundColor = cell.greyBG
                 })
             }
         }
@@ -325,9 +324,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     //the height of the post
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-         if indexPath.section == cellCount - 1 {
+        if indexPath.section == cellCount - 1 {
             return 30 //the add button is this height
-         } else {
+        } else {
             return UITableView.automaticDimension
         }
     }
