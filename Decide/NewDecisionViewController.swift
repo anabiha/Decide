@@ -350,6 +350,16 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                 for section in 1..<self.cellCount - 1 { //saving each cell
                     print("\(self.decision.getDecision(at: section))")
                 }
+                // upload the decision data to firebase
+                let ref = Database.database().reference().root
+                guard let userKey = Auth.auth().currentUser?.uid else {return}
+                
+                var post_options = self.decision.decisionItemList
+                // removes the first element because it is the question
+                post_options.remove(at: 0)
+                
+                ref.child("posts").child(userKey).child("").child("Options").setValue(post_options)
+                ref.child("posts").child(userKey).child("").child("Title").setValue(self.decision.getTitle())
                 //animate the action of going back, switching tabs is also handled in animated
                 self.animateToTab(toIndex: 0) //changing of tab bar item is handled here as well
             } else { //if the right button wasn't a post button....
@@ -358,16 +368,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             }
         })
         
-        // upload the decision data to firebase
-        let ref = Database.database().reference().root
-        guard let userKey = Auth.auth().currentUser?.uid else {return}
-        
-        var post_options = decision.decisionItemList
-        // removes the first element because it is the question
-        post_options.remove(at: 0)
-        
-        ref.child("posts").child(userKey).child("").child("Options").setValue(post_options)
-    ref.child("posts").child(userKey).child("").child("Title").setValue(self.decision.getTitle())
         
     }
     //animation to dismiss popup
