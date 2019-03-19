@@ -24,7 +24,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         }
         
         if (viewController.tabBarItem.tag == 1) {
-           animateToTab(toIndex: 1) //initiate slide up animation if new decision is pressed
+            animateToTab(toIndex: 1) //initiate slide up animation if new decision is pressed
             //also note that the tab bar is hidden in this view
         }
         //switch statement used to change previouslySelectedIndex
@@ -46,7 +46,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         return true
     }
     
-   //slide up animation!!!
+    //slide up animation!!!
     
     
 }

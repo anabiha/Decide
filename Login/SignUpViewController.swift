@@ -10,24 +10,83 @@ import UIKit
 import Firebase
 import FirebaseAuth
 
-class SignUpViewController: UIViewController {
-    
-    @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
-    
-    override func viewDidAppear(_ animated: Bool) {
-        
-        super.viewDidAppear(animated)
-        
-        passwordTextField.isSecureTextEntry = true
-        
-        
+class SignUpViewController: UIViewController, UITextFieldDelegate{
+    @IBOutlet weak var createAccount: UIButton!
+    @IBOutlet weak var email: UITextField!
+    @IBOutlet weak var password: UITextField!
+    @IBOutlet weak var signIn: UIButton!
+    var defaultFrame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
+    //what to do when view loads (DON'T USE VIEWWILLAPPEAR)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configure()
     }
-    
+    //what to do when view is about to disappear
+    override func viewWillDisappear(_ animated: Bool) {
+        self.email.endEditing(true)
+        self.password.endEditing(true)
+    }
+    //make things aesthetic
+    func configure() {
+        password.isSecureTextEntry = true
+        email.delegate = self
+        password.delegate = self
+        createAccount.layer.cornerRadius = 10
+        createAccount.layer.masksToBounds = false
+        createAccount.clipsToBounds = true
+        createAccount.layer.shadowColor = UIColor.lightGray.cgColor
+        createAccount.layer.shadowOpacity = 0.5
+        createAccount.layer.shadowRadius = 10
+        createAccount.layer.shadowOffset = CGSize(width: 7.0, height: 7.0)
+        email.layer.cornerRadius = 10
+        password.layer.cornerRadius = 10
+        
+         defaultFrame = self.view.frame
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+    }
+     //shifts view up when keyboard comes up
+    @objc func keyboardWillShow(_ notification:Notification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let rect = signIn.superview!.frame
+            if rect.intersects(keyboardSize) {
+                let offsetDist = rect.maxY - keyboardSize.minY + 20
+                self.view.frame = defaultFrame.offsetBy(dx: 0, dy: -offsetDist)
+            }
+        }
+    }
+    //shifts view down when keyboard goes away
+    @objc func keyboardWillHide(_ notification:Notification) {
+        self.view.frame = defaultFrame
+    }
+    //makes the keyboard disappear when pressing return
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if(string == "\n") {
+            textField.resignFirstResponder()
+            return false
+        } else {
+            return true
+        }
+    }
+    //preparing to segue back to the login page or to the create user page
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else { return }
+            switch identifier {
+            case "loginSegue":
+                print("SEGUED to login") //clear these fields if going back to login page
+                self.email.text = ""
+                self.password.text = ""
+            case "createUserSegue":
+                print("SEGUED to create user")
+            default:
+                print("unexpected segue identifier")
+            }
+    }
+    //create account
     @IBAction func createAccount(_ sender: Any) {
         
         // if the user leaves the email field, text field, or both blank, have a popup
-        if emailTextField.text == "" {
+        if email.text == "" {
             
             let alertController = UIAlertController(title: "Error", message: "Please enter your email and password", preferredStyle: .alert)
             
@@ -43,13 +102,13 @@ class SignUpViewController: UIViewController {
             let ref = Database.database().reference().root
             
             // creates a user account in firebase
-            Auth.auth().createUser(withEmail: emailTextField.text!, password: passwordTextField.text!) { (user, error) in
+            Auth.auth().createUser(withEmail: email.text!, password: password.text!) { (user, error) in
                 
                 // check to see if there is any sign up error
                 if error == nil {
                     
                     print("You have successfully signed up")
-                ref.child("users").child((user?.user.uid)!).setValue(self.emailTextField.text)
+                ref.child("users").child((user?.user.uid)!).setValue(self.email.text)
                     
                     // goes to the setup page which lets the user take a photo for their profile picture and create a username
                     let viewController = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "createUser") as UIViewController
@@ -66,22 +125,7 @@ class SignUpViewController: UIViewController {
                     self.present(alertController, animated: true, completion: nil)
                     
                 }
-                
-                
             }
-            
         }
-        
     }
-    
-    
-    @IBAction func goBackToLogin(_ sender: Any) {
-        
-        let vc = UIStoryboard(type: .login).instantiateInitialViewController()
-        
-        self.present(vc!, animated: true, completion: nil)
-        
-    
-    }
-    
 }
