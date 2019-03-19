@@ -48,12 +48,10 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var postButton: CustomButton!
     @IBOutlet weak var cancelButton: UIButton!
-    
+//
     @IBOutlet weak var cancelButtonHeight: NSLayoutConstraint!
     @IBOutlet weak var cancelButtonWidth: NSLayoutConstraint!
-    
-    @IBOutlet weak var cancelButtonLeading: NSLayoutConstraint!
-    @IBOutlet weak var cancelButtonTop: NSLayoutConstraint!
+
     
     @IBOutlet weak var cancelPopup: UIView!
     @IBOutlet weak var popupTitle: UILabel!
@@ -63,10 +61,10 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     
     @IBOutlet weak var dimBackground: UIView!
     
-    var justAdded: Bool = false
+    var cancelTriggered: Bool = false
     var selectedIndex = 0
     var decision = Decision() //data manager
-    var insets: UIEdgeInsets = UIEdgeInsets.init(top: 45, left: 0, bottom: 0, right: 0) //content inset for tableview
+    var insets: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 0, bottom: 0, right: 0) //content inset for tableview
     var cellCount = 4 //current number of cells, start at 4
     let maxCellCount = 8 //max number of cells, should be an even number
     let cellReuseIdentifier = "decisionItemCell" //reuse identifiers
@@ -74,7 +72,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     let questionBarCellReuseIdentifier = "questionBarCell"
     let cellSpacingHeight: CGFloat = 14
     let screenSize = UIScreen.main.bounds
-    
+    var defaultCancelFrame: CGRect?
     //Background is an IMAGEVIEW
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,18 +90,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         //configure post button, popup buttons
         postButton.configure(tuple: button.post)
         configurePopup("cancel")
-        //dynamically change cancelbutton size based on phone
-        if screenSize.height <= 667 { //iphone 7 and below
-            cancelButtonHeight.constant = 40
-            cancelButtonWidth.constant = 40
-            cancelButtonLeading.constant = -15
-            cancelButtonTop.constant = 10
-        } else if screenSize.height <= 896 { //iphone X, Xr, All plus models
-            cancelButtonHeight.constant = 60
-            cancelButtonWidth.constant =  60
-            cancelButtonLeading.constant = -20
-            cancelButtonTop.constant = 0
-        }
+        
         //configure decision object with cells
         decision.configure(withSize: cellCount - 1)
         //the dim background for popup
@@ -116,6 +103,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         //add keyboard observer, allows for actions when keyboard appears/disappears
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        defaultCancelFrame = cancelButton.frame
     }
     //tells cells how large keyboard will be
     /*
@@ -179,19 +167,22 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     //cool animations when scrolling!
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        //get rid of button when scrolling down
-        if scrollView.contentOffset.y >= -scrollView.frame.origin.y + 5 {
-            UIView.animate(withDuration: 0.3, delay: 0, options: .transitionCrossDissolve, animations: {
-                self.cancelButton.isUserInteractionEnabled = false
-                self.cancelButton.alpha = 0
-            }, completion: nil)
-        } else {
-            UIView.animate(withDuration: 0.3, delay: 0, options: .transitionCrossDissolve, animations: {
-                self.cancelButton.isUserInteractionEnabled = true
-                self.cancelButton.alpha = 1
-            }, completion: nil)
+        //increase size of button and scroll down when scrolling tableview down
+        if scrollView.contentOffset.y < -insets.top {
+            if defaultCancelFrame != nil {
+                cancelButton.frame = defaultCancelFrame!.offsetBy(dx: 0, dy: -(scrollView.contentOffset.y + insets.top))
+                cancelButton.transform = CGAffineTransform(scaleX: -(scrollView.contentOffset.y + insets.top)/100, y: -(scrollView.contentOffset.y + insets.top)/100)
+            }
+            //trigger the cancel action if past a certain point
+            if scrollView.contentOffset.y <= -110 {
+                if !cancelTriggered {
+                    cancelTriggered = true
+                    cancel()
+                }
+            }
         }
     }
+    
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == cellCount - 1 { //if the selected row is the add row.
@@ -341,6 +332,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     
     //popup that either saves the decision or cancels the post, depends on configuration
     @IBAction func popupRight(_ sender: Any) {
+        cancelTriggered = false
         UIView.animate(withDuration: 0.15, delay: 0, options: .transitionCrossDissolve, animations: {
             self.cancelPopup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
         }, completion: nil)
@@ -367,6 +359,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     //animation to dismiss popup
     @IBAction func popupLeft(_ sender: Any) {
+        cancelTriggered = false
         UIView.animate(withDuration: 0.15, delay: 0, options: .transitionCrossDissolve, animations: {
             self.cancelPopup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
         }, completion: nil)
@@ -381,8 +374,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         
     }
     //cancel button to introduce popup
-    @IBAction func cancel(_ sender: UIButton) {
-        print("Pressed cancelButton")
+    func cancel() {
+        
+        print("Initiated cancelButton")
         configurePopup("cancel")
         self.cancelPopup.isHidden = false
         self.dimBackground.isHidden = false

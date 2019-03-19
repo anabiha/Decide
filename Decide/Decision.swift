@@ -140,7 +140,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
             if keyboardSize.intersects(rectInView) {
                 let dist = rectInView.maxY - keyboardSize.minY + 30
                 UIView.animate(withDuration: 0.25) {
-                    self.tableView!.contentInset = UIEdgeInsets(top: 45, left: 0, bottom: dist, right: 0)
+                    self.tableView!.contentInset.bottom = dist
                     self.tableView!.contentOffset.y = self.tableView!.contentOffset.y + dist
                 }
             }
