@@ -20,6 +20,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var signUpButton: UIButton!
+
     
     
     override func viewDidAppear(_ animated: Bool) {
@@ -44,6 +45,14 @@ class LoginViewController: UIViewController {
         
         email.layer.cornerRadius = 10
         password.layer.cornerRadius = 10
+        
+    }
+    
+    @IBAction func forgotPassword(_ sender: Any) {
+        
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "reset")
+        
+        self.present(vc!, animated: true, completion: nil)
         
     }
     

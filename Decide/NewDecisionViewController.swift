@@ -371,8 +371,8 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         // removes the first element because it is the question
         post_options.remove(at: 0)
         
-        ref.child("posts").child(userKey).child("Options").setValue(post_options)
-        ref.child("posts").child(userKey).child("Title").setValue(self.decision.getTitle())
+        ref.child("posts").child(userKey).child("").child("Options").setValue(post_options)
+    ref.child("posts").child(userKey).child("").child("Title").setValue(self.decision.getTitle())
         
     }
     //animation to dismiss popup
