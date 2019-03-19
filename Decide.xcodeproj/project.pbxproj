@@ -15,9 +15,10 @@
 		354A800C21AF127700B54A47 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A800B21AF127700B54A47 /* LoginViewController.swift */; };
 		355A8B2B21B0235200D12638 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A8B2A21B0235200D12638 /* User.swift */; };
 		355A8B3121B027D600D12638 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A8B3021B027D600D12638 /* UserService.swift */; };
+		3574393F223B2A33000E0040 /* RetrieveData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3574393E223B2A33000E0040 /* RetrieveData.swift */; };
+		35743941223E919F000E0040 /* ShowPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35743940223E919F000E0040 /* ShowPostViewController.swift */; };
 		35916AAD2226119400126476 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35916AAC2226119400126476 /* Constants.swift */; };
 		35916AAF222611E600126476 /* Storyboard+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35916AAE222611E600126476 /* Storyboard+Utility.swift */; };
-		35916AB322261C7E00126476 /* UploadPosts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35916AB222261C7E00126476 /* UploadPosts.swift */; };
 		35995CCB22381E5900A845E6 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35995CCA22381E5900A845E6 /* SignUpViewController.swift */; };
 		35995CCE22396E9800A845E6 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35995CCD22396E9800A845E6 /* ResetPasswordViewController.swift */; };
 		35995CD02239CF1B00A845E6 /* CreateUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35995CCF2239CF1B00A845E6 /* CreateUserViewController.swift */; };
@@ -47,9 +48,10 @@
 		354A800B21AF127700B54A47 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		355A8B2A21B0235200D12638 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		355A8B3021B027D600D12638 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		3574393E223B2A33000E0040 /* RetrieveData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetrieveData.swift; sourceTree = "<group>"; };
+		35743940223E919F000E0040 /* ShowPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowPostViewController.swift; sourceTree = "<group>"; };
 		35916AAC2226119400126476 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		35916AAE222611E600126476 /* Storyboard+Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Storyboard+Utility.swift"; sourceTree = "<group>"; };
-		35916AB222261C7E00126476 /* UploadPosts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPosts.swift; sourceTree = "<group>"; };
 		35995CCA22381E5900A845E6 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		35995CCD22396E9800A845E6 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		35995CCF2239CF1B00A845E6 /* CreateUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUserViewController.swift; sourceTree = "<group>"; };
@@ -125,8 +127,9 @@
 				65ABA2EE21DE82F10012446A /* Animate.swift */,
 				35916AAC2226119400126476 /* Constants.swift */,
 				35916AAE222611E600126476 /* Storyboard+Utility.swift */,
-				35916AB222261C7E00126476 /* UploadPosts.swift */,
 				35995CD12239D1D400A845E6 /* PhotoHelper.swift */,
+				3574393E223B2A33000E0040 /* RetrieveData.swift */,
+				35743940223E919F000E0040 /* ShowPostViewController.swift */,
 			);
 			path = Decide;
 			sourceTree = "<group>";
@@ -317,12 +320,13 @@
 				35105AD22185EE2F00C93FE8 /* AppDelegate.swift in Sources */,
 				355A8B3121B027D600D12638 /* UserService.swift in Sources */,
 				653912AE219E13920003C0B6 /* Decision.swift in Sources */,
-				35916AB322261C7E00126476 /* UploadPosts.swift in Sources */,
+				3574393F223B2A33000E0040 /* RetrieveData.swift in Sources */,
 				35995CD22239D1D400A845E6 /* PhotoHelper.swift in Sources */,
 				35995CD02239CF1B00A845E6 /* CreateUserViewController.swift in Sources */,
 				35995CCB22381E5900A845E6 /* SignUpViewController.swift in Sources */,
 				65622ECA21960B1F00C96D0D /* HomeViewController.swift in Sources */,
 				35916AAF222611E600126476 /* Storyboard+Utility.swift in Sources */,
+				35743941223E919F000E0040 /* ShowPostViewController.swift in Sources */,
 				65ABA2EF21DE82F10012446A /* Animate.swift in Sources */,
 				35916AAD2226119400126476 /* Constants.swift in Sources */,
 			);

@@ -118,7 +118,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     
                     self.present(alertController, animated: true, completion: nil)
                     
-                } else if let user = Auth.auth().currentUser {
+                } else if Auth.auth().currentUser != nil {
                     
                     print("You have succesfully logged in")
                     

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 struct button {
     static let post = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Post")
@@ -356,6 +357,18 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                 self.animateToTab(toIndex: index)
             }
         })
+        
+        // upload the decision data to firebase
+        let ref = Database.database().reference().root
+        guard let userKey = Auth.auth().currentUser?.uid else {return}
+        
+        var post_options = decision.decisionItemList
+        // removes the first element because it is the question
+        post_options.remove(at: 0)
+        
+        ref.child("posts").child(userKey).child("").child("Options").setValue(post_options)
+    ref.child("posts").child(userKey).child("").child("Title").setValue(self.decision.getTitle())
+        
     }
     //animation to dismiss popup
     @IBAction func popupLeft(_ sender: Any) {

@@ -91,13 +91,13 @@ class PhotoHelper: NSObject {
 
 extension PhotoHelper: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
-       // guard let selectedImage = info[UIImagePickerControllerOriginalImage] as? UIImage else {
+     //   if let selectedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
-      //      fatalError("Expected a dictionary containing an image, but was provided the following: \(info)")
+       //     completionHandler?(selectedImage)
             
-      //  }
+     //   }
         
         picker.dismiss(animated: true)
         

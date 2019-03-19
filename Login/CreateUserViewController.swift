@@ -77,7 +77,6 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
         } else {
             
             //add the username to the database
-            
             let ref = Database.database().reference().root
             guard let userKey = Auth.auth().currentUser?.uid else {return}
             ref.child("users").child(userKey).child("username").setValue(username.text)
@@ -110,7 +109,7 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
             
             alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { action in
                 
-                // if everything is alright, proceed to home page
+                //proceed to home page
                 let vc = UIStoryboard(type: .main).instantiateInitialViewController()
                 
                 self.present(vc!, animated: true, completion: nil)
