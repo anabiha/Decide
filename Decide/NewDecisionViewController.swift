@@ -74,6 +74,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     let cellSpacingHeight: CGFloat = 14
     let screenSize = UIScreen.main.bounds
     var defaultCancelFrame: CGRect?
+    
     //Background is an IMAGEVIEW
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -358,8 +359,16 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                 // removes the first element because it is the question
                 post_options.remove(at: 0)
                 
-                ref.child("posts").child(userKey).child("").child("Options").setValue(post_options)
-                ref.child("posts").child(userKey).child("").child("Title").setValue(self.decision.getTitle())
+                let key = ref.child("posts").childByAutoId().key
+                let post = ["uid": userKey,
+                            "title": self.decision.getTitle(),
+                "options": post_options] as [String : Any]
+                
+                let childUpdates = ["/posts/\(key)" : post,
+                                    "/user-posts/\(userKey)/\(key)/" : post]
+                ref.updateChildValues(childUpdates)
+            
+                
                 //animate the action of going back, switching tabs is also handled in animated
                 self.animateToTab(toIndex: 0) //changing of tab bar item is handled here as well
             } else { //if the right button wasn't a post button....

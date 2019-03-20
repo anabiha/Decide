@@ -17,8 +17,9 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
     var defaultFrame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
     //what to do when view loads
     override func viewDidLoad() {
-        super.viewDidLoad()
         configure()
+        super.viewDidLoad()
+        
     }
     //make things aesthetic
     func configure() {
@@ -76,52 +77,13 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
             
         } else {
             
-            //add the username to the database
-            let ref = Database.database().reference().root
-            guard let userKey = Auth.auth().currentUser?.uid else {return}
-            ref.child("users").child(userKey).child("username").setValue(username.text)
-            
-            // ask if the user wants to add a profile picture
-            let alertController = UIAlertController(title: "Profile Picture", message: "Would you like to add a profile picture?", preferredStyle: .alert)
-            
-            alertController.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
-                
-                // bring up image picker to allow user to either pick a photo from the photo gallery or take a picture for their profile picture
-                let photoHelper = PhotoHelper()
-                
-                photoHelper.completionHandler = { image in
-                    
-                    print("handle image")
-                    
-                }
-                
-                photoHelper.presentActionSheet(from: self)
-                
-                //add the profile image to the database
-                
-                // go to home page
-                
-                let vc = UIStoryboard(type: .main).instantiateInitialViewController()
-                
-                self.present(vc!, animated: true, completion: nil)
-                
-            }))
-            
-            alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { action in
-                
-                //proceed to home page
-                let vc = UIStoryboard(type: .main).instantiateInitialViewController()
-                
-                self.present(vc!, animated: true, completion: nil)
-                
-            }))
-            
-            present(alertController, animated: true, completion: nil)
-            
+            // go to home page
+            let vc = UIStoryboard(type: .main).instantiateInitialViewController()
+            self.present(vc!, animated: true, completion: nil)
             
         }
+    
         
     }
-    
     
 }

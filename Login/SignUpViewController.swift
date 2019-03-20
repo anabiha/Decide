@@ -10,22 +10,30 @@ import UIKit
 import Firebase
 import FirebaseAuth
 
-class SignUpViewController: UIViewController, UITextFieldDelegate{
+class SignUpViewController: UIViewController, UITextFieldDelegate {
+    
     @IBOutlet weak var createAccount: UIButton!
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var signIn: UIButton!
     var defaultFrame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
+    
     //what to do when view loads (DON'T USE VIEWWILLAPPEAR)
     override func viewDidLoad() {
-        super.viewDidLoad()
         configure()
+        super.viewDidLoad()
+        
     }
+    
+    
     //what to do when view is about to disappear
     override func viewWillDisappear(_ animated: Bool) {
+        
         self.email.endEditing(true)
         self.password.endEditing(true)
+        
     }
+    
     //make things aesthetic
     func configure() {
         password.isSecureTextEntry = true
@@ -45,6 +53,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
+    
      //shifts view up when keyboard comes up
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -55,10 +64,12 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
             }
         }
     }
+    
     //shifts view down when keyboard goes away
     @objc func keyboardWillHide(_ notification:Notification) {
         self.view.frame = defaultFrame
     }
+    
     //makes the keyboard disappear when pressing return
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if(string == "\n") {
@@ -68,6 +79,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
             return true
         }
     }
+    
     //preparing to segue back to the login page or to the create user page
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
@@ -77,15 +89,17 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
                 self.email.text = ""
                 self.password.text = ""
             case "createUserSegue":
-                print("SEGUED to create user")
+                 print("SEGUED to create user")
             default:
                 print("unexpected segue identifier")
             }
     }
-    //create account
-    @IBAction func createAccount(_ sender: Any) {
+    
+    func isEmailAndPasswordCorrrectlyFormatted() -> Bool {
         
-        // if the user leaves the email field, text field, or both blank, have a popup
+        var isFormattedCorrectly = true
+        
+        // if the user leaves the email field blank, have a popup
         if email.text == "" {
             
             let alertController = UIAlertController(title: "Error", message: "Please enter your email and password", preferredStyle: .alert)
@@ -105,17 +119,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
             Auth.auth().createUser(withEmail: email.text!, password: password.text!) { (user, error) in
                 
                 // check to see if there is any sign up error
-                if error == nil {
-                    
-                    print("You have successfully signed up")
-                ref.child("users").child((user?.user.uid)!).setValue(self.email.text)
-                    
-                    // goes to the setup page which lets the user take a photo for their profile picture and create a username
-                    let viewController = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "createUser") as UIViewController
-                    
-                    self.present(viewController, animated: false, completion: nil)
-                    
-                } else {
+                if error != nil {
                     
                     let alertController = UIAlertController(title: "Error", message: error?.localizedDescription, preferredStyle: .alert)
                     
@@ -124,8 +128,45 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
                     
                     self.present(alertController, animated: true, completion: nil)
                     
+                    isFormattedCorrectly = false
+                    
+                    
+                } else {
+                    
+                    print("You have successfully signed up")
+                    
+                    ref.child("users").child((user?.user.uid)!).setValue(self.email.text)
+                    
+                    // goes to the setup page which lets the user take a photo for their profile picture and create a username
+                    //  let viewController = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "createUser") as UIViewController
+                    
+                    //  self.present(viewController, animated: false, completion: nil)
+                    
                 }
             }
         }
+        
+        return isFormattedCorrectly
+        
     }
+
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        
+        var shouldContinue = true
+        
+        if identifier == "createUserSegue" {
+            
+            shouldContinue = isEmailAndPasswordCorrrectlyFormatted()
+           
+        }
+        
+        return shouldContinue
+        
+    }
+    
+  
+    
+    
+
 }
