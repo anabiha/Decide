@@ -170,7 +170,7 @@
                                     <color key="titleColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="createAccount:" destination="dye-bF-6bQ" eventType="touchUpInside" id="ErU-Mu-ZNU"/>
+                                    <action selector="createAccount:" destination="dye-bF-6bQ" eventType="touchUpInside" id="SmX-Om-Fv7"/>
                                     <segue destination="Nx2-kg-mGX" kind="show" identifier="createUserSegue" id="kKj-WD-iK8"/>
                                 </connections>
                             </button>

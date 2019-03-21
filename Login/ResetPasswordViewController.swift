@@ -182,10 +182,10 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
             Auth.auth().sendPasswordReset(withEmail: self.email.text!, completion: { (error) in
                 self.label.numberOfLines = 0
                 var text = ""
-                if error != nil {
-                    text = (error?.localizedDescription)!
+                if let error = error {
+                    text = self.rephrase(error: error as NSError)
                 } else {
-                    text = "Password reset email sent."
+                    text = "Password reset email sent!"
                     self.email.text = ""
                 }
                 self.label.text = text

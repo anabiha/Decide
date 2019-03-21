@@ -20,7 +20,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
     var dimBackground: UIView!
     var label: UILabel!
     var titleLabel: UILabel!
-    //what to do when view loads (DON'T USE VIEWWILLAPPEAR)
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
@@ -178,9 +178,12 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
             print("unexpected segue identifier")
         }
     }
-    //create account
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if identifier == "loginSegue" {
+            return true
+        } else { return false }
+    }
     @IBAction func createAccount(_ sender: Any) {
-        
         // if the user leaves the email field, text field, or both blank, have a popup
         if email.text == "" && password.text == "" {
             label.numberOfLines = 0
@@ -195,30 +198,21 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
             label.text = "Please enter a password"
             openPopup()
         } else {
-            
             // writing user to the database
             let ref = Database.database().reference().root
-            
             // creates a user account in firebase
-            Auth.auth().createUser(withEmail: email.text!, password: password.text!) { (user, error) in
-                
+            Auth.auth().createUser(withEmail: email.text!, password: password.text!, completion: { (user, error) in
                 // check to see if there is any sign up error
-                if error == nil {
-                    
-                    print("You have successfully signed up")
-                    ref.child("users").child((user?.user.uid)!).setValue(self.email.text)
-                    
-                    // goes to the setup page which lets the user take a photo for their profile picture and create a username
-                    let viewController = UIStoryboard(name: "Login", bundle: nil).instantiateViewController(withIdentifier: "createUser") as UIViewController
-                    
-                    self.present(viewController, animated: false, completion: nil)
-                    
-                } else {
+                if let error = error {
                     self.label.numberOfLines = 0
-                    self.label.text = error?.localizedDescription
+                    self.label.text = self.rephrase(error: error as NSError)
                     self.openPopup()
+                } else {
+                    print("SUCCESSFULLY SIGNED UP")
+                    ref.child("users").child((user?.user.uid)!).setValue(self.email.text)
+                    self.performSegue(withIdentifier: "createUserSegue", sender: self)
                 }
-            }
+            })
         }
     }
 }

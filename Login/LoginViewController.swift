@@ -13,9 +13,20 @@ import FirebaseAuth
 
 
 typealias FIRUser = FirebaseAuth.User
-
-
-
+extension UIViewController {
+    func rephrase(error: NSError) -> String {
+        switch (error.code) {
+        case AuthErrorCode.invalidEmail.rawValue:
+            return "Please enter a valid email."
+        case AuthErrorCode.userNotFound.rawValue:
+            return "Invalid username or password. Please try again."
+        case AuthErrorCode.wrongPassword.rawValue:
+            return "Invalid username or password. Please try again."
+        default:
+            return error.localizedDescription
+        }
+    }
+}
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var logInButton: UIButton!
@@ -197,7 +208,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     //action for logging in
     @IBAction func loginAction(_ sender: Any) {
         if self.email.text == "" && self.password.text == "" {
-            
             label.numberOfLines = 0
             label.text = "Please enter your email and password"
             openPopup()
@@ -215,20 +225,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             Auth.auth().signIn(withEmail: self.email.text!, password: self.password.text!) { (user, error) in
                 if let error = error {
                     self.label.numberOfLines = 0
-                    self.label.text = error.localizedDescription
+                    self.label.text = self.rephrase(error: error as NSError)
                     self.openPopup()
                 } else if Auth.auth().currentUser != nil {
                     print("You have succesfully logged in")
                     // go to home view controller after login is a success
                     let vc = UIStoryboard(type: .main).instantiateInitialViewController()
                     self.present(vc!, animated: true, completion: nil)
-                    
-                    
                 }
-                
-                
             }
-            
         }
         
     }
