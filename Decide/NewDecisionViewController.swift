@@ -44,6 +44,7 @@ class CustomButton: UIButton {
     }
 }
 
+
 class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var tableView: UITableView!
@@ -92,7 +93,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         //configure post button, popup buttons
         postButton.configure(tuple: button.post)
         configurePopup("cancel")
-        
         //configure decision object with cells
         decision.configure(withSize: cellCount - 1)
         //the dim background for popup
@@ -164,7 +164,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             popupTitle.text = "Post Decision"
             popupText.text = "Are you sure you want to post this decision?"
         default:
-            print("ERROR: switch statement for popup triggered")
+            print("ERROR: default statement for popup triggered")
         }
     }
     //cool animations when scrolling!
@@ -176,7 +176,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                 cancelButton.transform = CGAffineTransform(scaleX: -(scrollView.contentOffset.y + insets.top)/100, y: -(scrollView.contentOffset.y + insets.top)/100)
             }
             //trigger the cancel action if past a certain point
-            if scrollView.contentOffset.y <= -110 {
+            if scrollView.contentOffset.y <= -130 {
                 if !cancelTriggered {
                     cancelTriggered = true
                     cancel()
@@ -376,8 +376,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                 self.animateToTab(toIndex: index)
             }
         })
-        
-        
     }
     //animation to dismiss popup
     @IBAction func popupLeft(_ sender: Any) {
@@ -397,7 +395,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     //cancel button to introduce popup
     func cancel() {
-        
         print("Initiated cancelButton")
         configurePopup("cancel")
         self.cancelPopup.isHidden = false
