@@ -11,7 +11,7 @@ import Firebase
 import FirebaseAuth
 
 class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
-    @IBOutlet weak var resetPassword: UIButton!
+    @IBOutlet weak var resetPassword: loginButton!
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var backToSignIn: UIButton!
     var defaultFrame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
@@ -38,7 +38,7 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
         //adding everything in
         popup = UIView(frame: CGRect.zero)
         popup.translatesAutoresizingMaskIntoConstraints = false //important
-        let button = UIButton(frame: CGRect.zero)
+        let button = loginButton(frame: CGRect.zero)
         button.translatesAutoresizingMaskIntoConstraints = false
         label = UILabel(frame: CGRect.zero)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -51,7 +51,7 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(popup)
         //popup constraints
         popup.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        popup.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 150).isActive = true
+        popup.topAnchor.constraint(equalTo: dimBackground.topAnchor, constant: 150).isActive = true
         popup.widthAnchor.constraint(equalToConstant: 260).isActive = true
         //titleLabel constraints
         titleLabel.centerXAnchor.constraint(equalTo: popup.centerXAnchor).isActive = true
@@ -82,7 +82,7 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
         //button aesthetics
         button.setTitle("Okay", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
-        button.backgroundColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
+        button.backgroundColor = button.normalBGColor
         button.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 17)!
         button.layer.cornerRadius = 8
         button.addTarget(self, action: #selector(self.closePopup(sender:)), for: .touchUpInside)
@@ -130,7 +130,7 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
         resetPassword.layer.shadowRadius = 10
         resetPassword.layer.shadowOffset = CGSize(width: 7.0, height: 7.0)
         email.layer.cornerRadius = 10
-        
+        resetPassword.backgroundColor = resetPassword.normalBGColor
         defaultFrame = self.view.frame
         
         //allows detection of keyboard appearing/disappearing

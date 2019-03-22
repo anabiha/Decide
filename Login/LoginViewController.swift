@@ -27,9 +27,20 @@ extension UIViewController {
         }
     }
 }
+class loginButton: UIButton {
+    var normalBGColor: UIColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
+    var selectedBGColor: UIColor = UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1)
+    override var isHighlighted: Bool {
+        didSet {
+            UIView.animate(withDuration: 0.2, animations: {
+                self.backgroundColor = self.isHighlighted ? self.selectedBGColor : self.normalBGColor
+            })
+        }
+    }
+}
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
-    @IBOutlet weak var logInButton: UIButton!
+    @IBOutlet weak var logInButton: loginButton!
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var signUpButton: UIButton!
@@ -63,7 +74,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         //adding everything in
         popup = UIView(frame: CGRect.zero)
         popup.translatesAutoresizingMaskIntoConstraints = false //important
-        let button = UIButton(frame: CGRect.zero)
+        let button = loginButton(frame: CGRect.zero)
         button.translatesAutoresizingMaskIntoConstraints = false
         label = UILabel(frame: CGRect.zero)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -107,7 +118,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         //button aesthetics
         button.setTitle("Okay", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
-        button.backgroundColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
+        button.backgroundColor = button.normalBGColor
         button.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 17)!
         button.layer.cornerRadius = 8
         button.addTarget(self, action: #selector(self.closePopup(sender:)), for: .touchUpInside)
@@ -156,9 +167,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         logInButton.layer.shadowOpacity = 0.5
         logInButton.layer.shadowRadius = 10
         logInButton.layer.shadowOffset = CGSize(width: 7.0, height: 7.0)
+        logInButton.backgroundColor = logInButton.normalBGColor
         email.layer.cornerRadius = 10
         password.layer.cornerRadius = 10
-        
         defaultFrame = self.view.frame
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
