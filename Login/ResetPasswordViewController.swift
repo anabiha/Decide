@@ -52,10 +52,10 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
         //popup constraints
         popup.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         popup.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 150).isActive = true
-        popup.widthAnchor.constraint(equalToConstant: 245).isActive = true
+        popup.widthAnchor.constraint(equalToConstant: 260).isActive = true
         //titleLabel constraints
         titleLabel.centerXAnchor.constraint(equalTo: popup.centerXAnchor).isActive = true
-        titleLabel.topAnchor.constraint(equalTo: popup.topAnchor, constant: 20).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: popup.topAnchor, constant: 23).isActive = true
         titleLabel.widthAnchor.constraint(equalToConstant: 225).isActive = true
         //label constraints
         label.centerXAnchor.constraint(equalTo: popup.centerXAnchor).isActive = true
@@ -65,17 +65,17 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
         button.centerXAnchor.constraint(equalTo: popup.centerXAnchor).isActive = true
         button.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 20).isActive = true
         button.bottomAnchor.constraint(equalTo: popup.bottomAnchor, constant: -15).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 215).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 230).isActive = true
         //titleLabel aesthetics
-        titleLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 17)
+        titleLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 18)
         titleLabel.textColor = UIColor.black
         titleLabel.lineBreakMode = .byWordWrapping
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 0
-        titleLabel.text = "Reset Password"
+        titleLabel.text = "Sign In"
         //label aesthetics
-        label.font = UIFont(name: "AvenirNext-Medium", size: 15)
+        label.font = UIFont(name: "AvenirNext-Medium", size: 16)
         label.textColor = UIColor.gray
         label.lineBreakMode = .byWordWrapping
         label.textAlignment = .center
@@ -173,7 +173,7 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
     }
     //action to reset password
     @IBAction func resetPassword(_ sender: Any) {
-        
+        email.endEditing(true)
         if self.email.text == "" {
             label.numberOfLines = 0
             label.text = "Please enter your email"
