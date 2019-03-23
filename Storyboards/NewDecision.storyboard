@@ -18,10 +18,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Dk-HW-YFC">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yOl-bh-KXq">
                                 <rect key="frame" x="30" y="20" width="315" height="572"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -110,14 +106,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="t2C-8Y-p2p" firstAttribute="bottom" secondItem="WIR-KR-om7" secondAttribute="bottom" constant="-20" id="2Hy-Np-ZD3"/>
-                            <constraint firstItem="WIR-KR-om7" firstAttribute="trailing" secondItem="5Dk-HW-YFC" secondAttribute="trailing" id="Fzn-ye-xAV"/>
-                            <constraint firstItem="5Dk-HW-YFC" firstAttribute="top" secondItem="skA-mO-84H" secondAttribute="top" id="QWa-hJ-lEX"/>
                             <constraint firstItem="I5M-vc-2jn" firstAttribute="centerX" secondItem="skA-mO-84H" secondAttribute="centerX" id="QqD-ag-fEm"/>
                             <constraint firstItem="I5M-vc-2jn" firstAttribute="centerY" secondItem="skA-mO-84H" secondAttribute="top" constant="-20" id="U0x-Pa-9zD"/>
                             <constraint firstItem="yOl-bh-KXq" firstAttribute="leading" secondItem="WIR-KR-om7" secondAttribute="leading" constant="30" id="WTF-1P-ZqB"/>
                             <constraint firstItem="WIR-KR-om7" firstAttribute="trailing" secondItem="t2C-8Y-p2p" secondAttribute="trailing" constant="40" id="bbp-J5-mbg"/>
-                            <constraint firstItem="5Dk-HW-YFC" firstAttribute="leading" secondItem="WIR-KR-om7" secondAttribute="leading" id="iyz-ty-N1p"/>
-                            <constraint firstAttribute="bottom" secondItem="5Dk-HW-YFC" secondAttribute="bottom" id="jDc-gu-crF"/>
                             <constraint firstItem="WIR-KR-om7" firstAttribute="trailing" secondItem="yOl-bh-KXq" secondAttribute="trailing" constant="30" id="kJ7-Gh-aqO"/>
                             <constraint firstItem="t2C-8Y-p2p" firstAttribute="leading" secondItem="WIR-KR-om7" secondAttribute="leading" constant="40" id="oQK-9V-kfO"/>
                             <constraint firstItem="t2C-8Y-p2p" firstAttribute="top" secondItem="yOl-bh-KXq" secondAttribute="bottom" constant="15" id="sO7-6P-8zz"/>
@@ -130,7 +122,6 @@
                         <outlet property="cancelButton" destination="I5M-vc-2jn" id="q8V-lE-6gq"/>
                         <outlet property="cancelButtonHeight" destination="UZU-Ub-LhO" id="aoa-j8-J0h"/>
                         <outlet property="cancelButtonWidth" destination="bam-e1-u2S" id="N10-A2-eUu"/>
-                        <outlet property="dimBackground" destination="5Dk-HW-YFC" id="WQ0-1K-zfu"/>
                         <outlet property="postButton" destination="t2C-8Y-p2p" id="CD4-yw-3pR"/>
                         <outlet property="tableView" destination="yOl-bh-KXq" id="G69-jt-c9n"/>
                     </connections>

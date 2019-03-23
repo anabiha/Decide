@@ -19,8 +19,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet weak var cancelButtonHeight: NSLayoutConstraint!
     @IBOutlet weak var cancelButtonWidth: NSLayoutConstraint!
     
-    @IBOutlet weak var dimBackground: UIView!
-    
     var cancelTriggered: Bool = false
     var decision = Decision() //data manager
     var insets: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 0, bottom: 0, right: 0) //content inset for tableview
@@ -32,7 +30,8 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     let cellSpacingHeight: CGFloat = 14
     let screenSize = UIScreen.main.bounds
     var defaultCancelFrame: CGRect?
-    var popup = Popup()
+    var popup: Popup!
+    var dimBackground: UIView!
     //Background is an IMAGEVIEW
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,23 +50,30 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         postButton.configure(tuple: button.post)
         //configure decision object with cells
         decision.configure(withSize: cellCount - 1)
-        //the dim background for popup
-        dimBackground.alpha = 0
-        dimBackground.isHidden = true
-        dimBackground.backgroundColor = UIColor.black
-        //view controller is behind dim background which is behind the popup
-        self.view.bringSubviewToFront(dimBackground)
         
         //add keyboard observer, allows for actions when keyboard appears/disappears
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        //tell view what the frame of the cancelbutton looks like
         defaultCancelFrame = cancelButton.frame
         
+        //the dim background for popup
+        dimBackground = UIView(frame: UIScreen.main.bounds)
+        dimBackground.alpha = 0
+        dimBackground.isHidden = true
+        dimBackground.backgroundColor = UIColor.black
+        dimBackground.alpha = 0
+        dimBackground.isHidden = true
+        dimBackground.backgroundColor = UIColor.black
+        view.addSubview(dimBackground)
+        //popup
+        popup = Popup()
         self.view.addSubview(popup)
-        popup.configure()
+        popup.configureTwoButtons()
+        //view controller is behind dim background which is behind the popup
+        self.view.bringSubviewToFront(dimBackground)
         self.view.bringSubviewToFront(popup)
     }
-    //tells cells how large keyboard will be
     /*
      Works in conjunction with decisionitem func "shift" which shifts the cell based on the keyboard size
      whenever a cell is selected

@@ -11,89 +11,54 @@ import Firebase
 import FirebaseAuth
 
 class SignUpViewController: UIViewController, UITextFieldDelegate{
-    @IBOutlet weak var createAccount: loginButton!
+    @IBOutlet weak var createAccount: CustomButton!
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var signIn: UIButton!
     var defaultFrame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
-    var popup: UIView!
+    var popup: Popup!
     var dimBackground: UIView!
-    var label: UILabel!
-    var titleLabel: UILabel!
    
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
-        configurePopup()
     }
+    
     //what to do when view is about to disappear
     override func viewWillDisappear(_ animated: Bool) {
         self.email.endEditing(true)
         self.password.endEditing(true)
     }
-    func configurePopup() {
+    //make things aesthetic
+    func configure() {
+        password.isSecureTextEntry = true
+        email.delegate = self
+        password.delegate = self
+        createAccount.configure(tuple: button.createAccount)
+        createAccount.layer.masksToBounds = false
+        createAccount.clipsToBounds = true
+        createAccount.layer.shadowColor = UIColor.lightGray.cgColor
+        createAccount.layer.shadowOpacity = 0.5
+        createAccount.layer.shadowRadius = 10
+        createAccount.layer.shadowOffset = CGSize(width: 7.0, height: 7.0)
+        email.layer.cornerRadius = 10
+        password.layer.cornerRadius = 10
+        defaultFrame = self.view.frame
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        popup = Popup()
+        view.addSubview(popup)
+        popup.configureOneButton()
+        popup.setTitle(to: "Sign Up")
+        popup.setButton1Target(self, #selector(self.closePopup(sender:)))
         //dim background
         dimBackground = UIView(frame: UIScreen.main.bounds)
         dimBackground.alpha = 0
         dimBackground.isHidden = true
         dimBackground.backgroundColor = UIColor.black
-        //adding everything in
-        popup = UIView(frame: CGRect.zero)
-        popup.translatesAutoresizingMaskIntoConstraints = false //important
-        let button = loginButton(frame: CGRect.zero)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        label = UILabel(frame: CGRect.zero)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel = UILabel(frame: CGRect.zero)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        popup.addSubview(button)
-        popup.addSubview(label)
-        popup.addSubview(titleLabel)
         view.addSubview(dimBackground)
-        view.addSubview(popup)
-        //popup constraints
-        popup.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        popup.topAnchor.constraint(equalTo: dimBackground.topAnchor, constant: 150).isActive = true
-        popup.widthAnchor.constraint(equalToConstant: 260).isActive = true
-        //titleLabel constraints
-        titleLabel.centerXAnchor.constraint(equalTo: popup.centerXAnchor).isActive = true
-        titleLabel.topAnchor.constraint(equalTo: popup.topAnchor, constant: 23).isActive = true
-        titleLabel.widthAnchor.constraint(equalToConstant: 225).isActive = true
-        //label constraints
-        label.centerXAnchor.constraint(equalTo: popup.centerXAnchor).isActive = true
-        label.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10).isActive = true
-        label.widthAnchor.constraint(equalToConstant: 215).isActive = true
-        //button constraints
-        button.centerXAnchor.constraint(equalTo: popup.centerXAnchor).isActive = true
-        button.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 20).isActive = true
-        button.bottomAnchor.constraint(equalTo: popup.bottomAnchor, constant: -15).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 230).isActive = true
-        //titleLabel aesthetics
-        titleLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 18)
-        titleLabel.textColor = UIColor.black
-        titleLabel.lineBreakMode = .byWordWrapping
-        titleLabel.textAlignment = .center
-        titleLabel.numberOfLines = 0
-        titleLabel.text = "Sign In"
-        //label aesthetics
-        label.font = UIFont(name: "AvenirNext-Medium", size: 16)
-        label.textColor = UIColor.gray
-        label.lineBreakMode = .byWordWrapping
-        label.textAlignment = .center
-        //button aesthetics
-        button.setTitle("Okay", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.backgroundColor = button.normalBGColor
-        button.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 17)!
-        button.layer.cornerRadius = 8
-        button.addTarget(self, action: #selector(self.closePopup(sender:)), for: .touchUpInside)
-        //popup aesthetics
-        popup.alpha = 0
-        popup.backgroundColor = UIColor.white
-        popup.layer.cornerRadius = 15
-        popup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
-        popup.isHidden = true
         //bring views to front
         view.bringSubviewToFront(dimBackground)
         view.bringSubviewToFront(popup)
@@ -122,25 +87,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
             self.popup.transform = CGAffineTransform(scaleX: 1, y: 1)
         })
     }
-    //make things aesthetic
-    func configure() {
-        password.isSecureTextEntry = true
-        email.delegate = self
-        password.delegate = self
-        createAccount.layer.cornerRadius = 10
-        createAccount.layer.masksToBounds = false
-        createAccount.clipsToBounds = true
-        createAccount.layer.shadowColor = UIColor.lightGray.cgColor
-        createAccount.layer.shadowOpacity = 0.5
-        createAccount.layer.shadowRadius = 10
-        createAccount.layer.shadowOffset = CGSize(width: 7.0, height: 7.0)
-        email.layer.cornerRadius = 10
-        password.layer.cornerRadius = 10
-        createAccount.backgroundColor = createAccount.normalBGColor
-        defaultFrame = self.view.frame
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-    }
+    
     //shifts view up when keyboard comes up
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -188,16 +135,13 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
         email.endEditing(true)
         password.endEditing(true)
         if email.text == "" && password.text == "" {
-            label.numberOfLines = 0
-            label.text = "Please enter an email and password"
+            popup.setText(to: "Please enter an email and password.")
             openPopup()
         } else if email.text == "" {
-            label.numberOfLines = 0
-            label.text = "Please enter an email"
+            popup.setText(to: "Please enter an email.")
             openPopup()
         } else if password.text == "" {
-            label.numberOfLines = 0
-            label.text = "Please enter a password"
+            popup.setText(to: "Please enter a password.")
             openPopup()
         } else {
             // writing user to the database
@@ -206,8 +150,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
             Auth.auth().createUser(withEmail: email.text!, password: password.text!, completion: { (user, error) in
                 // check to see if there is any sign up error
                 if let error = error {
-                    self.label.numberOfLines = 0
-                    self.label.text = self.rephrase(error: error as NSError)
+                    self.popup.setText(to: self.rephrase(error: error as NSError))
                     self.openPopup()
                 } else {
                     print("SUCCESSFULLY SIGNED UP")
