@@ -26,6 +26,7 @@
 		35F1010D222464F50074DA6F /* (null) in Resources */ = {isa = PBXBuildFile; };
 		653912AE219E13920003C0B6 /* Decision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653912AD219E13920003C0B6 /* Decision.swift */; };
 		65622ECA21960B1F00C96D0D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65622EC921960B1F00C96D0D /* HomeViewController.swift */; };
+		657F5CEB2245B5160096224E /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657F5CEA2245B5160096224E /* Popup.swift */; };
 		65ABA2EF21DE82F10012446A /* Animate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ABA2EE21DE82F10012446A /* Animate.swift */; };
 		65C4297A218FDD4000B7768C /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C42979218FDD4000B7768C /* ProfileViewController.swift */; };
 		65C5F0DD21934F3E00E426BB /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C5F0DC21934F3E00E426BB /* MainTabBarController.swift */; };
@@ -58,6 +59,7 @@
 		35995CD12239D1D400A845E6 /* PhotoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoHelper.swift; sourceTree = "<group>"; };
 		653912AD219E13920003C0B6 /* Decision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decision.swift; sourceTree = "<group>"; };
 		65622EC921960B1F00C96D0D /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		657F5CEA2245B5160096224E /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
 		65ABA2EE21DE82F10012446A /* Animate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animate.swift; sourceTree = "<group>"; };
 		65C42979218FDD4000B7768C /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		65C5F0DC21934F3E00E426BB /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 				65622EC921960B1F00C96D0D /* HomeViewController.swift */,
 				65C5F0DC21934F3E00E426BB /* MainTabBarController.swift */,
 				65F21E6C218F527A00A74B52 /* NewDecisionViewController.swift */,
+				657F5CEA2245B5160096224E /* Popup.swift */,
 				653912AD219E13920003C0B6 /* Decision.swift */,
 				65C42979218FDD4000B7768C /* ProfileViewController.swift */,
 				35105AD82185EE3000C93FE8 /* Assets.xcassets */,
@@ -322,6 +325,7 @@
 				653912AE219E13920003C0B6 /* Decision.swift in Sources */,
 				3574393F223B2A33000E0040 /* RetrieveData.swift in Sources */,
 				35995CD22239D1D400A845E6 /* PhotoHelper.swift in Sources */,
+				657F5CEB2245B5160096224E /* Popup.swift in Sources */,
 				35995CD02239CF1B00A845E6 /* CreateUserViewController.swift in Sources */,
 				35995CCB22381E5900A845E6 /* SignUpViewController.swift in Sources */,
 				65622ECA21960B1F00C96D0D /* HomeViewController.swift in Sources */,

@@ -87,7 +87,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(popup)
         //popup constraints
         popup.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        popup.topAnchor.constraint(equalTo: dimBackground.topAnchor, constant: 150).isActive = true
+        popup.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 150).isActive = true
         popup.widthAnchor.constraint(equalToConstant: 260).isActive = true
         //titleLabel constraints
         titleLabel.centerXAnchor.constraint(equalTo: popup.centerXAnchor).isActive = true
