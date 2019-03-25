@@ -37,7 +37,7 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
         //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
+        //add in popup
         popup = Popup()
         view.addSubview(popup)
         popup.configureOneButton()

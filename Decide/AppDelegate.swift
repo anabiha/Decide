@@ -30,7 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             initialViewController = UIStoryboard.initialViewController(for: .login)
             
         }
-        
         window?.rootViewController = initialViewController
         window?.makeKeyAndVisible()
         

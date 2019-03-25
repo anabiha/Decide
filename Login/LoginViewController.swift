@@ -27,17 +27,6 @@ extension UIViewController {
         }
     }
 }
-class loginButton: UIButton {
-    var normalBGColor: UIColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
-    var selectedBGColor: UIColor = UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1)
-    override var isHighlighted: Bool {
-        didSet {
-            UIView.animate(withDuration: 0.2, animations: {
-                self.backgroundColor = self.isHighlighted ? self.selectedBGColor : self.normalBGColor
-            })
-        }
-    }
-}
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var logInButton: CustomButton!
@@ -75,10 +64,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         email.layer.cornerRadius = 10
         password.layer.cornerRadius = 10
         defaultFrame = self.view.frame
-        
+         //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
+        //add popup
         popup = Popup()
         view.addSubview(popup)
         popup.configureOneButton()

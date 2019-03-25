@@ -23,7 +23,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
         super.viewDidLoad()
         configure()
     }
-    
     //what to do when view is about to disappear
     override func viewWillDisappear(_ animated: Bool) {
         self.email.endEditing(true)
@@ -36,7 +35,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
         password.delegate = self
         createAccount.configure(tuple: button.createAccount)
         createAccount.layer.masksToBounds = false
-        createAccount.clipsToBounds = true
         createAccount.layer.shadowColor = UIColor.lightGray.cgColor
         createAccount.layer.shadowOpacity = 0.5
         createAccount.layer.shadowRadius = 10
@@ -44,10 +42,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
         email.layer.cornerRadius = 10
         password.layer.cornerRadius = 10
         defaultFrame = self.view.frame
-        
+         //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
+        //add in popup
         popup = Popup()
         view.addSubview(popup)
         popup.configureOneButton()

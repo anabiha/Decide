@@ -4,6 +4,7 @@
 //
 //  Created by Daniel Wei on 3/22/19.
 //  Copyright © 2019 AyPeDa. All rights reserved.
+//  Class for popups
 //
 
 import Foundation
@@ -11,9 +12,13 @@ import UIKit
 class Popup: UIView {
     var title: UILabel!
     var label: UILabel!
+    //popup must contain at least one button
     var button1: CustomButton!
+    //next two buttons are optional
     var button2: CustomButton?
     var button3: CustomButton?
+    //the default configuration that configures popup, title, and label
+    //MUST be called before custom configurations are called
     private func defaultConfigure() {
         self.translatesAutoresizingMaskIntoConstraints = false //important
         title = UILabel(frame: CGRect.zero)
@@ -57,9 +62,44 @@ class Popup: UIView {
         self.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
         self.isHidden = true
     }
+    //popup with three buttons
     func configureThreeButtons() {
         defaultConfigure()
+        button1 = CustomButton()
+        button1.translatesAutoresizingMaskIntoConstraints = false //important
+        button2 = CustomButton()
+        button2!.translatesAutoresizingMaskIntoConstraints = false //important
+        button3 = CustomButton()
+        button3!.translatesAutoresizingMaskIntoConstraints = false //important
+        self.addSubview(button1)
+        self.addSubview(button2!)
+        self.addSubview(button3!)
+        //button1 constraints
+        button1.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: -98).isActive = true
+        button1.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 20).isActive = true
+        button1.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        button1.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        button1.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
+        //button2 constraints
+        button2!.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        button2!.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 20).isActive = true
+        button2!.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        button2!.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        button2!.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
+        //button3 constraints
+        button3!.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: 98).isActive = true
+        button3!.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 20).isActive = true
+        button3!.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        button3!.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        button3!.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
+        //button1 aesthetics
+        button1.configure(tuple: button.popupCancel)
+        //button2 aesthetics
+        button2!.configure(tuple: button.popupDelete)
+        //button3 aesthetics
+        button3!.configure(tuple: button.popupOkay)
     }
+    //popup with two buttons
     func configureTwoButtons() {
         defaultConfigure()
         button1 = CustomButton()
@@ -87,6 +127,7 @@ class Popup: UIView {
         //button2 aesthetics
         button2!.configure(tuple: button.popupDelete)
     }
+    //popup with one button
     func configureOneButton() {
         defaultConfigure()
         //instantiate button
@@ -184,9 +225,10 @@ class CustomButton: UIButton {
         titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 18)
         layer.cornerRadius = 10
         
-        self.normalBGColor = tuple.0
-        self.selectedBGColor = tuple.1
+        normalBGColor = tuple.0
+        selectedBGColor = tuple.1
     }
+    //change the title of the button
     func changeTitle(to newTitle: String) {
         setTitle(newTitle, for: .normal)
     }

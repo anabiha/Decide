@@ -33,11 +33,10 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
         getStarted.layer.shadowOffset = CGSize(width: 7.0, height: 7.0)
         username.layer.cornerRadius = 10
         defaultFrame = self.view.frame
-        
         //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
+        //add popup
         popup = Popup()
         view.addSubview(popup)
         popup.configureOneButton()

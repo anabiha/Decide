@@ -73,6 +73,10 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         //view controller is behind dim background which is behind the popup
         self.view.bringSubviewToFront(dimBackground)
         self.view.bringSubviewToFront(popup)
+        cancelButton.alpha = 0
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        cancelButton.alpha = 1
     }
     /*
      Works in conjunction with decisionitem func "shift" which shifts the cell based on the keyboard size
@@ -324,14 +328,11 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         ref.child("posts").child(userKey).child("").child("Options").setValue(post_options)
         ref.child("posts").child(userKey).child("").child("Title").setValue(self.decision.getTitle())
         //animate the action of going back, switching tabs is also handled in animated
-        self.animateToTab(toIndex: 0) //changing of tab bar item is handled here as well
-        
     }
     //deletes the decision
     @objc func deleteDecision(_ sender: Any) {
         closePopup()
-        let index = (self.tabBarController as! MainTabBarController).previouslySelectedIndex!
-        self.animateToTab(toIndex: index)
+        self.dismiss(animated: true, completion: nil)
     }
     
     //cancel button to introduce popup
