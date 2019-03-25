@@ -13,7 +13,8 @@ import FirebaseDatabase.FIRDataSnapshot
 class Decision: DecisionHandler {
     
     var decisionItemList: [String] = []
-    
+    var activeFieldIndex: IndexPath?
+    var keyboardSize: CGRect?
     func configure(withSize size: Int) {
         while decisionItemList.count < size {
             decisionItemList.append("")
@@ -87,12 +88,12 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     let placeholderColor: UIColor = UIColor(red:200/255, green: 200/255, blue: 200/255, alpha: 0.5)
     let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 25)
     var textViewPlaceholder: UILabel!
-    var decisionHandler: DecisionHandler?
+    var decisionHandler: Decision?
     public func configure(text: String?) { //sets everything in the cell up
         descriptionBox.delegate = self //important
         descriptionBox.text = text
         descriptionBox.font = normalFont
-            //UIFont.boldSystemFont(ofSize: 25.0)
+        //UIFont.boldSystemFont(ofSize: 25.0)
         descriptionBox.textColor = normalTextColor
         selectionStyle = .none//disables the "selected" animation when someone clicks on the cell, but still allows for interaction with the descriptionBox
         //setting the colors of the descriptionBox and row
@@ -115,10 +116,34 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor
         clipsToBounds = true //important
+        
+        
     }
+    //tells view controller which cell is currently being edited
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        if let index = self.tableView!.indexPath(for: self) {
+            decisionHandler!.activeFieldIndex = index
+        }
+        return true
+    }
+    //tells tableview to shift
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if let index = self.tableView?.indexPath(for: self) {
-            
+        if let size = decisionHandler!.keyboardSize {
+            shift(keyboardSize: size)
+        }
+    }
+    //moves tableview accordingly
+    func shift(keyboardSize: CGRect) {
+        if let index = decisionHandler!.activeFieldIndex {
+            let rectInTable = self.tableView!.rectForRow(at: index)
+            let rectInView = self.tableView!.convert(rectInTable, to: self.tableView!.superview)
+            if keyboardSize.intersects(rectInView) {
+                let dist = rectInView.maxY - keyboardSize.minY + 30
+                UIView.animate(withDuration: 0.25) {
+                    self.tableView!.contentInset.bottom = dist
+                    self.tableView!.contentOffset.y = self.tableView!.contentOffset.y + dist
+                }
+            }
         }
     }
     //changes cell height while text is changing
@@ -135,13 +160,13 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         }
         decisionHandler!.setDecision(at: getIndexPath()!.section, with: descriptionBox.text)
     }
-    //restricts number of characters
+    //restricts number of characters, hide keyboard when pressing return
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         if(text == "\n") {
             textView.resignFirstResponder()
             return false
         } else {
-           return textView.text.count + (text.count - range.length) <= 65
+            return textView.text.count + (text.count - range.length) <= 65
         }
     }
     //shifts color of background
@@ -158,6 +183,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         self.shake()
         fade(backgroundTo: normalBGColor, borderTo: normalBorderColor)
     }
+    //get cell's indexpath
     func getIndexPath() -> IndexPath? {
         guard let superView = self.superview as? UITableView else {
             print("superview is not a UITableView - getIndexPath")
@@ -167,8 +193,8 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         return indexPath
     }
 }
-
-extension UIView { //allows shaking of cells
+//allows shaking of cells
+extension UIView {
     func shake() {
         let animation = CABasicAnimation(keyPath: "position")
         animation.duration = 0.08
@@ -179,8 +205,8 @@ extension UIView { //allows shaking of cells
         self.layer.add(animation, forKey: "position")
     }
 }
-
-extension UITableViewCell { //this is how our cell accesses its own tableview
+//this is how our cell accesses its own tableview
+extension UITableViewCell {
     /// Search up the view hierarchy of the table view cell to find the containing table view
     var tableView: UITableView? {
         get {
@@ -198,7 +224,7 @@ class AddButton: UITableViewCell {
     //198, 236, 255
     let normalBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.2)
     let normalTextColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
-        //UIColor(red: 255/255, green: 147/255, blue: 33/155, alpha: 1)
+    //UIColor(red: 255/255, green: 147/255, blue: 33/155, alpha: 1)
     let greyBG = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 1)
     let greyText = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 1)
     let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 15)
@@ -215,19 +241,22 @@ class AddButton: UITableViewCell {
         layer.cornerRadius = 8
         clipsToBounds = true
     }
-    
+    //changes color of textview
     public func fade(backgroundTo bgColor: UIColor, textTo textColor: UIColor) {
         UIView.animate(withDuration: 0.15, delay: 0, options: [.transitionCrossDissolve, .curveEaseOut], animations: {
             self.backgroundColor = bgColor
             self.textLabel?.textColor = textColor
         }, completion: nil)
     }
+    //changes color to grey
     public func fadeToGrey() {
         fade(backgroundTo: greyBG, textTo: greyText)
     }
+    //changes color to normal color
     public func fadeToNormal() {
         fade(backgroundTo: normalBGColor, textTo: normalTextColor)
     }
+    //custom frame
     override var frame: CGRect {
         get {
             return super.frame
@@ -240,18 +269,18 @@ class AddButton: UITableViewCell {
             super.frame = frame
         }
     }
-   
+    
 }
 
 class QuestionBar: UITableViewCell, UITextViewDelegate {
-   
+    
     @IBOutlet weak var questionBar: UITextView!
     var textViewPlaceholder: UILabel!
     let normalBGColor = UIColor.clear
     let normalTextColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
     let placeholderColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
     let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 34)
-    var decisionHandler: DecisionHandler?
+    var decisionHandler: Decision?
     public func configure(text: String) {
         questionBar.delegate = self
         questionBar.text = text
@@ -276,6 +305,7 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
         
         clipsToBounds = true
     }
+    //resizes the cell that the textview is in based on text size
     func textViewDidChange(_ textView: UITextView) { //this only works because "scrolling" was disabled in interface builder
         textViewPlaceholder.isHidden = !questionBar.text.isEmpty
         let startHeight = textView.frame.size.height
@@ -289,11 +319,13 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
         }
         decisionHandler!.setTitle(text: questionBar.text)
     }
+    //shifts color of textview
     public func fade(backgroundTo bgColor: UIColor) {
         UIView.animate(withDuration: 0.3, delay: 0.1, options: .transitionCrossDissolve, animations: {
             self.questionBar.backgroundColor = bgColor
         }, completion: nil)
     }
+    //hides keyboard when pressing return
     public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         if (text == "\n") {
             textView.resignFirstResponder()
@@ -302,6 +334,12 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
             return true
         }
     }
+    //tells the view controller which cell is currently being edited
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        decisionHandler!.activeFieldIndex = IndexPath(row: 0, section: 0)
+        return true
+    }
+    //method to invoke shake of the cell
     public func shakeError() {
         self.shake()
     }
