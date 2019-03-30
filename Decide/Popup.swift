@@ -9,6 +9,7 @@
 
 import Foundation
 import UIKit
+
 class Popup: UIView {
     var title: UILabel!
     var label: UILabel!
@@ -20,6 +21,7 @@ class Popup: UIView {
     //the default configuration that configures popup, title, and label
     //MUST be called before custom configurations are called
     private func defaultConfigure() {
+        clipsToBounds = false
         self.translatesAutoresizingMaskIntoConstraints = false //important
         title = UILabel(frame: CGRect.zero)
         title.translatesAutoresizingMaskIntoConstraints = false //important
@@ -27,11 +29,13 @@ class Popup: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false //important
         self.addSubview(title)
         self.addSubview(label)
+        
         //popup constraints
         if let view = self.superview {
             self.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
             self.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
             self.widthAnchor.constraint(equalToConstant: 290).isActive = true
+            
         }
         //title constraints
         title.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
@@ -126,6 +130,7 @@ class Popup: UIView {
         button1.configure(tuple: button.popupCancel)
         //button2 aesthetics
         button2!.configure(tuple: button.popupDelete)
+        
     }
     //popup with one button
     func configureOneButton() {
@@ -162,6 +167,17 @@ class Popup: UIView {
             button3.addTarget(target, action: selector, for: .touchUpInside)
         } else {
             print("BUTTON 3 IS NIL!")
+        }
+    }
+    func removeAllTargets() {
+        if let button1 = button1 {
+            button1.removeTarget(nil, action: nil, for: .allEvents)
+        }
+        if let button2 = button2 {
+            button2.removeTarget(nil, action: nil, for: .allEvents)
+        }
+        if let button3 = button3 {
+            button3.removeTarget(nil, action: nil, for: .allEvents)
         }
     }
     //sets the title of the popup

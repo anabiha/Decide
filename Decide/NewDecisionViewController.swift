@@ -57,11 +57,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         //tell view what the frame of the cancelbutton looks like
         defaultCancelFrame = cancelButton.frame
         
-        //the dim background for popup
         dimBackground = UIView(frame: UIScreen.main.bounds)
-        dimBackground.alpha = 0
-        dimBackground.isHidden = true
-        dimBackground.backgroundColor = UIColor.black
         dimBackground.alpha = 0
         dimBackground.isHidden = true
         dimBackground.backgroundColor = UIColor.black
@@ -73,6 +69,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         //view controller is behind dim background which is behind the popup
         self.view.bringSubviewToFront(dimBackground)
         self.view.bringSubviewToFront(popup)
+        //keep cancelButton hidden while sliding up
         cancelButton.alpha = 0
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -278,11 +275,11 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     //closes popup
     func closePopup() {
-        UIView.animate(withDuration: 0.15, delay: 0, options: .transitionCrossDissolve, animations: {
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
             self.popup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
         }, completion: nil)
         
-        UIView.transition(with: popup, duration: 0.15, options: .transitionCrossDissolve, animations: {
+        UIView.transition(with: popup, duration: 0.1, options: .transitionCrossDissolve, animations: {
             self.popup.alpha = 0
             self.dimBackground.alpha = 0
         }, completion: { finished in
@@ -328,6 +325,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         ref.child("posts").child(userKey).child("").child("Options").setValue(post_options)
         ref.child("posts").child(userKey).child("").child("Title").setValue(self.decision.getTitle())
         //animate the action of going back, switching tabs is also handled in animated
+        self.dismiss(animated: true, completion: nil)
     }
     //deletes the decision
     @objc func deleteDecision(_ sender: Any) {
@@ -342,6 +340,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         popup.setText(to: "Are you sure you want to delete this decision?")
         popup.changeButton1(to: button.popupCancel)
         popup.changeButton2(to: button.popupDelete)
+        popup.removeAllTargets()
         popup.setButton1Target(self, #selector(cancelPopup(_:)))
         popup.setButton2Target(self, #selector(deleteDecision(_:)))
         //fade it in while also zooming in
@@ -362,6 +361,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             popup.setText(to: "Are you sure you want to post this decision?")
             popup.changeButton1(to: button.popupCancel)
             popup.changeButton2(to: button.popupPost)
+            popup.removeAllTargets()
             popup.setButton1Target(self, #selector(cancelPopup(_:)))
             popup.setButton2Target(self, #selector(saveDecision(_:)))
             showPopup()

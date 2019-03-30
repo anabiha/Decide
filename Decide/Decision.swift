@@ -10,6 +10,120 @@ import Foundation
 import UIKit
 import FirebaseDatabase.FIRDataSnapshot
 
+//data structure for the decisions displayed on the home page
+class HomeDecision {
+    //each post has a title, decisions, and percentages for those decisions
+    class Post {
+        var title: String!
+        var decisions: [String]!
+        var percentages: [Int]!
+        var didDisplay = false
+        init(title: String, decisions: [String], percentages: [Int]) {
+            self.title = title
+            self.decisions = decisions
+            self.percentages = percentages
+        }
+    }
+    
+    var posts = [Post]()
+    var maxPosts: Int = 20
+    
+    func configure() {
+        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], percentages: [10, 30, 40, 100]))
+        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], percentages: [10, 30, 40, 20]))
+        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], percentages: [10, 30, 40, 20]))
+        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], percentages: [10, 30, 40, 20]))
+        //retrieve maxPosts number of posts
+        //put them in the array
+    }
+    func getPost(at index: Int) -> Post? {
+        if index < posts.count {
+            return posts[index]
+        } else {
+            print("POST DOESN'T EXIST AT INDEX: \(index)")
+            return nil
+        }
+    }
+    func shiftPosts(by shift: Int) {
+        //retrieve a number of posts equal to shift
+        //delete that number of posts at the beginning
+        //add in the posts at the top
+    }
+    
+}
+class ChoiceCell: UITableViewCell {
+    
+    @IBOutlet weak var choice: UILabel!
+    var bar: UIView?//creates the bar that highlights percentages
+    var percentage: Int!
+    func configure(text: String, percentage: Int) {
+        //make sure subviews to leave the view
+        clipsToBounds = true
+        selectionStyle = .none
+        //set the information
+        choice.text = text
+        self.percentage = percentage
+        //bar
+        if bar == nil {
+            bar = UIView(frame: self.frame)
+            bar!.sizeToFit()
+            self.addSubview(bar!)
+            bar!.layer.backgroundColor = UIColor.white.cgColor
+            bar!.isHidden = true
+            bar!.alpha = 0
+            bar!.frame.size.width = 0
+        }
+        bringSubviewToFront(bar!)
+        //cell aesthetics
+        backgroundColor = UIColor.orange
+        //label aesthetics
+        choice.backgroundColor = UIColor.clear
+        choice.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+    }
+    func displayPercentage() {
+        if let bar = bar {
+            bar.isHidden = false
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+                bar.alpha = 0.5
+                bar.frame.size.width = self.frame.size.width * CGFloat(Double(self.percentage)/100)
+            }, completion: nil)
+        }
+    }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        bar!.isHidden = true
+        bar!.alpha = 0
+        bar!.frame.size.width = 0
+    }
+    
+}
+class HomeTitleCell: UITableViewCell {
+    @IBOutlet weak var title: UITextView!
+    func configure(text: String) {
+        title.text = text
+        selectionStyle = .none
+        title.font = UIFont(name: "AvenirNext-DemiBold", size: 40)
+        title.textContainerInset = UIEdgeInsets(top: 0, left: 5, bottom: 5, right: 0)
+    }
+}
+class UserCell: UITableViewCell {
+    
+    @IBOutlet weak var username: UILabel!
+    @IBOutlet weak var profilePicture: UIImageView!
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        roundCorners([.topLeft, .topRight], radius: 15)
+    }
+    func configure(username: String) {
+        clipsToBounds = true
+        self.username.text = username
+        self.username.font = UIFont(name: "AvenirNext-DemiBold", size: 15)
+        backgroundColor = UIColor.white
+    }
+}
+
+//data structure for a new decision
 class Decision: DecisionHandler {
     
     var decisionItemList: [String] = []
@@ -80,6 +194,7 @@ protocol DecisionHandler {
     func getDecision(at index: Int) -> String
 }
 
+
 class DecisionItem: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var descriptionBox: UITextView!
     let normalBGColor: UIColor = UIColor.white
@@ -116,8 +231,6 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor
         clipsToBounds = true //important
-        
-        
     }
     //tells view controller which cell is currently being edited
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
@@ -204,6 +317,17 @@ extension UIView {
         animation.toValue = NSValue(cgPoint: CGPoint(x: self.center.x + 12, y: self.center.y))
         self.layer.add(animation, forKey: "position")
     }
+    
+    
+    func roundCorners(_ corners: UIRectCorner, radius: CGFloat) {
+        let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        self.layer.mask = mask
+    }
+    
+    
+    
 }
 //this is how our cell accesses its own tableview
 extension UITableViewCell {
