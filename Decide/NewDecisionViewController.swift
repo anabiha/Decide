@@ -357,7 +357,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         }
         //if there are no empty cells....
         if blankCellList.count == 0 && decision.getTitle() != "" {
-            popup.setTitle(to: "Post Deicision")
+            popup.setTitle(to: "Post Decision")
             popup.setText(to: "Are you sure you want to post this decision?")
             popup.changeButton1(to: button.popupCancel)
             popup.changeButton2(to: button.popupPost)

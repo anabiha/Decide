@@ -54,28 +54,34 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         headerView.backgroundColor = UIColor.clear
         return headerView
     }
+   
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == 0 {
+        if indexPath.row == 0 { //username/profile pic bar
             let cell = self.tableView.dequeueReusableCell(withIdentifier: usernameIdentifier) as! UserCell
             cell.configure(username: "USER")
             cell.selectionStyle = .none
             return cell
-        } else if indexPath.row == 1 {
+        } else if indexPath.row == 1 { //title bar
             let cell = self.tableView.dequeueReusableCell(withIdentifier: titleIdentifier) as! HomeTitleCell
             if let post = homeDecision.getPost(at: indexPath.section) {
                 cell.configure(text: post.title)
             }
             return cell
-        } else {
+        } else { //choice bars
             let cell = self.tableView.dequeueReusableCell(withIdentifier: choiceIdentifier) as! ChoiceCell
-           
             print("CREATED CHOICECELL at \(indexPath)")
             if let post = homeDecision.getPost(at: indexPath.section) {
+                if indexPath.row == post.decisions.count + 1 { //rounds corners of bottom row
+                    cell.shouldRound = true
+                } else {
+                    cell.shouldRound = false
+                }
                 cell.configure(text: post.decisions[indexPath.row - 2], percentage: post.percentages[indexPath.row - 2])
                 if post.didDisplay { //redisplay percentages if they were shown prior
                     cell.displayPercentage()
                 }
+                
             }
             return cell
         }

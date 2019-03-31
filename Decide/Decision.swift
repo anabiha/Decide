@@ -56,6 +56,15 @@ class ChoiceCell: UITableViewCell {
     @IBOutlet weak var choice: UILabel!
     var bar: UIView?//creates the bar that highlights percentages
     var percentage: Int!
+    var shouldRound = false
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if shouldRound {
+            roundCorners([.bottomLeft, .bottomRight], radius: 15)
+        } else {
+            roundCorners([.bottomLeft, .bottomRight], radius: 0)
+        }
+    }
     func configure(text: String, percentage: Int) {
         //make sure subviews to leave the view
         clipsToBounds = true
@@ -73,7 +82,7 @@ class ChoiceCell: UITableViewCell {
             bar!.alpha = 0
             bar!.frame.size.width = 0
         }
-        bringSubviewToFront(bar!)
+        bringSubviewToFront(choice)
         //cell aesthetics
         backgroundColor = UIColor.orange
         //label aesthetics
