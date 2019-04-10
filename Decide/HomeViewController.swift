@@ -72,12 +72,53 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             let cell = self.tableView.dequeueReusableCell(withIdentifier: choiceIdentifier) as! ChoiceCell
             print("CREATED CHOICECELL at \(indexPath)")
             if let post = homeDecision.getPost(at: indexPath.section) {
+                var total: Int = 0 //the total number of votes to determine the percentage
+//                var listOfPercents = [Double]()
+//                var listOfFloors = [Int]()
+                for i in 0..<post.numVotes.count {
+                    total += post.numVotes[i]
+                }
+//                var sumOfPercentFloors: Int = 0
+//                for i in 0..<post.numVotes.count {
+//                    sumOfPercentFloors += Int(Double(post.numVotes[i])/Double(total) * 100)
+//                    listOfFloors.append(Int(Double(post.numVotes[i])/Double(total) * 100))
+//                    listOfPercents.append(Double(post.numVotes[i])/Double(total) * 100)
+//                }
+//                var sortListOfFloors = listOfFloors
+//                var diff = 100 - sumOfPercentFloors
+//                //bubblesort
+//                for i in stride(from: listOfPercents.count - 1, to: -1, by: -1) {
+//                    for j in stride(from: 1, to: i + 1, by: +1) {
+//                        //sort by decimal places
+//                        if (listOfPercents[j - 1] - Double(sortedListOfFloors[j]) < listOfPercents[j] - Double(sortedListOfFloors[j])) {
+//                            let temp1 = sortedListOfFloors[j-1]
+//                            sortedListOfFloors[j-1] = sortedListOfFloors[j]
+//                            sortedListOfFloors[j] = temp1
+//                            let temp2 = sortedListOfPercents[j-1]
+//                            sortedListOfPercents[j-1] = sortedListOfPercents[j]
+//                            sortedListOfPercents[j] = temp2
+//                        }
+//                    }
+//                }
+//                var counter = 0
+//                while diff > 0 {
+//                    if counter >= listOfFloors.count { counter = 0 }
+//                    listOfFloors[counter] += 1
+//                    counter += 1
+//                    diff -= 1
+//                }
+//                //problem, list of floors is getting sorted, which messes up the order of the percentages
+//                print(listOfFloors)
+//                print(listOfPercents)
                 if indexPath.row == post.decisions.count + 1 { //rounds corners of bottom row
                     cell.shouldRound = true
                 } else {
                     cell.shouldRound = false
                 }
-                cell.configure(text: post.decisions[indexPath.row - 2], percentage: post.percentages[indexPath.row - 2])
+                //configure cell with the correct percentage
+                //change percentage to a decimal
+                
+                cell.configure(text: post.decisions[indexPath.row - 2], percentage: Double(post.numVotes[indexPath.row - 2])/Double(total))
                 if post.didDisplay { //redisplay percentages if they were shown prior
                     cell.displayPercentage()
                 }
@@ -93,10 +134,14 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         print("You tapped cell number \(indexPath.row). at post number: \(indexPath.section)")
         if indexPath.row != 0 && indexPath.row != 1 {
             if let post = homeDecision.getPost(at: indexPath.section) {
-                post.didDisplay = true //mark the cell as displayed
+                post.didDisplay = !post.didDisplay //mark the cell as displayed
                 for index in 2..<post.decisions.count + 2 {
                     if let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: indexPath.section)) as? ChoiceCell {
-                        cell.displayPercentage()
+                        if post.didDisplay {
+                            cell.displayPercentage()
+                        } else {
+                            cell.displayText()
+                        }
                     }
                 }
             }

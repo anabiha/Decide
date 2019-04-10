@@ -14,14 +14,14 @@ import FirebaseDatabase.FIRDataSnapshot
 class HomeDecision {
     //each post has a title, decisions, and percentages for those decisions
     class Post {
-        var title: String!
-        var decisions: [String]!
-        var percentages: [Int]!
-        var didDisplay = false
-        init(title: String, decisions: [String], percentages: [Int]) {
+        var title: String! //the title/question
+        var decisions: [String]! //the decisions
+        var numVotes: [Int]! //distribution of votes
+        var didDisplay = false //marks whether cell was clicked on or not
+        init(title: String, decisions: [String], numVotes: [Int]) {
             self.title = title
             self.decisions = decisions
-            self.percentages = percentages
+            self.numVotes = numVotes
         }
     }
     
@@ -29,12 +29,15 @@ class HomeDecision {
     var maxPosts: Int = 20
     
     func configure() {
-        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], percentages: [10, 30, 40, 100]))
-        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], percentages: [10, 30, 40, 20]))
-        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], percentages: [10, 30, 40, 20]))
-        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], percentages: [10, 30, 40, 20]))
+        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 100]))
+        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
+        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
+        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
         //retrieve maxPosts number of posts
         //put them in the array
+    }
+    func addPost() {
+        
     }
     func getPost(at index: Int) -> Post? {
         if index < posts.count {
@@ -52,10 +55,11 @@ class HomeDecision {
     
 }
 class ChoiceCell: UITableViewCell {
-    
     @IBOutlet weak var choice: UILabel!
+    var choiceOrigin: CGPoint! //the original origin of choice
+    var decision: String!
     var bar: UIView?//creates the bar that highlights percentages
-    var percentage: Int!
+    var percentage: Double!
     var shouldRound = false
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -65,12 +69,13 @@ class ChoiceCell: UITableViewCell {
             roundCorners([.bottomLeft, .bottomRight], radius: 0)
         }
     }
-    func configure(text: String, percentage: Int) {
+    func configure(text: String, percentage: Double) {
         //make sure subviews to leave the view
         clipsToBounds = true
         selectionStyle = .none
         //set the information
         choice.text = text
+        decision = text
         self.percentage = percentage
         //bar
         if bar == nil {
@@ -88,14 +93,44 @@ class ChoiceCell: UITableViewCell {
         //label aesthetics
         choice.backgroundColor = UIColor.clear
         choice.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        choiceOrigin = choice.frame.origin
+    }
+    func displayText() {
+        if let bar = bar {
+            UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
+                bar.alpha = 0
+                bar.frame.size.width = 0
+                self.choice.alpha = 0
+            })
+            UIView.animate(withDuration: 0.3, delay: 0.2, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
+               self.choice.alpha = 1
+            })
+            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
+                self.choice.frame.origin = self.choiceOrigin
+                self.choice.text = self.decision
+            })
+        }
     }
     func displayPercentage() {
         if let bar = bar {
             bar.isHidden = false
+            //animat
             UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
                 bar.alpha = 0.5
-                bar.frame.size.width = self.frame.size.width * CGFloat(Double(self.percentage)/100)
+                bar.frame.size.width = self.frame.size.width * CGFloat(self.percentage)
             }, completion: nil)
+            //animate shifting of choice alpha
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations: {
+                self.choice.alpha = 0
+                self.choice.alpha = 1
+            }, completion: nil)
+            UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+                self.choice.text = String("\(Int((self.percentage * 100) + 0.5))%") //this step must happen before the shift of choice, otherwise animation wont work
+            }, completion: { finished in
+                UIView.animate(withDuration: 0.3, delay: 0, options: .transitionCrossDissolve, animations: {
+                    self.choice.frame.origin = CGPoint(x: self.choice.frame.origin.x + self.frame.size.width * CGFloat(self.percentage), y: self.choice.frame.origin.y)
+                })
+            })
         }
     }
     override func prepareForReuse() {
@@ -103,9 +138,13 @@ class ChoiceCell: UITableViewCell {
         bar!.isHidden = true
         bar!.alpha = 0
         bar!.frame.size.width = 0
+        choice.frame.origin = choiceOrigin
     }
-    
 }
+
+
+
+
 class HomeTitleCell: UITableViewCell {
     @IBOutlet weak var title: UITextView!
     func configure(text: String) {
