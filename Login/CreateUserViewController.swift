@@ -13,80 +13,40 @@ import FirebaseDatabase
 class CreateUserViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var username: UITextField!
-    @IBOutlet weak var getStarted: UIButton!
+    @IBOutlet weak var getStarted: CustomButton!
     var defaultFrame: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
-    var popup: UIView!
+    var popup: Popup!
     var dimBackground: UIView!
-    var label: UILabel!
-    var titleLabel: UILabel!
     //what to do when view loads
     override func viewDidLoad() {
         configure()
-        configurePopup()
     }
-    func configurePopup() {
+    //make things aesthetic
+    func configure() {
+        username.delegate = self
+        getStarted.configure(tuple: button.getStarted)
+        getStarted.layer.masksToBounds = false
+        getStarted.layer.shadowColor = UIColor.lightGray.cgColor
+        getStarted.layer.shadowOpacity = 0.5
+        getStarted.layer.shadowRadius = 10
+        getStarted.layer.shadowOffset = CGSize(width: 7.0, height: 7.0)
+        username.layer.cornerRadius = 10
+        defaultFrame = self.view.frame
+        //allows detection of keyboard appearing/disappearing
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        //add popup
+        popup = Popup()
+        view.addSubview(popup)
+        popup.configureOneButton()
+        popup.setTitle(to: "Sign Up")
+        popup.setButton1Target(self, #selector(self.closePopup(sender:)))
         //dim background
         dimBackground = UIView(frame: UIScreen.main.bounds)
         dimBackground.alpha = 0
         dimBackground.isHidden = true
         dimBackground.backgroundColor = UIColor.black
-        //adding everything in
-        popup = UIView(frame: CGRect.zero)
-        popup.translatesAutoresizingMaskIntoConstraints = false //important
-        let button = UIButton(frame: CGRect.zero)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        label = UILabel(frame: CGRect.zero)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel = UILabel(frame: CGRect.zero)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        popup.addSubview(button)
-        popup.addSubview(label)
-        popup.addSubview(titleLabel)
         view.addSubview(dimBackground)
-        view.addSubview(popup)
-        //popup constraints
-        popup.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        popup.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 150).isActive = true
-        popup.widthAnchor.constraint(equalToConstant: 245).isActive = true
-        //titleLabel constraints
-        titleLabel.centerXAnchor.constraint(equalTo: popup.centerXAnchor).isActive = true
-        titleLabel.topAnchor.constraint(equalTo: popup.topAnchor, constant: 20).isActive = true
-        titleLabel.widthAnchor.constraint(equalToConstant: 225).isActive = true
-        //label constraints
-        label.centerXAnchor.constraint(equalTo: popup.centerXAnchor).isActive = true
-        label.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10).isActive = true
-        label.widthAnchor.constraint(equalToConstant: 215).isActive = true
-        //button constraints
-        button.centerXAnchor.constraint(equalTo: popup.centerXAnchor).isActive = true
-        button.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 20).isActive = true
-        button.bottomAnchor.constraint(equalTo: popup.bottomAnchor, constant: -15).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 215).isActive = true
-        //titleLabel aesthetics
-        titleLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 17)
-        titleLabel.textColor = UIColor.black
-        titleLabel.lineBreakMode = .byWordWrapping
-        titleLabel.textAlignment = .center
-        titleLabel.numberOfLines = 0
-        titleLabel.text = "Create Username"
-        //label aesthetics
-        label.font = UIFont(name: "AvenirNext-Medium", size: 15)
-        label.textColor = UIColor.gray
-        label.lineBreakMode = .byWordWrapping
-        label.textAlignment = .center
-        //button aesthetics
-        button.setTitle("Okay", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.backgroundColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
-        button.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 17)!
-        button.layer.cornerRadius = 8
-        button.addTarget(self, action: #selector(self.closePopup(sender:)), for: .touchUpInside)
-        //popup aesthetics
-        popup.alpha = 0
-        popup.backgroundColor = UIColor.white
-        popup.layer.cornerRadius = 15
-        popup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
-        popup.isHidden = true
         //bring views to front
         view.bringSubviewToFront(dimBackground)
         view.bringSubviewToFront(popup)
@@ -115,23 +75,7 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
             self.popup.transform = CGAffineTransform(scaleX: 1, y: 1)
         })
     }
-    //make things aesthetic
-    func configure() {
-        username.delegate = self
-        getStarted.layer.cornerRadius = 10
-        getStarted.layer.masksToBounds = false
-        getStarted.layer.shadowColor = UIColor.lightGray.cgColor
-        getStarted.layer.shadowOpacity = 0.5
-        getStarted.layer.shadowRadius = 10
-        getStarted.layer.shadowOffset = CGSize(width: 7.0, height: 7.0)
-        username.layer.cornerRadius = 10
-        
-        defaultFrame = self.view.frame
-        
-        //allows detection of keyboard appearing/disappearing
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-    }
+    
     //shift view up when keyboard appears
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -160,8 +104,7 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
         username.endEditing(true)
         // if the user leaves the email field, text field, or both blank, have a popup
         if username.text == "" {
-            label.numberOfLines = 0
-            label.text = "Please enter a username"
+            popup.setText(to: "Please enter a username.")
             openPopup()
             
         } else {

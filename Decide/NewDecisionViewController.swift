@@ -9,62 +9,17 @@
 import UIKit
 import Firebase
 
-struct button {
-    static let post = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Post")
-    static let popupCancel = (UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1), UIColor(red: 205/255, green: 205/255, blue: 205/255, alpha: 1), UIColor.black, UIColor.black,"Cancel")
-    static let popupDelete = (UIColor(red: 244/255, green: 66/255, blue: 66/255, alpha: 0.8), UIColor(red: 216/255, green: 41/255, blue: 41/255, alpha: 0.8), UIColor.white, UIColor.white, "Delete")
-    //59, 237, 118
-    static let popupPost = (UIColor(red: 59/255, green: 230/255, blue: 115/255, alpha: 1), UIColor(red: 29/255, green: 209/255, blue: 80/255, alpha: 1), UIColor.white, UIColor.white, "Post")
-}
-
-//class that instantiates buttons based on the tuple passed in
-class CustomButton: UIButton {
-    var normalBGColor: UIColor = UIColor.black
-    var selectedBGColor: UIColor = UIColor.black
-    //normal bg color, highlighted bg color, normal text color, highlighted text color, title
-    public func configure(tuple: (UIColor, UIColor, UIColor, UIColor, String)) {
-        backgroundColor = tuple.0
-        setTitleColor(tuple.2, for: .normal)
-        setTitleColor(tuple.3, for: .highlighted)
-        setTitleColor(tuple.3, for: .selected)
-        setTitle(tuple.4, for: .normal)
-        titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 18)
-        layer.cornerRadius = 12
-        
-        self.normalBGColor = tuple.0
-        self.selectedBGColor = tuple.1
-    }
-    
-    override var isHighlighted: Bool {
-        didSet {
-            UIView.animate(withDuration: 0.2, animations: {
-                self.backgroundColor = self.isHighlighted ? self.selectedBGColor : self.normalBGColor
-            })
-        }
-    }
-}
-
 
 class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var postButton: CustomButton!
     @IBOutlet weak var cancelButton: UIButton!
-//
+    //
     @IBOutlet weak var cancelButtonHeight: NSLayoutConstraint!
     @IBOutlet weak var cancelButtonWidth: NSLayoutConstraint!
-
-    
-    @IBOutlet weak var cancelPopup: UIView!
-    @IBOutlet weak var popupTitle: UILabel!
-    @IBOutlet weak var popupText: UILabel!
-    @IBOutlet weak var popupButtonLeft: CustomButton!
-    @IBOutlet weak var popupButtonRight: CustomButton!
-    
-    @IBOutlet weak var dimBackground: UIView!
     
     var cancelTriggered: Bool = false
-    var selectedIndex = 0
     var decision = Decision() //data manager
     var insets: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 0, bottom: 0, right: 0) //content inset for tableview
     var cellCount = 4 //current number of cells, start at 4
@@ -75,7 +30,8 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     let cellSpacingHeight: CGFloat = 14
     let screenSize = UIScreen.main.bounds
     var defaultCancelFrame: CGRect?
-    
+    var popup: Popup!
+    var dimBackground: UIView!
     //Background is an IMAGEVIEW
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,26 +48,37 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         self.view.backgroundColor = UIColor(red:250/255, green: 250/255, blue: 250/255, alpha: 1)
         //configure post button, popup buttons
         postButton.configure(tuple: button.post)
-        configurePopup("cancel")
         //configure decision object with cells
         decision.configure(withSize: cellCount - 1)
-        //the dim background for popup
-        dimBackground.alpha = 0
-        dimBackground.isHidden = true
-        dimBackground.backgroundColor = UIColor.black
-        //view controller is behind dim background which is behind the popup
-        self.view.bringSubviewToFront(dimBackground)
-        self.view.bringSubviewToFront(cancelPopup)
+        
         //add keyboard observer, allows for actions when keyboard appears/disappears
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        //tell view what the frame of the cancelbutton looks like
         defaultCancelFrame = cancelButton.frame
+        
+        dimBackground = UIView(frame: UIScreen.main.bounds)
+        dimBackground.alpha = 0
+        dimBackground.isHidden = true
+        dimBackground.backgroundColor = UIColor.black
+        view.addSubview(dimBackground)
+        //popup
+        popup = Popup()
+        self.view.addSubview(popup)
+        popup.configureTwoButtons()
+        //view controller is behind dim background which is behind the popup
+        self.view.bringSubviewToFront(dimBackground)
+        self.view.bringSubviewToFront(popup)
+        //keep cancelButton hidden while sliding up
+        cancelButton.alpha = 0
     }
-    //tells cells how large keyboard will be
+    override func viewDidAppear(_ animated: Bool) {
+        cancelButton.alpha = 1
+    }
     /*
      Works in conjunction with decisionitem func "shift" which shifts the cell based on the keyboard size
      whenever a cell is selected
-    */
+     */
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             decision.keyboardSize = keyboardSize
@@ -140,33 +107,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         headerView.backgroundColor = UIColor.clear
         return headerView
     }
-    //configures the popup
-    public func configurePopup(_ type: String) {
-        popupTitle.font = UIFont(name: "AvenirNext-DemiBold", size: 19)
-        popupText.font = UIFont(name: "AvenirNext-Medium", size: 17)
-        popupText.textColor = UIColor.lightGray
-        popupText.numberOfLines = 2
-        cancelPopup.alpha = 0
-        cancelPopup.backgroundColor = UIColor.white
-        cancelPopup.layer.cornerRadius = 15
-        cancelPopup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
-        cancelPopup.isHidden = true
-        
-        switch type {
-        case "cancel":
-            popupButtonLeft.configure(tuple: button.popupCancel)
-            popupButtonRight.configure(tuple: button.popupDelete)
-            popupTitle.text = "Delete Decision"
-            popupText.text = "Are you sure you want to delete this decision?"
-        case "post":
-            popupButtonLeft.configure(tuple: button.popupCancel)
-            popupButtonRight.configure(tuple: button.popupPost)
-            popupTitle.text = "Post Decision"
-            popupText.text = "Are you sure you want to post this decision?"
-        default:
-            print("ERROR: default statement for popup triggered")
-        }
-    }
+    
     //cool animations when scrolling!
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         //increase size of button and scroll down when scrolling tableview down
@@ -323,6 +264,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             return UITableView.automaticDimension
         }
     }
+    //right swipe
     func tableView(_ tableView: UITableView,
                    leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let addPicture = UIContextualAction(style: .normal, title:  "Add picture", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
@@ -331,85 +273,80 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         addPicture.backgroundColor = .orange
         return UISwipeActionsConfiguration(actions: [addPicture])
     }
-    
-    //popup that either saves the decision or cancels the post, depends on configuration
-    @IBAction func popupRight(_ sender: Any) {
-        cancelTriggered = false
-        UIView.animate(withDuration: 0.15, delay: 0, options: .transitionCrossDissolve, animations: {
-            self.cancelPopup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
-        }, completion: nil)
-        UIView.transition(with: self.cancelPopup, duration: 0.15, options: .transitionCrossDissolve, animations: {
-            self.cancelPopup.alpha = 0
-            self.dimBackground.alpha = 0
-        }, completion: { finished in
-            self.cancelPopup.isHidden = true
-            self.dimBackground.isHidden = true
-            if self.popupTitle.text == "Post Decision" { //if the rightbutton was a post button....
-                print("DECISION SAVED")
-                print("Title: \(self.decision.getTitle())")
-                print("Content: ")
-                for section in 1..<self.cellCount - 1 { //saving each cell
-                    print("\(self.decision.getDecision(at: section))")
-                }
-                // upload the decision data to firebase
-                let ref = Database.database().reference().root
-                guard let userKey = Auth.auth().currentUser?.uid else {return}
-                
-                var post_options = self.decision.decisionItemList
-                // removes the first element because it is the question
-                post_options.remove(at: 0)
-                
-                let key = ref.child("posts").childByAutoId().key
-                let post = ["uid": userKey,
-                            "title": self.decision.getTitle(),
-                "options": post_options] as [String : Any]
-                
-                let childUpdates = ["/posts/\(key)" : post,
-                                    "/user-posts/\(userKey)/\(key)/" : post]
-                ref.updateChildValues(childUpdates)
-            
-                
-                //animate the action of going back, switching tabs is also handled in animated
-                self.animateToTab(toIndex: 0) //changing of tab bar item is handled here as well
-            } else { //if the right button wasn't a post button....
-                let index = (self.tabBarController as! MainTabBarController).previouslySelectedIndex!
-                self.animateToTab(toIndex: index)
-            }
-        })
-    }
-    //animation to dismiss popup
-    @IBAction func popupLeft(_ sender: Any) {
-        cancelTriggered = false
-        UIView.animate(withDuration: 0.15, delay: 0, options: .transitionCrossDissolve, animations: {
-            self.cancelPopup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+    //closes popup
+    func closePopup() {
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.popup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
         }, completion: nil)
         
-        UIView.transition(with: self.cancelPopup, duration: 0.15, options: .transitionCrossDissolve, animations: {
-            self.cancelPopup.alpha = 0
+        UIView.transition(with: popup, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.popup.alpha = 0
             self.dimBackground.alpha = 0
         }, completion: { finished in
-            self.cancelPopup.isHidden = true
+            self.popup.isHidden = true
             self.dimBackground.isHidden = true
         })
-        
     }
-    //cancel button to introduce popup
-    func cancel() {
-        print("Initiated cancelButton")
-        configurePopup("cancel")
-        self.cancelPopup.isHidden = false
+    //opens popup
+    func showPopup() {
+        self.popup.isHidden = false
         self.dimBackground.isHidden = false
-        //fade it in while also zooming in
-        UIView.transition(with: cancelPopup, duration: 0.1, options: .transitionCrossDissolve, animations: {
-            self.cancelPopup.alpha = 1
+        UIView.transition(with: popup, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.popup.alpha = 1
             self.dimBackground.alpha = 0.5
         }, completion: nil )
         UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
-            self.cancelPopup.transform = CGAffineTransform(scaleX: 1, y: 1)
+            self.popup.transform = CGAffineTransform(scaleX: 1, y: 1)
         })
     }
+    //dismisses the popup
+    @objc func cancelPopup(_ sender: Any) {
+        cancelTriggered = false
+        closePopup()
+    }
+    //saves the decision
+    @objc func saveDecision(_ sender: Any) {
+        cancelTriggered = false
+        closePopup()
+        print("DECISION SAVED")
+        print("Title: \(self.decision.getTitle())")
+        print("Content: ")
+        for section in 1..<self.cellCount - 1 { //saving each cell
+            print("\(self.decision.getDecision(at: section))")
+        }
+        // upload the decision data to firebase
+        let ref = Database.database().reference().root
+        guard let userKey = Auth.auth().currentUser?.uid else {return}
+        
+        var post_options = self.decision.decisionItemList
+        // removes the first element because it is the question
+        post_options.remove(at: 0)
+        
+        ref.child("posts").child(userKey).child("").child("Options").setValue(post_options)
+        ref.child("posts").child(userKey).child("").child("Title").setValue(self.decision.getTitle())
+        //animate the action of going back, switching tabs is also handled in animated
+        self.dismiss(animated: true, completion: nil)
+    }
+    //deletes the decision
+    @objc func deleteDecision(_ sender: Any) {
+        closePopup()
+        self.dismiss(animated: true, completion: nil)
+    }
     
-    
+    //cancel button to introduce popup
+    func cancel() {
+        print("Initiated cancelButton")
+        popup.setTitle(to: "Delete Decision")
+        popup.setText(to: "Are you sure you want to delete this decision?")
+        popup.changeButton1(to: button.popupCancel)
+        popup.changeButton2(to: button.popupDelete)
+        popup.removeAllTargets()
+        popup.setButton1Target(self, #selector(cancelPopup(_:)))
+        popup.setButton2Target(self, #selector(deleteDecision(_:)))
+        //fade it in while also zooming in
+        showPopup()
+    }
+    //action connected to post button
     @IBAction func save(_ sender: CustomButton) {
         var blankCellList: [Int] = [] //used to determine where the blank cells are
         
@@ -420,18 +357,15 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         }
         //if there are no empty cells....
         if blankCellList.count == 0 && decision.getTitle() != "" {
-            configurePopup("post")
-            self.cancelPopup.isHidden = false
-            self.dimBackground.isHidden = false
-            //present popup
-            UIView.transition(with: cancelPopup, duration: 0.1, options: .transitionCrossDissolve, animations: {
-                self.cancelPopup.alpha = 1
-                self.dimBackground.alpha = 0.5
-            }, completion: nil )
-            UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
-                self.cancelPopup.transform = CGAffineTransform(scaleX: 1, y: 1)
-            })
-        } else {
+            popup.setTitle(to: "Post Decision")
+            popup.setText(to: "Are you sure you want to post this decision?")
+            popup.changeButton1(to: button.popupCancel)
+            popup.changeButton2(to: button.popupPost)
+            popup.removeAllTargets()
+            popup.setButton1Target(self, #selector(cancelPopup(_:)))
+            popup.setButton2Target(self, #selector(saveDecision(_:)))
+            showPopup()
+        } else { //otherwise...
             if blankCellList.count != 0 {
                 for section in 0..<blankCellList.count {
                     if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: blankCellList[section])) as? DecisionItem {
