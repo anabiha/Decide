@@ -224,24 +224,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             })
         }
         
-        return isFormattedCorrectly
+    
         
     }
 
-    
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        
-        var shouldContinue = true
-        
-        if identifier == "createUserSegue" {
-            
-            shouldContinue = isEmailAndPasswordCorrrectlyFormatted()
-           
-        }
-        
-        return shouldContinue
-        
-    }
     
   
     

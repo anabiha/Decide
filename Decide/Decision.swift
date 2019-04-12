@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import FirebaseDatabase.FIRDataSnapshot
+import FirebaseDatabase
 
 class Decision: DecisionHandler {
     

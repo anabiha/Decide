@@ -163,7 +163,28 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
             label.numberOfLines = 0
             label.text = "Please enter a username"
             openPopup()
+            
         } else {
+            
+            // writing user to the database
+            let ref = Database.database().reference()
+            guard let userKey = Auth.auth().currentUser?.uid else {return}
+            
+            ref.child("users").child("usernames").child(username.text!).observeSingleEvent(of: DataEventType.value, with: {(snapshot) in
+                
+                if snapshot.hasChild(self.username.text!) { // if username exists
+                    
+                    let alert = UIAlertController(title: "Error", message: "Username already exists", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+                    self.present(alert, animated: true)
+            
+                } else { //if username does not already exist
+                    ref.child("users").child(userKey).child("username").setValue(self.username.text!)
+                    
+                }
+                
+                
+            }, withCancel: nil)
             
             // go to home page
             let vc = UIStoryboard(type: .main).instantiateInitialViewController()
