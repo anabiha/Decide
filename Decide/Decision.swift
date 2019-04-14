@@ -17,11 +17,57 @@ class HomeDecision {
         var title: String! //the title/question
         var decisions: [String]! //the decisions
         var numVotes: [Int]! //distribution of votes
+        var totalVotes: Int!
         var didDisplay = false //marks whether cell was clicked on or not
+        var isVoteable = true
+        var userVote: Int?
         init(title: String, decisions: [String], numVotes: [Int]) {
             self.title = title
             self.decisions = decisions
             self.numVotes = numVotes
+            recalculateTotal()
+        }
+        func getPercentage(forDecisionAt index: Int) -> Double {
+            if index >= 0 && index < numVotes.count {
+                return Double(numVotes[index])/Double(totalVotes)
+            } else {
+                print("INVALID accessing of numVotes in Post class getPercentage")
+                return 0
+            }
+        }
+        func getVotes(at index: Int) -> Int{
+            if index >= 0 && index < numVotes.count {
+                return numVotes[index]
+            } else {
+                print("INVALID accessing of numVotes in Post class getVotes")
+                return 0
+            }
+        }
+        func getUserVote() -> Int? {
+            return userVote
+        }
+        func vote(forDecisionAt index: Int) {
+            if isVoteable {
+                if numVotes.count > index && index >= 0{
+                    numVotes[index] += 1
+                } else {
+                    print("INVALID accessing of numVotes in Post class vote")
+                }
+            } else {
+                print("Post has already been voted on")
+            }
+            isVoteable = false
+            userVote = index
+            recalculateTotal()
+        }
+        func getTotal() -> Int {
+            return totalVotes
+        }
+        private func recalculateTotal() {
+            totalVotes = 0
+            for i in 0..<numVotes.count {
+                totalVotes += numVotes[i]
+            }
         }
     }
     
@@ -29,7 +75,7 @@ class HomeDecision {
     var maxPosts: Int = 20
     
     func configure() {
-        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 100]))
+        posts.append(Post(title: "Title", decisions: ["PIZZA", "2", "3", "4"], numVotes: [1, 1, 1, 1]))
         posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
         posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
         posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
@@ -61,6 +107,10 @@ class ChoiceCell: UITableViewCell {
     var bar: UIView?//creates the bar that highlights percentages
     var percentage: Double!
     var shouldRound = false
+    var color1 = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8)
+    var color2 = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.3)
+    var selectedBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8).withAlphaComponent(0.4)
+    var normalBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8)
     override func layoutSubviews() {
         super.layoutSubviews()
         if shouldRound {
@@ -69,7 +119,7 @@ class ChoiceCell: UITableViewCell {
             roundCorners([.bottomLeft, .bottomRight], radius: 0)
         }
     }
-    func configure(text: String, percentage: Double) {
+    func configure(text: String, percentage: Double, color: UIColor) {
         //make sure subviews to leave the view
         clipsToBounds = true
         selectionStyle = .none
@@ -82,18 +132,22 @@ class ChoiceCell: UITableViewCell {
             bar = UIView(frame: self.frame)
             bar!.sizeToFit()
             self.addSubview(bar!)
-            bar!.layer.backgroundColor = UIColor.white.cgColor
+            bar!.layer.backgroundColor = UIColor(red: 198/255, green: 246/255, blue: 255/255, alpha: 1).cgColor
             bar!.isHidden = true
             bar!.alpha = 0
             bar!.frame.size.width = 0
         }
         bringSubviewToFront(choice)
         //cell aesthetics
-        backgroundColor = UIColor.orange
+        backgroundColor = color
         //label aesthetics
         choice.backgroundColor = UIColor.clear
-        choice.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        choice.font = UIFont(name: "AvenirNext-Bold", size: 20)
+        choice.textColor = UIColor.white
         choiceOrigin = choice.frame.origin
+    }
+    func updatePercent(newPercent: Double) {
+        percentage = newPercent
     }
     func displayText() {
         if let bar = bar {
@@ -114,25 +168,27 @@ class ChoiceCell: UITableViewCell {
     func displayPercentage() {
         if let bar = bar {
             bar.isHidden = false
-            //animat
-            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
-                bar.alpha = 0.5
+            //animate bar
+            UIView.animate(withDuration: 0.3, delay: 0.2, options: .curveEaseOut, animations: {
+                bar.alpha = 1
                 bar.frame.size.width = self.frame.size.width * CGFloat(self.percentage)
             }, completion: nil)
             //animate shifting of choice alpha
-            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations: {
+            UIView.animate(withDuration: 0.5, delay: 0.2, options: .curveEaseIn, animations: {
                 self.choice.alpha = 0
                 self.choice.alpha = 1
             }, completion: nil)
-            UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            UIView.animate(withDuration: 0.1, delay: 0.2, options: .transitionCrossDissolve, animations: {
                 self.choice.text = String("\(Int((self.percentage * 100) + 0.5))%") //this step must happen before the shift of choice, otherwise animation wont work
             }, completion: { finished in
+                //shifting position of the uilabel
                 UIView.animate(withDuration: 0.3, delay: 0, options: .transitionCrossDissolve, animations: {
                     self.choice.frame.origin = CGPoint(x: self.choice.frame.origin.x + self.frame.size.width * CGFloat(self.percentage), y: self.choice.frame.origin.y)
                 })
             })
         }
     }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         bar!.isHidden = true
@@ -141,9 +197,6 @@ class ChoiceCell: UITableViewCell {
         choice.frame.origin = choiceOrigin
     }
 }
-
-
-
 
 class HomeTitleCell: UITableViewCell {
     @IBOutlet weak var title: UITextView!
