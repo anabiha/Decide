@@ -18,7 +18,7 @@ class HomeDecision {
         var decisions: [String]! //the decisions
         var numVotes: [Int]! //distribution of votes
         var totalVotes: Int!
-        var didDisplay = false //marks whether cell was clicked on or not
+        var didDisplayPercents = false //marks whether cell was clicked on or not
         var isVoteable = true
         var userVote: Int?
         init(title: String, decisions: [String], numVotes: [Int]) {
@@ -75,7 +75,7 @@ class HomeDecision {
     var maxPosts: Int = 20
     
     func configure() {
-        posts.append(Post(title: "Title", decisions: ["PIZZA", "2", "3", "4"], numVotes: [1, 1, 1, 1]))
+        posts.append(Post(title: "Which pizza?", decisions: ["Pizza Hut", "Costco", "Papa Johns", "Other"], numVotes: [1, 1, 1, 1]))
         posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
         posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
         posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
@@ -179,7 +179,7 @@ class ChoiceCell: UITableViewCell {
                 self.choice.alpha = 1
             }, completion: nil)
             UIView.animate(withDuration: 0.1, delay: 0.2, options: .transitionCrossDissolve, animations: {
-                self.choice.text = String("\(Int((self.percentage * 100) + 0.5))%") //this step must happen before the shift of choice, otherwise animation wont work
+                self.choice.text = String("\((self.percentage * 100).truncate(places: 1))%") //this step must happen before the shift of choice, otherwise animation wont work
             }, completion: { finished in
                 //shifting position of the uilabel
                 UIView.animate(withDuration: 0.3, delay: 0, options: .transitionCrossDissolve, animations: {
@@ -195,6 +195,14 @@ class ChoiceCell: UITableViewCell {
         bar!.alpha = 0
         bar!.frame.size.width = 0
         choice.frame.origin = choiceOrigin
+    }
+}
+
+extension Double
+{
+    func truncate(places : Int)-> Double
+    {
+        return Double(floor(pow(10.0, Double(places)) * self)/pow(10.0, Double(places)))
     }
 }
 
