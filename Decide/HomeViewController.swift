@@ -142,7 +142,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 for index in 2..<post.decisions.count + 2 {
                     if let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: indexPath.section)) as? ChoiceCell {
                         cell.updatePercent(newPercent: post.getPercentage(forDecisionAt: index - 2)) //retrieve the updated percentage and display it
-                        
                         if post.didDisplayPercents {
                             UIView.animate(withDuration: 0.2) {
                                 cell.backgroundColor = cell.color1

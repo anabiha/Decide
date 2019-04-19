@@ -10,6 +10,166 @@
 import Foundation
 import UIKit
 
+class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
+    
+    var title: UILabel!
+    var tagTable: UITableView!
+    var postButton: CustomButton!
+    var decision: Decision!
+    func configure(handler: Decision!) {
+        decision = handler
+        clipsToBounds = false
+        self.translatesAutoresizingMaskIntoConstraints = false //important
+        
+        //title instantiation
+        title = UILabel(frame: CGRect.zero)
+        title.translatesAutoresizingMaskIntoConstraints = false //important
+        //table instantiation
+        tagTable = UITableView()
+        tagTable.delegate = self
+        tagTable.dataSource = self
+        tagTable.separatorStyle = .none
+        tagTable.contentInsetAdjustmentBehavior = .never
+        tagTable.contentInset = UIEdgeInsets.zero
+        tagTable.register(UITableViewCell.self, forCellReuseIdentifier: "tagCell") //important bc we didn't use interface builder
+        tagTable.translatesAutoresizingMaskIntoConstraints = false
+        //button instantiation
+        postButton = CustomButton()
+        postButton.translatesAutoresizingMaskIntoConstraints = false
+        //add subviews
+        self.addSubview(title)
+        self.addSubview(tagTable)
+        self.addSubview(postButton)
+        self.bringSubviewToFront(tagTable)
+        //popup constraints
+        if let view = self.superview {
+            self.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            self.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+            self.widthAnchor.constraint(equalToConstant: 290).isActive = true
+        }
+        //title constraints
+        title.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        title.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
+        title.widthAnchor.constraint(equalToConstant: 280).isActive = true
+        //table constraints
+        tagTable.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        tagTable.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10).isActive = true
+        tagTable.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+        tagTable.heightAnchor.constraint(equalToConstant: 350).isActive = true
+        tagTable.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        //button constraints
+        postButton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        postButton.topAnchor.constraint(equalTo: tagTable.bottomAnchor, constant: 20).isActive = true
+        postButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
+        postButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        postButton.widthAnchor.constraint(equalToConstant: 260).isActive = true
+        //button aesthetics
+        postButton.configure(tuple: button.popupOkay)
+        //title aesthetics
+        title.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        title.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8)
+        title.lineBreakMode = .byWordWrapping
+        title.textAlignment = .center
+        title.numberOfLines = 0
+        title.text = "Add up to 2 tags"
+        //popup aesthetics
+        self.alpha = 0
+        self.backgroundColor = UIColor.white
+        self.layer.cornerRadius = 15
+        self.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        self.isHidden = true
+    }
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 12
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var text = ""
+        switch (indexPath.row) {
+        case 0:
+            text = "Food"
+            break
+        case 1:
+            text = "Sports"
+            break
+        case 2:
+            text = "Education"
+            break
+        case 3:
+            text = "Entertainment"
+            break
+        case 4:
+            text = "Travel"
+            break
+        case 5:
+            text = "Technology"
+            break
+        case 6:
+            text = "Fashion"
+            break
+        case 7:
+            text = "Politics"
+            break
+        case 8:
+            text = "Finances"
+            break
+        case 9:
+            text = "Politics"
+            break
+        case 10:
+            text = "Life Advice"
+            break
+        case 11:
+            text = "Outdoors"
+            break
+        default:
+            text = "Misc"
+            break
+        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "tagCell") as! UITableViewCell
+        cell.textLabel!.text = text
+        cell.textLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        cell.textLabel?.textColor = UIColor.black.withAlphaComponent(0.6)
+        cell.selectionStyle = .none
+        if decision.isTagged(at: indexPath.row) {
+            cell.accessoryType = .checkmark
+            cell.backgroundColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.3)
+        } else {
+            cell.accessoryType = .none
+            cell.backgroundColor = UIColor.white
+        }
+        return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("Tapped tag at: \(indexPath.row)")
+        if let cell = tableView.cellForRow(at: indexPath) {
+            if cell.accessoryType == .checkmark {
+                cell.accessoryType = .none
+                UIView.animate(withDuration: 0.1) {
+                    cell.backgroundColor = UIColor.white
+                }
+            } else if decision.numTagged() < 2 {
+                cell.accessoryType = .checkmark
+                UIView.animate(withDuration: 0.1) {
+                    cell.backgroundColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.3)
+                }
+            }
+        }
+        decision.markTag(at: indexPath.row) //telling the data structure that this tag was marked
+    }
+    func setButtonTarget(_ target: Any?, _ selector: Selector) {
+        postButton.addTarget(target, action: selector, for: .touchUpInside)
+    }
+    func removeButtonTargets() {
+        postButton.removeTarget(nil, action: nil, for: .allEvents)
+    }
+}
 class Popup: UIView {
     var title: UILabel!
     var label: UILabel!
@@ -68,6 +228,7 @@ class Popup: UIView {
         self.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
         self.isHidden = true
     }
+    
     //popup with three buttons
     func configureThreeButtons() {
         defaultConfigure()

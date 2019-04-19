@@ -27,14 +27,16 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     let cellReuseIdentifier = "decisionItemCell" //reuse identifiers
     let addButtonCellReuseIdentifier = "addButtonCell"
     let questionBarCellReuseIdentifier = "questionBarCell"
-    let cellSpacingHeight: CGFloat = 14
+    let cellSpacingHeight: CGFloat = 10
     let screenSize = UIScreen.main.bounds
     var defaultCancelFrame: CGRect?
     var popup: Popup!
+    var tagPopup: TagPopup!
     var dimBackground: UIView!
     //Background is an IMAGEVIEW
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.automaticallyAdjustsScrollViewInsets = false
         //DO NOT REGISTER THE CELL CLASSES HERE, ALREADY DONE IN INTERFACEBUILDER!!!!!!!
         tableView.delegate = self
         tableView.dataSource = self
@@ -66,9 +68,15 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         popup = Popup()
         self.view.addSubview(popup)
         popup.configureTwoButtons()
+        
+        tagPopup = TagPopup()
+        self.view.addSubview(tagPopup)
+        tagPopup.configure(handler: decision)
+        tagPopup.setButtonTarget(self, #selector(saveDecision(_:)))
         //view controller is behind dim background which is behind the popup
         self.view.bringSubviewToFront(dimBackground)
         self.view.bringSubviewToFront(popup)
+        self.view.bringSubviewToFront(tagPopup)
         //keep cancelButton hidden while sliding up
         cancelButton.alpha = 0
     }
@@ -284,7 +292,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             self.dimBackground.alpha = 0
         }, completion: { finished in
             self.popup.isHidden = true
-            self.dimBackground.isHidden = true
+//            self.dimBackground.isHidden = true
         })
     }
     //opens popup
@@ -299,15 +307,45 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             self.popup.transform = CGAffineTransform(scaleX: 1, y: 1)
         })
     }
+   func showTagPopup() {
+        self.tagPopup.isHidden = false
+        self.dimBackground.isHidden = false
+        UIView.transition(with: tagPopup, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.tagPopup.alpha = 1
+            self.dimBackground.alpha = 0.5
+        }, completion: nil )
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.tagPopup.transform = CGAffineTransform(scaleX: 1, y: 1)
+        })
+    }
+    func closeTagPopup() {
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.tagPopup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        }, completion: nil)
+        
+        UIView.transition(with: tagPopup, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.tagPopup.alpha = 0
+            self.dimBackground.alpha = 0
+        }, completion: { finished in
+            self.tagPopup.isHidden = true
+            self.dimBackground.isHidden = true
+        })
+    }
     //dismisses the popup
     @objc func cancelPopup(_ sender: Any) {
         cancelTriggered = false
         closePopup()
     }
+    @objc func moveToTags(_ sender: Any) {
+       
+            self.closePopup()
+            self.showTagPopup()
+       
+    }
     //saves the decision
     @objc func saveDecision(_ sender: Any) {
         cancelTriggered = false
-        closePopup()
+        closeTagPopup()
         print("DECISION SAVED")
         print("Title: \(self.decision.getTitle())")
         print("Content: ")
@@ -363,8 +401,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             popup.changeButton2(to: button.popupPost)
             popup.removeAllTargets()
             popup.setButton1Target(self, #selector(cancelPopup(_:)))
-            popup.setButton2Target(self, #selector(saveDecision(_:)))
+            popup.setButton2Target(self, #selector(moveToTags(_:)))
             showPopup()
+            
         } else { //otherwise...
             if blankCellList.count != 0 {
                 for section in 0..<blankCellList.count {

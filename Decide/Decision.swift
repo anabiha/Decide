@@ -103,12 +103,12 @@ class HomeDecision {
 class ChoiceCell: UITableViewCell {
     @IBOutlet weak var choice: UILabel!
     var choiceOrigin: CGPoint! //the original origin of choice
-    var decision: String!
+    var decision: String! //the text of the decision
     var bar: UIView?//creates the bar that highlights percentages
-    var percentage: Double!
-    var shouldRound = false
-    var color1 = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8)
-    var color2 = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.3)
+    var percentage: Double! //percentage
+    var shouldRound = false //decides whether the row should be rounded
+    var color1 = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8) //default color and the color of what was chosen
+    var color2 = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.4) //the color of whatever wasn't chosen
     var selectedBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8).withAlphaComponent(0.4)
     var normalBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8)
     override func layoutSubviews() {
@@ -132,7 +132,7 @@ class ChoiceCell: UITableViewCell {
             bar = UIView(frame: self.frame)
             bar!.sizeToFit()
             self.addSubview(bar!)
-            bar!.layer.backgroundColor = UIColor(red: 198/255, green: 246/255, blue: 255/255, alpha: 1).cgColor
+            bar!.layer.backgroundColor = UIColor.white.withAlphaComponent(0.7).cgColor
             bar!.isHidden = true
             bar!.alpha = 0
             bar!.frame.size.width = 0
@@ -211,7 +211,7 @@ class HomeTitleCell: UITableViewCell {
     func configure(text: String) {
         title.text = text
         selectionStyle = .none
-        title.font = UIFont(name: "AvenirNext-DemiBold", size: 40)
+        title.font = UIFont(name: "AvenirNext-DemiBold", size: 30)
         title.textContainerInset = UIEdgeInsets(top: 0, left: 5, bottom: 5, right: 0)
     }
 }
@@ -236,11 +236,15 @@ class UserCell: UITableViewCell {
 class Decision: DecisionHandler {
     
     var decisionItemList: [String] = []
+    var tagList: [Bool] = []
     var activeFieldIndex: IndexPath?
     var keyboardSize: CGRect?
     func configure(withSize size: Int) {
         while decisionItemList.count < size {
             decisionItemList.append("")
+        }
+        for _ in 0..<12 {
+            tagList.append(false)
         }
     }
     func setTitle(text: String) {
@@ -291,6 +295,38 @@ class Decision: DecisionHandler {
         } else {
             print("DECISION HANLDER ATTEMPTED TO RETRIEVE A TITLE THAT DIDN'T EXIST")
             return ""
+        }
+    }
+    func numTagged() -> Int {
+        var count = 0
+        for i in 0..<tagList.count {
+            if tagList[i] { count += 1}
+        }
+        return count
+    }
+    func isTagged(at index: Int) -> Bool {
+        if index >= 0 && index < 12 {
+            if tagList[index] {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            print("Decision;isTagged(): index out of bounds")
+            return false
+        }
+    }
+    func markTag(at index: Int) {
+        if index >= 0 && index < 12 {
+            if tagList[index] {
+                tagList[index] = false
+            } else if numTagged() < 2 {
+                tagList[index] = true
+            } else {
+                print("Decision;markTag(): max number of tags achieved")
+            }
+        } else {
+            print("Decision;markTag(): index out of bounds")
         }
     }
 }
