@@ -16,7 +16,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     let usernameIdentifier = "userCell"
     let titleIdentifier = "titleCell"
     let choiceIdentifier = "choiceCell"
-    let cellSpacingHeight: CGFloat = 10
+    let cellSpacingHeight: CGFloat = 40
     let homeDecision = HomeDecision()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -124,44 +124,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             let cell = self.tableView.dequeueReusableCell(withIdentifier: choiceIdentifier) as! ChoiceCell
             print("CREATED CHOICECELL at \(indexPath)")
             if let post = homeDecision.getPost(at: indexPath.section) {
-                var total: Int = 0 //the total number of votes to determine the percentage
-//                var listOfPercents = [Double]()
-//                var listOfFloors = [Int]()
-                for i in 0..<post.numVotes.count {
-                    total += post.numVotes[i]
-                }
-//                var sumOfPercentFloors: Int = 0
-//                for i in 0..<post.numVotes.count {
-//                    sumOfPercentFloors += Int(Double(post.numVotes[i])/Double(total) * 100)
-//                    listOfFloors.append(Int(Double(post.numVotes[i])/Double(total) * 100))
-//                    listOfPercents.append(Double(post.numVotes[i])/Double(total) * 100)
-//                }
-//                var sortListOfFloors = listOfFloors
-//                var diff = 100 - sumOfPercentFloors
-//                //bubblesort
-//                for i in stride(from: listOfPercents.count - 1, to: -1, by: -1) {
-//                    for j in stride(from: 1, to: i + 1, by: +1) {
-//                        //sort by decimal places
-//                        if (listOfPercents[j - 1] - Double(sortedListOfFloors[j]) < listOfPercents[j] - Double(sortedListOfFloors[j])) {
-//                            let temp1 = sortedListOfFloors[j-1]
-//                            sortedListOfFloors[j-1] = sortedListOfFloors[j]
-//                            sortedListOfFloors[j] = temp1
-//                            let temp2 = sortedListOfPercents[j-1]
-//                            sortedListOfPercents[j-1] = sortedListOfPercents[j]
-//                            sortedListOfPercents[j] = temp2
-//                        }
-//                    }
-//                }
-//                var counter = 0
-//                while diff > 0 {
-//                    if counter >= listOfFloors.count { counter = 0 }
-//                    listOfFloors[counter] += 1
-//                    counter += 1
-//                    diff -= 1
-//                }
-//                //problem, list of floors is getting sorted, which messes up the order of the percentages
-//                print(listOfFloors)
-//                print(listOfPercents)
                 if indexPath.row == post.decisions.count + 1 { //rounds corners of bottom row
                     cell.shouldRound = true
                 } else {
@@ -169,14 +131,52 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 }
                 //configure cell with the correct percentage
                 //change percentage to a decimal
-                
-                cell.configure(text: post.decisions[indexPath.row - 2], percentage: Double(post.numVotes[indexPath.row - 2])/Double(total))
-                if post.didDisplay { //redisplay percentages if they were shown prior
+                var color: UIColor!
+                if let vote = post.getUserVote() { //if the post was voted on, we have to highlight what that vote was...
+                    //make every nonvoted choice a different color...
+                    if post.didDisplayPercents {
+                        color = cell.color1
+                    } else {
+                        if vote + 2 == indexPath.row {
+                            color = cell.color1
+                        } else {
+                            color = cell.color2
+                        }
+                    }
+                } else {
+                    color = cell.color1 //everything remains color1 if nothing was voted
+                }
+                let total = post.getTotal()
+                cell.configure(text: post.decisions[indexPath.row - 2], percentage: Double(post.numVotes[indexPath.row - 2])/Double(total), color: color)
+                if post.didDisplayPercents { //redisplay percentages if they were shown prior
                     cell.displayPercentage()
                 }
-                
             }
             return cell
+        }
+    }
+    //animates highlighting of selection
+    func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
+        let post = homeDecision.getPost(at: indexPath.section)
+        if post!.isVoteable && indexPath.row > 1 {
+            if let cell = tableView.cellForRow(at: indexPath) as? ChoiceCell {
+                UIView.animate(withDuration: 0.1, animations: {
+                    cell.backgroundColor = cell.color2
+                })
+            }
+        }
+    }
+  
+    //animates highlighting of selection
+    func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
+        let post = homeDecision.getPost(at: indexPath.section)
+        if post!.isVoteable && indexPath.row > 1 {
+            if let cell = tableView.cellForRow(at: indexPath) as? ChoiceCell {
+                UIView.animate(withDuration: 0.1, delay: 0.1, animations: {
+                    cell.backgroundColor = cell.color1
+                })
+            }
+            
         }
     }
     
@@ -186,12 +186,27 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         print("You tapped cell number \(indexPath.row). at post number: \(indexPath.section)")
         if indexPath.row != 0 && indexPath.row != 1 {
             if let post = homeDecision.getPost(at: indexPath.section) {
-                post.didDisplay = !post.didDisplay //mark the cell as displayed
+                if post.isVoteable {
+                    post.vote(forDecisionAt: indexPath.row - 2)
+                } //add a vote to the decision
+                post.didDisplayPercents = !post.didDisplayPercents //mark the cell as displayed, regardless of whether whole post is visible, switch it each time it is pressed
+                
                 for index in 2..<post.decisions.count + 2 {
                     if let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: indexPath.section)) as? ChoiceCell {
-                        if post.didDisplay {
+                        cell.updatePercent(newPercent: post.getPercentage(forDecisionAt: index - 2)) //retrieve the updated percentage and display it
+                        if post.didDisplayPercents {
+                            UIView.animate(withDuration: 0.2) {
+                                cell.backgroundColor = cell.color1
+                            }
                             cell.displayPercentage()
                         } else {
+                            if let vote = post.getUserVote() {
+                                if vote + 2 != index {
+                                    UIView.animate(withDuration: 0.2) {
+                                        cell.backgroundColor = cell.color2
+                                    }
+                                }
+                            }
                             cell.displayText()
                         }
                     }
