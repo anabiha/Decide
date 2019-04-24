@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     
@@ -27,6 +28,57 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.rowHeight = UITableView.automaticDimension
         self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
         homeDecision.configure()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        let ref = Database.database().reference().child("posts")
+        
+        ref.observe(DataEventType.value, with: { (snapshot) in
+            
+            if snapshot.childrenCount > 0 {
+                
+                self.homeDecision.posts.removeAll()
+                
+                let userPosts = snapshot.value as? [String : Any] ?? [:]
+                
+                for post in userPosts {
+                    
+                    print(post.value)
+                    
+                    let curPost = post.value as! [String : Any]
+                    
+                    let currentPost = HomeDecision.Post(title: curPost["title"] as? String ?? "Title", decisions: curPost["options"] as? [String] ?? ["option"], numVotes: [10,7,30])
+                    
+                    self.homeDecision.posts.append(currentPost)
+                    
+                    
+                }
+                
+                DispatchQueue.main.async {
+                    
+                    self.tableView.beginUpdates()
+                    let indexPath = IndexPath(row: 1, section: self.homeDecision.posts.count-1)
+                    let index = IndexSet([indexPath.section])
+                    
+                    if(self.homeDecision.posts.count-1 > indexPath.section) {
+                        
+                        self.tableView.insertSections(index, with: .automatic)
+                        
+                    }
+                    
+                    self.tableView.endUpdates()
+                    
+                }
+                
+                self.tableView.reloadData()
+                
+            }
+            
+        })
+        
+        super.viewWillAppear(animated)
+        
     }
     
     // MARK: - Table View delegate methods

@@ -17,12 +17,21 @@ class HomeDecision {
         var title: String! //the title/question
         var decisions: [String]! //the decisions
         var numVotes: [Int]! //distribution of votes
+        var username: String!
         var didDisplay = false //marks whether cell was clicked on or not
         init(title: String, decisions: [String], numVotes: [Int]) {
             self.title = title
             self.decisions = decisions
             self.numVotes = numVotes
         }
+        
+        init(title: String, decisions: [String], numVotes: [Int], username: String) {
+            self.title = title
+            self.decisions = decisions
+            self.numVotes = numVotes
+            self.username = username
+        }
+        
     }
     
     var posts = [Post]()
