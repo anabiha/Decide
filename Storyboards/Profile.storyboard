@@ -48,7 +48,7 @@
                                     <constraint firstAttribute="height" constant="350" id="diT-P9-7gu"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="postCell" id="tVG-XG-ocb" customClass="PostCell" customModule="Decide" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="postCell" id="tVG-XG-ocb" customClass="ViewControllerTableViewCell" customModule="Decide" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="275" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tVG-XG-ocb" id="s28-jm-dMy">
@@ -71,6 +71,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="questionLabel" destination="ErO-3P-zsC" id="Swx-qQ-D7T"/>
                                             <segue destination="3C1-vD-xXR" kind="show" id="exl-Ng-wlh"/>
                                         </connections>
                                     </tableViewCell>

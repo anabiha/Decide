@@ -11,12 +11,6 @@ import FirebaseUI
 import FirebaseDatabase
 import FirebaseAuth
 
-class PostCell: UITableViewCell {
-    
-     @IBOutlet weak var questionLabel: UILabel!
-    
-    
-}
 
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -24,10 +18,12 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var tableView: UITableView!
     
     var insets: UIEdgeInsets = UIEdgeInsets.init(top: 45, left: 0, bottom: 0, right: 0) //content inset for tableview
-    // this object will be used to retrieve data from firebase
-    let data = RetrieveData()
-    var cellCount = 4 //current number of cells, start at 4
     let cellSpacingHeight: CGFloat = 14
+    var cellCount = 1
+    var titles : [String] = []
+    var arrOptions : [[String]] = [[]]
+    var posts = [Post]()
+    
     
     override func viewDidLoad() {
         
@@ -41,9 +37,66 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         //keeps some space between bottom of screen and the bottom of the tableview
         tableView.contentInset = insets
         
+        
        super.viewDidLoad()
         
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        let userKey = Auth.auth().currentUser?.uid
+        let ref = Database.database().reference().child("user-posts").child(userKey!)
+        
+        ref.observe(DataEventType.value, with: { (snapshot) in
+            
+            if snapshot.childrenCount > 0 {
+                
+                self.posts.removeAll()
+                
+                let userPosts = snapshot.value as? [String : Any] ?? [:]
+                
+                self.cellCount = userPosts.count
+                
+                for post in userPosts {
+                    
+                    let currentPost = Post()
+                    
+                    let curPost = post.value as! [String : Any]
+                    
+                    currentPost.title = curPost["title"] as! String
+                    currentPost.options = curPost["options"] as! [String]
+                    
+                    self.posts.append(currentPost)
+                    
+                    
+                }
+               
+                DispatchQueue.main.async {
+                    
+                    self.tableView.beginUpdates()
+                    let indexPath = IndexPath(row: 1, section: self.cellCount-1)
+                    let index = IndexSet([indexPath.section])
+                    
+                    if(self.cellCount-1 > indexPath.section) {
+                        
+                        self.tableView.insertSections(index, with: .automatic)
+                        
+                    }
+                    
+                    self.tableView.endUpdates()
+                    
+                }
+                
+                self.tableView.reloadData()
+                
+            }
+            
+        })
+        
+        super.viewDidAppear(animated)
+        
+    }
+    
     
     //scrolls the tableview upward when the keyboard shows
     @objc func keyboardWillShow(_ notification:Notification) {
@@ -57,9 +110,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     //returns the number of sections
     func numberOfSections(in tableView: UITableView) -> Int {
-        return cellCount
+        
+        return self.cellCount
+        
+        
     }
-    // There is just one row in every section
+    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
@@ -77,37 +134,42 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     //the height of the post
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == cellCount - 1 {
-            return 30 //the add button is this height
-        } else {
-            return UITableView.automaticDimension
-        }
+        
+        return UITableView.automaticDimension
     }
+    
     
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! ViewControllerTableViewCell
         
-     //   let ref = Database.database().reference().root
-     //   let userKey = Auth.auth().currentUser?.uid
-        
-     //   ref.child("posts").child(userKey!).observeSingleEvent(of: .value, with: { snapshot in
+        DispatchQueue.main.async {
             
-      //      if !snapshot.exists() { return }
+            if(self.posts.count > 0) {
+                
+                let currentPost = self.posts[indexPath.section]
+                cell.questionLabel.text = currentPost.title
+                
+                
+                
+            }
             
-       //     cell.questionLabel.text = snapshot.childSnapshot(forPath: "title").value as? String
-            
-       // })
-        
+        }
+    
         return cell
         
     }
     
+    
     // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        print("post cell tapped")
        
     }
+    
+    
     
     
     @IBAction func logOutButton(_ sender: Any) {

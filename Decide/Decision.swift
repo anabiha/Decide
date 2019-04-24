@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import FirebaseDatabase.FIRDataSnapshot
+import FirebaseDatabase
 
 //data structure for the decisions displayed on the home page
 class HomeDecision {

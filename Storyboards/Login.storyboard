@@ -226,7 +226,7 @@
                         <viewLayoutGuide key="safeArea" id="WS6-un-PYM"/>
                     </view>
                     <connections>
-                        <outlet property="createAccount" destination="SUy-89-eyg" id="5AV-ap-KEc"/>
+                        <outlet property="createAccount" destination="SUy-89-eyg" id="wTv-cx-VhZ"/>
                         <outlet property="email" destination="f8b-pc-DGB" id="iYX-IO-yiH"/>
                         <outlet property="password" destination="Xcs-pr-XlG" id="BjP-SD-o3w"/>
                         <outlet property="signIn" destination="crI-wz-NYj" id="4vV-zP-ycc"/>
@@ -235,7 +235,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XtP-Ed-0IZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="ATD-t5-BIg" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1417" y="187"/>
+            <point key="canvasLocation" x="1329" y="181"/>
         </scene>
         <!--Create User View Controller-->
         <scene sceneID="bRk-Lm-Wsj">
@@ -275,7 +275,6 @@
                                     <color key="titleColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="createAccount:" destination="dye-bF-6bQ" eventType="touchUpInside" id="io4-aM-abs"/>
                                     <action selector="goToMainScreen:" destination="Nx2-kg-mGX" eventType="touchUpInside" id="NOt-hJ-Vjy"/>
                                 </connections>
                             </button>

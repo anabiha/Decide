@@ -22,6 +22,8 @@ extension UIViewController {
             return "Invalid username or password. Please try again."
         case AuthErrorCode.wrongPassword.rawValue:
             return "Invalid username or password. Please try again."
+        case AuthErrorCode.emailAlreadyInUse.rawValue:
+            return "User account already exists."
         default:
             return error.localizedDescription
         }

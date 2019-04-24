@@ -19,7 +19,6 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
     var dimBackground: UIView!
     //what to do when view loads
     override func viewDidLoad() {
-        super.viewDidLoad()
         configure()
     }
     //make things aesthetic
@@ -107,54 +106,36 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
         if username.text == "" {
             popup.setText(to: "Please enter a username.")
             openPopup()
+            
         } else {
             
-            //add the username to the database
-            let ref = Database.database().reference().root
+            // writing user to the database
+            let ref = Database.database().reference()
             guard let userKey = Auth.auth().currentUser?.uid else {return}
-            ref.child("users").child(userKey).child("username").setValue(username.text)
             
-            // ask if the user wants to add a profile picture
-            let alertController = UIAlertController(title: "Profile Picture", message: "Would you like to add a profile picture?", preferredStyle: .alert)
-            
-            alertController.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
+            ref.child("users").child("usernames").child(username.text!).observeSingleEvent(of: DataEventType.value, with: {(snapshot) in
                 
-                // bring up image picker to allow user to either pick a photo from the photo gallery or take a picture for their profile picture
-                let photoHelper = PhotoHelper()
-                
-                photoHelper.completionHandler = { image in
+                if snapshot.hasChild(self.username.text!) { // if username exists
                     
-                    print("handle image")
+                    let alert = UIAlertController(title: "Error", message: "Username already exists", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+                    self.present(alert, animated: true)
+            
+                } else { //if username does not already exist
+                    ref.child("users").child(userKey).child("username").setValue(self.username.text!)
                     
                 }
                 
-                photoHelper.presentActionSheet(from: self)
                 
-                //add the profile image to the database
-                
-                // go to home page
-                
-                let vc = UIStoryboard(type: .main).instantiateInitialViewController()
-                
-                self.present(vc!, animated: true, completion: nil)
-                
-            }))
+            }, withCancel: nil)
             
-            alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { action in
-                
-                //proceed to home page
-                let vc = UIStoryboard(type: .main).instantiateInitialViewController()
-                
-                self.present(vc!, animated: true, completion: nil)
-                
-            }))
-            
-            present(alertController, animated: true, completion: nil)
-            
+            // go to home page
+            let vc = UIStoryboard(type: .main).instantiateInitialViewController()
+            self.present(vc!, animated: true, completion: nil)
             
         }
+    
         
     }
-    
     
 }
