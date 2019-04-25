@@ -147,7 +147,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     color = cell.color1 //everything remains color1 if nothing was voted
                 }
                 let total = post.getTotal()
-                cell.configure(text: post.decisions[indexPath.row - 2], percentage: Double(post.numVotes[indexPath.row - 2])/Double(total), color: color)
+                
+                cell.configure(text: post.getDecision(at: indexPath.row-2), percentage: Double(post.getVotes(at: indexPath.row - 2))/Double(total), color: color)
                 if post.didDisplayPercents { //redisplay percentages if they were shown prior
                     cell.displayPercentage()
                 }

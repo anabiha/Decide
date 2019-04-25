@@ -21,6 +21,7 @@ class HomeDecision {
         var didDisplayPercents = false //marks whether cell was clicked on or not
         var isVoteable = true
         var userVote: Int?
+        var username: String?
         init(title: String, decisions: [String], numVotes: [Int]) {
             self.title = title
             self.decisions = decisions
@@ -33,6 +34,14 @@ class HomeDecision {
             } else {
                 print("INVALID accessing of numVotes in Post class getPercentage")
                 return 0
+            }
+        }
+        func getDecision(at index: Int) -> String {
+            if index >= 0 && index < decisions.count {
+                return decisions[index]
+            } else {
+                print("INVALID accessing of numVotes in Post class getDecision, Index \(index) vs Size \(decisions.count)")
+                return ""
             }
         }
         func getVotes(at index: Int) -> Int{
