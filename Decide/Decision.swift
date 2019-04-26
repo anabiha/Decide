@@ -30,9 +30,10 @@ class HomeDecision {
         }
         func getPercentage(forDecisionAt index: Int) -> Double {
             if index >= 0 && index < numVotes.count {
+//                print("Post;getPercentage(): accessing, Index \(index) vs Size \(numVotes.count))")
                 return Double(numVotes[index])/Double(totalVotes)
             } else {
-                print("INVALID accessing of numVotes in Post class getPercentage")
+                print("Post;getPercentage(): INVALID accessing, Index \(index) vs Size \(numVotes.count))")
                 return 0
             }
         }
@@ -40,7 +41,7 @@ class HomeDecision {
             if index >= 0 && index < decisions.count {
                 return decisions[index]
             } else {
-                print("INVALID accessing of numVotes in Post class getDecision, Index \(index) vs Size \(decisions.count)")
+                print("Post;getDecision(): INVALID accessing, Index \(index) vs Size \(decisions.count))")
                 return ""
             }
         }
@@ -48,7 +49,7 @@ class HomeDecision {
             if index >= 0 && index < numVotes.count {
                 return numVotes[index]
             } else {
-                print("INVALID accessing of numVotes in Post class getVotes")
+                print("Post;getVotes(): INVALID accessing, Index \(index) vs Size \(numVotes.count))")
                 return 0
             }
         }
@@ -60,10 +61,10 @@ class HomeDecision {
                 if numVotes.count > index && index >= 0{
                     numVotes[index] += 1
                 } else {
-                    print("INVALID accessing of numVotes in Post class vote")
+                    print("Post;vote(): INVALID accessing, Index \(index) vs Size \(numVotes.count))")
                 }
             } else {
-                print("Post has already been voted on")
+                print("Post;vote(): POST ALREADY VOTED ON")
             }
             isVoteable = false
             userVote = index
@@ -95,10 +96,10 @@ class HomeDecision {
         
     }
     func getPost(at index: Int) -> Post? {
-        if index < posts.count {
+        if index >= 0 && index < posts.count {
             return posts[index]
         } else {
-            print("POST DOESN'T EXIST AT INDEX: \(index)")
+            print("HomeDecision;getPost(): INVALID accessing, Index \(index) vs Size \(posts.count))")
             return nil
         }
     }

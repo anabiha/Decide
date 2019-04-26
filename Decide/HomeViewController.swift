@@ -44,11 +44,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 for post in userPosts {
                     
-                    print(post.value)
+//                    print(post.value)
                     
                     let curPost = post.value as! [String : Any]
                     
-                    let currentPost = HomeDecision.Post(title: curPost["title"] as? String ?? "Title", decisions: curPost["options"] as? [String] ?? ["option"], numVotes: [10,7,30])
+                    let currentPost = HomeDecision.Post(title: curPost["title"] as? String ?? "Title", decisions: curPost["options"] as? [String] ?? ["option"], numVotes: [10,7,30]) //fake votes!!!!! only size 3
                     
                     self.homeDecision.posts.append(currentPost)
                     
@@ -122,7 +122,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             return cell
         } else { //choice bars
             let cell = self.tableView.dequeueReusableCell(withIdentifier: choiceIdentifier) as! ChoiceCell
-            print("CREATED CHOICECELL at \(indexPath)")
             if let post = homeDecision.getPost(at: indexPath.section) {
                 if indexPath.row == post.decisions.count + 1 { //rounds corners of bottom row
                     cell.shouldRound = true

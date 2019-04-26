@@ -113,28 +113,29 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
             let ref = Database.database().reference()
             guard let userKey = Auth.auth().currentUser?.uid else {return}
             
-            ref.child("users").child("usernames").child(username.text!).observeSingleEvent(of: DataEventType.value, with: {(snapshot) in
-                
-                if snapshot.hasChild(self.username.text!) { // if username exists
-                    
-                    let alert = UIAlertController(title: "Error", message: "Username already exists", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
-                    self.present(alert, animated: true)
-            
-                } else { //if username does not already exist
-                    ref.child("users").child(userKey).child("username").setValue(self.username.text!)
-                    
+            ref.child("users").observeSingleEvent(of: .value, with: {(snapshot) in
+                var validName = true
+                //checking for a name that hasn't been taken
+                for case let user as DataSnapshot in snapshot.children  {
+                    for case let name as DataSnapshot in user.children {
+                        if let unwrapped = name.value as? String {
+                            if self.username.text! == unwrapped {
+                                validName = false
+                            }
+                        }
+                    }
                 }
-                
-                
+                if validName {
+                    ref.child("users").child(userKey).child("username").setValue(self.username.text!)
+                    let vc = UIStoryboard(type: .main).instantiateInitialViewController()
+                    self.present(vc!, animated: true, completion: nil)
+                } else { //if username does not already exist
+                    self.popup.setText(to: "This username is already taken.")
+                    self.openPopup()
+                }
             }, withCancel: nil)
-            
-            // go to home page
-            let vc = UIStoryboard(type: .main).instantiateInitialViewController()
-            self.present(vc!, animated: true, completion: nil)
-            
         }
-    
+        
         
     }
     
