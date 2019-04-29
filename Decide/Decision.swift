@@ -85,10 +85,10 @@ class HomeDecision {
     var maxPosts: Int = 20
     
     func configure() {
-        posts.append(Post(title: "Which pizza?", decisions: ["Pizza Hut", "Costco", "Papa Johns", "Other"], numVotes: [1, 1, 1, 1]))
-        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
-        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
-        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
+//        posts.append(Post(title: "Which pizza?", decisions: ["Pizza Hut", "Costco", "Papa Johns", "Other"], numVotes: [1, 1, 1, 1]))
+//        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
+//        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
+//        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
         //retrieve maxPosts number of posts
         //put them in the array
     }

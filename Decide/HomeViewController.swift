@@ -28,10 +28,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.rowHeight = UITableView.automaticDimension
         self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
         homeDecision.configure()
+        updateData()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
+    func updateData() {
         let ref = Database.database().reference().child("posts")
         
         ref.observe(DataEventType.value, with: { (snapshot) in
@@ -44,7 +43,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 for post in userPosts {
                     
-//                    print(post.value)
+                    //                    print(post.value)
                     
                     let curPost = post.value as! [String : Any]
                     
@@ -74,11 +73,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             
         })
-        
-        super.viewWillAppear(animated)
-        
     }
-    
     // MARK: - Table View delegate methods
     func numberOfSections(in tableView: UITableView) -> Int {
         return homeDecision.posts.count
