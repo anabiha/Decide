@@ -360,8 +360,25 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         // removes the first element because it is the question
         post_options.remove(at: 0)
         
-        ref.child("posts").child(userKey).child("").child("Options").setValue(post_options)
-        ref.child("posts").child(userKey).child("").child("Title").setValue(self.decision.getTitle())
+        var votes: [Int] = []
+        for i in 0..<post_options.count {
+            votes.append(0)
+        }
+        
+        var postData = [
+            
+            "post_title": self.decision.getTitle(),
+            "options": post_options,
+            "votes": votes,
+            
+            ] as [String : Any]
+        
+        var newPostKey = ref.child("posts").childByAutoId().key
+        
+        ref.child("posts").child(newPostKey!).setValue(postData)
+        
+        ref.child("user-posts").child(userKey).child(newPostKey!).setValue(postData)
+        
         //animate the action of going back, switching tabs is also handled in animated
         self.dismiss(animated: true, completion: nil)
     }
