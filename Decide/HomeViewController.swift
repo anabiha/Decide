@@ -44,15 +44,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 for post in userPosts {
                     
-                    print(post.value)
+//                    print(post.value)
                     
                     let curPost = post.value as! [String : Any]
                     
-                    let currentPost = HomeDecision.Post(title: curPost["title"] as? String ?? "Title", decisions: curPost["options"] as? [String] ?? ["option"], numVotes: [10,7,30])
+                    let currentPost = HomeDecision.Post(title: curPost["title"] as? String ?? "Title", decisions: curPost["options"] as? [String] ?? ["option"], numVotes: [10,7,30]) //fake votes!!!!! only size 3
                     
                     self.homeDecision.posts.append(currentPost)
-                    
-                    
                 }
                 
                 DispatchQueue.main.async {
@@ -122,7 +120,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             return cell
         } else { //choice bars
             let cell = self.tableView.dequeueReusableCell(withIdentifier: choiceIdentifier) as! ChoiceCell
-            print("CREATED CHOICECELL at \(indexPath)")
             if let post = homeDecision.getPost(at: indexPath.section) {
                 if indexPath.row == post.decisions.count + 1 { //rounds corners of bottom row
                     cell.shouldRound = true
@@ -147,7 +144,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     color = cell.color1 //everything remains color1 if nothing was voted
                 }
                 let total = post.getTotal()
-                cell.configure(text: post.decisions[indexPath.row - 2], percentage: Double(post.numVotes[indexPath.row - 2])/Double(total), color: color)
+                
+                cell.configure(text: post.getDecision(at: indexPath.row-2), percentage: Double(post.getVotes(at: indexPath.row - 2))/Double(total), color: color)
                 if post.didDisplayPercents { //redisplay percentages if they were shown prior
                     cell.displayPercentage()
                 }
