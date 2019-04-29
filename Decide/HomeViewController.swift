@@ -51,8 +51,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     let currentPost = HomeDecision.Post(title: curPost["title"] as? String ?? "Title", decisions: curPost["options"] as? [String] ?? ["option"], numVotes: [10,7,30]) //fake votes!!!!! only size 3
                     
                     self.homeDecision.posts.append(currentPost)
-                    
-                    
                 }
                 
                 DispatchQueue.main.async {

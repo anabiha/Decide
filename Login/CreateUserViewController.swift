@@ -135,8 +135,5 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
                 }
             }, withCancel: nil)
         }
-        
-        
     }
-    
 }
