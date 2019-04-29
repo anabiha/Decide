@@ -20,7 +20,7 @@ class HomeDecision {
         var totalVotes: Int!
         var didDisplayPercents = false //marks whether cell was clicked on or not
         var isVoteable = true
-        var userVote: Int?
+        var userVote: Int? // locally keeps track of which option this specific user has voted
         var username: String?
         var key: String! //unique key for the post, used for referencing Firebase
         init(title: String, decisions: [String], numVotes: [Int], key: String) {
@@ -107,15 +107,14 @@ class HomeDecision {
 }
 class ChoiceCell: UITableViewCell {
     @IBOutlet weak var choice: UILabel!
-    var choiceOrigin: CGPoint! //the original origin of choice
     var decision: String! //the text of the decision
     var bar: UIView?//creates the bar that highlights percentages
     var percentage: Double! //percentage
     var shouldRound = false //decides whether the row should be rounded
-    var color1 = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.3)
+    var color1 = UIColor.white
         //default color
-    var color2 = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)  //the color of what was chosen
-    var barColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1) //color of bar
+    var color2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)  //the color of what was chosen
+    var barColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.2) //color of bar
     override func layoutSubviews() {
         super.layoutSubviews()
         if shouldRound {
@@ -147,9 +146,8 @@ class ChoiceCell: UITableViewCell {
         backgroundColor = color
         //label aesthetics
         choice.backgroundColor = UIColor.clear
-        choice.font = UIFont(name: "AvenirNext-Bold", size: 20)
-        choice.textColor = UIColor.white
-        choiceOrigin = choice.frame.origin
+        choice.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        choice.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1) //color of bar
     }
     func updatePercent(newPercent: Double) {
         percentage = newPercent
@@ -193,7 +191,6 @@ class ChoiceCell: UITableViewCell {
         bar!.isHidden = true
         bar!.alpha = 0
         bar!.frame.size.width = 0
-        choice.frame.origin = choiceOrigin
     }
 }
 
@@ -209,7 +206,7 @@ class HomeTitleCell: UITableViewCell {
     @IBOutlet weak var title: UITextView!
     func configure(text: String) {
         title.text = text
-        title.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
+        title.textColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1)
         selectionStyle = .none
         title.font = UIFont(name: "AvenirNext-DemiBold", size: 30)
         title.textContainerInset = UIEdgeInsets(top: 0, left: 5, bottom: 5, right: 0)
