@@ -360,23 +360,24 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         // removes the first element because it is the question
         post_options.remove(at: 0)
         
+        //creating an array for voting
         var votes: [Int] = []
-        for i in 0..<post_options.count {
+        for _ in 0..<post_options.count {
             votes.append(0)
         }
         
-        var postData = [
+        //dictionary uploaded to firebase
+        let postData = [
             
-            "post_title": self.decision.getTitle(),
+            "title": self.decision.getTitle(),
             "options": post_options,
             "votes": votes,
             
             ] as [String : Any]
         
-        var newPostKey = ref.child("posts").childByAutoId().key
+        let newPostKey = ref.child("posts").childByAutoId().key
         
         ref.child("posts").child(newPostKey!).setValue(postData)
-        
         ref.child("user-posts").child(userKey).child(newPostKey!).setValue(postData)
         
         //animate the action of going back, switching tabs is also handled in animated
