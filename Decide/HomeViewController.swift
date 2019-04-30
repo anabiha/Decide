@@ -34,19 +34,18 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     //displays the data from firebase in the homepage
     func updateData() {
         let ref = Database.database().reference().child("posts")
-        
-        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+    
+        ref.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
             
             if snapshot.childrenCount > 0 {
-                
                 //clear tableview for reload
-                
                 self.homeDecision.posts.removeAll() //important
-                
-                let posts = snapshot.value as? [String : Any] ?? [:]
-                for post in posts { //create the post and check if this user has voted on it yet
+             
+                for case let post as DataSnapshot in snapshot.children { //create the post and check if this user has voted on it yet.
+                    //NOT using snapshot.value allows for chronological order
                     let postData = post.value as! [String : Any]
                     let currentPost = HomeDecision.Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], key: post.key)
+                    print(post.key)
                     //retrieve whether the user voted on this post or not, then show it
                     if let userVote = postData["user-votes"] as? [String : Any]{
                         guard let UID = Auth.auth().currentUser?.uid else {return}
@@ -55,7 +54,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                             currentPost.userVote = vote
                         }
                     }
-                    self.homeDecision.posts.append(currentPost)
+                    self.homeDecision.posts.insert(currentPost, at: 0)
                 }
       
                 DispatchQueue.main.async {
