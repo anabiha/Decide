@@ -18,6 +18,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     let choiceIdentifier = "choiceCell"
     let cellSpacingHeight: CGFloat = 40
     let homeDecision = HomeDecision()
+    var refreshTriggered = false
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -26,33 +27,36 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.tableFooterView = UIView() //hides unused cells
         tableView.estimatedRowHeight = 300
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
-        homeDecision.configure()
+        updateData()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
+    //displays the data from firebase in the homepage
+    func updateData() {
         let ref = Database.database().reference().child("posts")
-        
-        ref.observe(DataEventType.value, with: { (snapshot) in
+    
+        ref.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
             
             if snapshot.childrenCount > 0 {
-                
-                self.homeDecision.posts.removeAll()
-                
-                let userPosts = snapshot.value as? [String : Any] ?? [:]
-                
-                for post in userPosts {
-                    
-//                    print(post.value)
-                    
-                    let curPost = post.value as! [String : Any]
-                    
-                    let currentPost = HomeDecision.Post(title: curPost["title"] as? String ?? "Title", decisions: curPost["options"] as? [String] ?? ["option"], numVotes: [10,7,30]) //fake votes!!!!! only size 3
-                    
-                    self.homeDecision.posts.append(currentPost)
+                //clear tableview for reload
+                self.homeDecision.posts.removeAll() //important
+             
+                for case let post as DataSnapshot in snapshot.children { //create the post and check if this user has voted on it yet.
+                    //NOT using snapshot.value allows for chronological order
+                    let postData = post.value as! [String : Any]
+                    let currentPost = HomeDecision.Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], key: post.key)
+                    print(post.key)
+                    //retrieve whether the user voted on this post or not, then show it
+                    if let userVote = postData["user-votes"] as? [String : Any]{
+                        guard let UID = Auth.auth().currentUser?.uid else {return}
+                        if let vote = userVote[UID] as? Int {
+                            currentPost.isVoteable = false
+                            currentPost.userVote = vote
+                        }
+                    }
+                    self.homeDecision.posts.insert(currentPost, at: 0)
                 }
-                
+      
                 DispatchQueue.main.async {
                     
                     self.tableView.beginUpdates()
@@ -60,9 +64,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     let index = IndexSet([indexPath.section])
                     
                     if(self.homeDecision.posts.count-1 > indexPath.section) {
-                        
                         self.tableView.insertSections(index, with: .automatic)
-                        
                     }
                     
                     self.tableView.endUpdates()
@@ -74,11 +76,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             
         })
-        
-        super.viewWillAppear(animated)
-        
+        refreshTriggered = false
     }
-    
+    //data refresh when scrolling down!
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        //increase size of button and scroll down when scrolling tableview down
+        if !refreshTriggered && scrollView.contentOffset.y < -130 {
+            refreshTriggered = true
+            updateData()
+        }
+    }
     // MARK: - Table View delegate methods
     func numberOfSections(in tableView: UITableView) -> Int {
         return homeDecision.posts.count
@@ -104,7 +111,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         headerView.backgroundColor = UIColor.clear
         return headerView
     }
-   
+    
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 { //username/profile pic bar
@@ -135,9 +142,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                         color = cell.color1
                     } else {
                         if vote + 2 == indexPath.row {
-                            color = cell.color1
-                        } else {
                             color = cell.color2
+                        } else {
+                            color = cell.color1
                         }
                     }
                 } else {
@@ -164,7 +171,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
     }
-  
+    
     //animates highlighting of selection
     func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
         let post = homeDecision.getPost(at: indexPath.section)
@@ -199,7 +206,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                             cell.displayPercentage()
                         } else {
                             if let vote = post.getUserVote() {
-                                if vote + 2 != index {
+                                if vote + 2 == index {
                                     UIView.animate(withDuration: 0.2) {
                                         cell.backgroundColor = cell.color2
                                     }

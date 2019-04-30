@@ -83,6 +83,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     override func viewDidAppear(_ animated: Bool) {
         cancelButton.alpha = 1
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        cancelButton.alpha = 0
+    }
     /*
      Works in conjunction with decisionitem func "shift" which shifts the cell based on the keyboard size
      whenever a cell is selected
@@ -360,25 +363,25 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         // removes the first element because it is the question
         post_options.remove(at: 0)
         
+        //creating an array for voting
         var votes: [Int] = []
-        for i in 0..<post_options.count {
+        for _ in 0..<post_options.count {
             votes.append(0)
         }
         
-        var postData = [
-            
-            "post_title": self.decision.getTitle(),
+        //dictionary uploaded to firebase for the post
+        let postData = [
+            "title": self.decision.getTitle(),
             "options": post_options,
+            "owner": userKey,
             "votes": votes,
-            
             ] as [String : Any]
         
-        var newPostKey = ref.child("posts").childByAutoId().key
-        
+        let newPostKey = ref.child("posts").childByAutoId().key
+        //store the post under the posts branch
         ref.child("posts").child(newPostKey!).setValue(postData)
-        
-        ref.child("user-posts").child(userKey).child(newPostKey!).setValue(postData)
-        
+        //stores the child ID of the post into the users>posts branch
+        ref.child("users").child(userKey).child("posts").child(newPostKey!).setValue(newPostKey!) //the key == the value, didn't know how else to get it to work like this.
         //animate the action of going back, switching tabs is also handled in animated
         self.dismiss(animated: true, completion: nil)
     }

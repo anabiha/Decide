@@ -9,28 +9,30 @@
 import Foundation
 import UIKit
 import FirebaseDatabase
-
+import Firebase
 //data structure for the decisions displayed on the home page
 class HomeDecision {
     //each post has a title, decisions, and percentages for those decisions
     class Post {
-        var title: String! //the title/question
+        var title: String! //the title or question
         var decisions: [String]! //the decisions
         var numVotes: [Int]! //distribution of votes
         var totalVotes: Int!
         var didDisplayPercents = false //marks whether cell was clicked on or not
         var isVoteable = true
-        var userVote: Int?
+        var userVote: Int? // locally keeps track of which option this specific user has voted
         var username: String?
-        init(title: String, decisions: [String], numVotes: [Int]) {
+        var key: String! //unique key for the post, used for referencing Firebase
+        init(title: String, decisions: [String], numVotes: [Int], key: String) {
             self.title = title
             self.decisions = decisions
             self.numVotes = numVotes
+            self.key = key
             recalculateTotal()
         }
+
         func getPercentage(forDecisionAt index: Int) -> Double {
             if index >= 0 && index < numVotes.count {
-//                print("Post;getPercentage(): accessing, Index \(index) vs Size \(numVotes.count))")
                 return Double(numVotes[index])/Double(totalVotes)
             } else {
                 print("Post;getPercentage(): INVALID accessing, Index \(index) vs Size \(numVotes.count))")
@@ -60,6 +62,10 @@ class HomeDecision {
             if isVoteable {
                 if numVotes.count > index && index >= 0{
                     numVotes[index] += 1
+                    let ref = Database.database().reference()
+                    ref.child("posts").child(key).child("votes").setValue(numVotes)
+                    guard let UID = Auth.auth().currentUser?.uid else {return}
+                    ref.child("posts").child(key).child("user-votes").child(UID).setValue(index)
                 } else {
                     print("Post;vote(): INVALID accessing, Index \(index) vs Size \(numVotes.count))")
                 }
@@ -83,18 +89,7 @@ class HomeDecision {
     
     var posts = [Post]()
     var maxPosts: Int = 20
-    
-    func configure() {
-        posts.append(Post(title: "Which pizza?", decisions: ["Pizza Hut", "Costco", "Papa Johns", "Other"], numVotes: [1, 1, 1, 1]))
-        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
-        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
-        posts.append(Post(title: "Title", decisions: ["1", "2", "3", "4"], numVotes: [10, 30, 40, 20]))
-        //retrieve maxPosts number of posts
-        //put them in the array
-    }
-    func addPost() {
-        
-    }
+  
     func getPost(at index: Int) -> Post? {
         if index >= 0 && index < posts.count {
             return posts[index]
@@ -103,24 +98,18 @@ class HomeDecision {
             return nil
         }
     }
-    func shiftPosts(by shift: Int) {
-        //retrieve a number of posts equal to shift
-        //delete that number of posts at the beginning
-        //add in the posts at the top
-    }
-    
+   
 }
 class ChoiceCell: UITableViewCell {
     @IBOutlet weak var choice: UILabel!
-    var choiceOrigin: CGPoint! //the original origin of choice
     var decision: String! //the text of the decision
     var bar: UIView?//creates the bar that highlights percentages
     var percentage: Double! //percentage
     var shouldRound = false //decides whether the row should be rounded
-    var color1 = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8) //default color and the color of what was chosen
-    var color2 = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.4) //the color of whatever wasn't chosen
-    var selectedBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8).withAlphaComponent(0.4)
-    var normalBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8)
+    var color1 = UIColor.white
+        //default color
+    var color2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)  //the color of what was chosen
+    var barColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.2) //color of bar
     override func layoutSubviews() {
         super.layoutSubviews()
         if shouldRound {
@@ -142,19 +131,18 @@ class ChoiceCell: UITableViewCell {
             bar = UIView(frame: self.frame)
             bar!.sizeToFit()
             self.addSubview(bar!)
-            bar!.layer.backgroundColor = UIColor.white.withAlphaComponent(0.7).cgColor
+            bar!.layer.backgroundColor = barColor.cgColor
             bar!.isHidden = true
             bar!.alpha = 0
             bar!.frame.size.width = 0
         }
-        bringSubviewToFront(choice)
+        self.sendSubviewToBack(bar!)
         //cell aesthetics
         backgroundColor = color
         //label aesthetics
         choice.backgroundColor = UIColor.clear
-        choice.font = UIFont(name: "AvenirNext-Bold", size: 20)
-        choice.textColor = UIColor.white
-        choiceOrigin = choice.frame.origin
+        choice.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        choice.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1) //color of bar
     }
     func updatePercent(newPercent: Double) {
         percentage = newPercent
@@ -170,7 +158,6 @@ class ChoiceCell: UITableViewCell {
                self.choice.alpha = 1
             })
             UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
-                self.choice.frame.origin = self.choiceOrigin
                 self.choice.text = self.decision
             })
         }
@@ -190,12 +177,7 @@ class ChoiceCell: UITableViewCell {
             }, completion: nil)
             UIView.animate(withDuration: 0.1, delay: 0.2, options: .transitionCrossDissolve, animations: {
                 self.choice.text = String("\((self.percentage * 100).truncate(places: 1))%") //this step must happen before the shift of choice, otherwise animation wont work
-            }, completion: { finished in
-                //shifting position of the uilabel
-                UIView.animate(withDuration: 0.3, delay: 0, options: .transitionCrossDissolve, animations: {
-                    self.choice.frame.origin = CGPoint(x: self.choice.frame.origin.x + self.frame.size.width * CGFloat(self.percentage), y: self.choice.frame.origin.y)
-                })
-            })
+            }, completion: nil)
         }
     }
     
@@ -204,7 +186,6 @@ class ChoiceCell: UITableViewCell {
         bar!.isHidden = true
         bar!.alpha = 0
         bar!.frame.size.width = 0
-        choice.frame.origin = choiceOrigin
     }
 }
 
@@ -220,6 +201,7 @@ class HomeTitleCell: UITableViewCell {
     @IBOutlet weak var title: UITextView!
     func configure(text: String) {
         title.text = text
+        title.textColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1)
         selectionStyle = .none
         title.font = UIFont(name: "AvenirNext-DemiBold", size: 30)
         title.textContainerInset = UIEdgeInsets(top: 0, left: 5, bottom: 5, right: 0)
