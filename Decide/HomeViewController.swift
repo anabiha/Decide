@@ -27,6 +27,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.tableFooterView = UIView() //hides unused cells
         tableView.estimatedRowHeight = 300
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
         updateData()
     }
@@ -37,6 +38,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             
             if snapshot.childrenCount > 0 {
+                
+                //clear tableview for reload
                 
                 self.homeDecision.posts.removeAll() //important
                 
@@ -79,7 +82,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     //data refresh when scrolling down!
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         //increase size of button and scroll down when scrolling tableview down
-        if !refreshTriggered && scrollView.contentOffset.y < -150 {
+        if !refreshTriggered && scrollView.contentOffset.y < -130 {
             refreshTriggered = true
             updateData()
         }

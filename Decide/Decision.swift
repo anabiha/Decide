@@ -62,15 +62,10 @@ class HomeDecision {
             if isVoteable {
                 if numVotes.count > index && index >= 0{
                     numVotes[index] += 1
-                    let postData = [
-                        "title": title,
-                        "options": decisions,
-                        "votes": numVotes
-                        ] as [String : Any]
                     let ref = Database.database().reference()
-                    ref.child("posts").child(key).setValue(postData) //update firebase with the new votes
+                    ref.child("posts").child(key).child("votes").setValue(numVotes)
                     guard let UID = Auth.auth().currentUser?.uid else {return}
-                    ref.child("posts").child(key).child("user-votes").child(UID).setValue(index) //keep track of which posts the user has voted on and what they voted for
+                    ref.child("posts").child(key).child("user-votes").child(UID).setValue(index)
                 } else {
                     print("Post;vote(): INVALID accessing, Index \(index) vs Size \(numVotes.count))")
                 }
