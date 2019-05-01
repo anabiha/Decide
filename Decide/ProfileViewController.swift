@@ -20,11 +20,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     var insets: UIEdgeInsets = UIEdgeInsets.init(top: 45, left: 0, bottom: 0, right: 0) //content inset for tableview
     let cellSpacingHeight: CGFloat = 14
     var cellCount = 1
-    var titles : [String] = []
-    var arrOptions : [[String]] = [[]]
-    var posts = [Post]()
-    
-    
+    let userPosts = HomeDecision()
     override func viewDidLoad() {
         
         tableView.delegate = self
@@ -36,67 +32,52 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.rowHeight = UITableView.automaticDimension
         //keeps some space between bottom of screen and the bottom of the tableview
         tableView.contentInset = insets
-        
+        updateData()
         
        super.viewDidLoad()
         
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
+    func updateData() {
         
-        let userKey = Auth.auth().currentUser?.uid
-        let ref = Database.database().reference().child("user-posts").child(userKey!)
+        guard let UID = Auth.auth().currentUser?.uid else {return}
+        let ref = Database.database().reference().root
         
         ref.observe(DataEventType.value, with: { (snapshot) in
             
-            if snapshot.childrenCount > 0 {
-                
-                self.posts.removeAll()
-                
-                let userPosts = snapshot.value as? [String : Any] ?? [:]
-                
-                self.cellCount = userPosts.count
-                
-                for post in userPosts {
-                    
-                    let currentPost = Post()
-                    
-                    let curPost = post.value as! [String : Any]
-                    
-                    currentPost.title = curPost["title"] as! String
-                    currentPost.options = curPost["options"] as! [String]
-                    
-                    self.posts.append(currentPost)
-                    
-                    
-                }
-               
+            var finalList: [String] = []
+            let rawPostList = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: UID).childSnapshot(forPath: "posts").value as! [String : Any]
+            for post in rawPostList {
+                let key = post.key
+                finalList.insert(key, at: 0)
+            }
+           
+            for key in finalList {
+                let postData = snapshot.childSnapshot(forPath: "posts").childSnapshot(forPath: key).value as! [String : Any]
+                let currentPost = HomeDecision.Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], key: key)
+                currentPost.isVoteable = false
+                self.userPosts.posts.append(currentPost)
+            }
+
                 DispatchQueue.main.async {
-                    
+
                     self.tableView.beginUpdates()
                     let indexPath = IndexPath(row: 1, section: self.cellCount-1)
                     let index = IndexSet([indexPath.section])
-                    
+
                     if(self.cellCount-1 > indexPath.section) {
-                        
+
                         self.tableView.insertSections(index, with: .automatic)
                         
                     }
-                    
+
                     self.tableView.endUpdates()
-                    
+
                 }
-                
+
                 self.tableView.reloadData()
-                
-            }
-            
+
         })
-        
-        super.viewDidAppear(animated)
-        
     }
-    
     
     //scrolls the tableview upward when the keyboard shows
     @objc func keyboardWillShow(_ notification:Notification) {
@@ -143,20 +124,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! ViewControllerTableViewCell
-        
-        DispatchQueue.main.async {
-            
-            if(self.posts.count > 0) {
-                
-                let currentPost = self.posts[indexPath.section]
-                cell.questionLabel.text = currentPost.title
-                
-                
-                
-            }
-            
-        }
-    
+      
         return cell
         
     }

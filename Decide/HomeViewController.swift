@@ -45,7 +45,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     //NOT using snapshot.value allows for chronological order
                     let postData = post.value as! [String : Any]
                     let currentPost = HomeDecision.Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], key: post.key)
-                    print(post.key)
                     //retrieve whether the user voted on this post or not, then show it
                     if let userVote = postData["user-votes"] as? [String : Any]{
                         guard let UID = Auth.auth().currentUser?.uid else {return}
