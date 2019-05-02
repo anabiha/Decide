@@ -17,10 +17,15 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBOutlet weak var tableView: UITableView!
     
-    var insets: UIEdgeInsets = UIEdgeInsets.init(top: 45, left: 0, bottom: 0, right: 0) //content inset for tableview
+    @IBOutlet weak var headerLabel: UILabel!
+    var insets: UIEdgeInsets = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0) //content inset for tableview
     let cellSpacingHeight: CGFloat = 14
     var cellCount = 1
+    var refreshTriggered = false
     let userPosts = HomeDecision()
+    let titleIdentifier = "profileTitleCell"
+    let choiceIdentifier = "profileChoiceCell"
+    let headerIdentifier = "headerCell"
     override func viewDidLoad() {
         
         tableView.delegate = self
@@ -32,10 +37,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.rowHeight = UITableView.automaticDimension
         //keeps some space between bottom of screen and the bottom of the tableview
         tableView.contentInset = insets
+        tableView.separatorStyle = .none
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: headerIdentifier)
         updateData()
-        
-       super.viewDidLoad()
-        
+        self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
+        super.viewDidLoad()
     }
     func updateData() {
         
@@ -57,7 +63,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 currentPost.isVoteable = false
                 self.userPosts.posts.append(currentPost)
             }
-
                 DispatchQueue.main.async {
 
                     self.tableView.beginUpdates()
@@ -77,8 +82,41 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 self.tableView.reloadData()
 
         })
+        refreshTriggered = false
     }
-    
+    //data refresh when scrolling down!
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        //increase size of button and scroll down when scrolling tableview down
+        if scrollView.contentOffset.y < 0 {
+            setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0), forView: headerLabel)
+            headerLabel.transform = CGAffineTransform(scaleX: 1 + abs(scrollView.contentOffset.y)/250, y: 1 + abs(scrollView.contentOffset.y)/250)
+        }
+        if !refreshTriggered && scrollView.contentOffset.y < -130 {
+            refreshTriggered = true
+            updateData()
+        }
+    }
+    func setAnchorPoint(anchorPoint: CGPoint, forView view: UIView) {
+        var newPoint = CGPoint(x: view.bounds.size.width * anchorPoint.x,
+                               y: view.bounds.size.height * anchorPoint.y)
+        
+        
+        var oldPoint = CGPoint(x: view.bounds.size.width * view.layer.anchorPoint.x,
+                               y: view.bounds.size.height * view.layer.anchorPoint.y)
+        
+        newPoint = newPoint.applying(view.transform)
+        oldPoint = oldPoint.applying(view.transform)
+        
+        var position = view.layer.position
+        position.x -= oldPoint.x
+        position.x += newPoint.x
+        
+        position.y -= oldPoint.y
+        position.y += newPoint.y
+        
+        view.layer.position = position
+        view.layer.anchorPoint = anchorPoint
+    }
     //scrolls the tableview upward when the keyboard shows
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
@@ -91,15 +129,17 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     //returns the number of sections
     func numberOfSections(in tableView: UITableView) -> Int {
-        
-        return self.cellCount
-        
-        
+        return userPosts.posts.count
     }
-    
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+       
+            if let post = userPosts.getPost(at: section) {
+                return post.decisions.count + 1 // +1 to account for title
+            } else {
+                return 0
+            }
+      
     }
     // Set the spacing between sections
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -122,19 +162,55 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! ViewControllerTableViewCell
-      
-        return cell
+       if indexPath.row == 0 { //title bar
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: titleIdentifier) as! ProfileTitleCell
+            if let post = userPosts.getPost(at: indexPath.section) {
+                cell.configure(text: post.title)
+            }
+            return cell
+        } else { //choice bars
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: choiceIdentifier) as! ProfileChoiceCell
+            if let post = userPosts.getPost(at: indexPath.section) {
+                if indexPath.row == post.decisions.count { //rounds corners of bottom row
+                    cell.shouldRound = true
+                } else {
+                    cell.shouldRound = false
+                }
+                //configure cell with the correct percentage
+                //change percentage to a decimal
+                let total = post.getTotal()
+                
+                cell.configure(text: post.getDecision(at: indexPath.row-1), percentage: Double(post.getVotes(at: indexPath.row - 1))/Double(total), color: cell.color1)
+                if post.didDisplayPercents { //redisplay percentages if they were shown prior
+                    cell.displayPercentage()
+                }
+            }
+            return cell
+        }
         
     }
     
     
     // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // note that indexPath.section is used rather than indexPath.row
+        print("You tapped cell number \(indexPath.row). at post number: \(indexPath.section)")
+        if let post = userPosts.getPost(at: indexPath.section) {
+            post.didDisplayPercents = !post.didDisplayPercents //mark the cell as displayed, regardless of whether whole post is visible, switch it each time it is pressed
+            for index in 1..<post.decisions.count + 1 {
+                if let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: indexPath.section)) as? ProfileChoiceCell {
+                    if post.didDisplayPercents {
+                        UIView.animate(withDuration: 0.2) {
+                            cell.backgroundColor = cell.color1
+                        }
+                        cell.displayPercentage()
+                    } else {
+                        cell.displayText()
+                    }
+                }
+            }
+        }
         
-        print("post cell tapped")
-       
     }
     
     

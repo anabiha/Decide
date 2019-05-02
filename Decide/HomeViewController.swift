@@ -80,10 +80,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     //data refresh when scrolling down!
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         //increase size of button and scroll down when scrolling tableview down
+        
         if !refreshTriggered && scrollView.contentOffset.y < -130 {
             refreshTriggered = true
             updateData()
+            
         }
+        
     }
     // MARK: - Table View delegate methods
     func numberOfSections(in tableView: UITableView) -> Int {

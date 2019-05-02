@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Qsh-eX-iTn">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Qsh-eX-iTn">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -41,38 +41,64 @@
                                     <constraint firstAttribute="trailing" secondItem="Erw-ep-8T9" secondAttribute="trailing" constant="10" id="rEq-fq-4pP"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your Posts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U8B-Rj-MsO">
+                                <rect key="frame" x="20" y="220" width="208" height="100"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="44"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Ann-dM-god">
-                                <rect key="frame" x="50" y="270" width="275" height="350"/>
+                                <rect key="frame" x="20" y="320" width="335" height="347"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="350" id="diT-P9-7gu"/>
-                                </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="postCell" id="tVG-XG-ocb" customClass="ViewControllerTableViewCell" customModule="Decide" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="275" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="profileTitleCell" id="8tC-yH-IzC" customClass="ProfileTitleCell" customModule="Decide" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="335" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tVG-XG-ocb" id="s28-jm-dMy">
-                                            <rect key="frame" x="0.0" y="0.0" width="275" height="43.5"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8tC-yH-IzC" id="2rh-ep-6dj">
+                                            <rect key="frame" x="0.0" y="0.0" width="335" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ErO-3P-zsC">
-                                                    <rect key="frame" x="15" y="10" width="226" height="24"/>
-                                                    <color key="tintColor" white="0.97161279970000003" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="17"/>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oqo-LP-ffm">
+                                                    <rect key="frame" x="0.0" y="0.0" width="335" height="43.5"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="Oqo-LP-ffm" secondAttribute="bottom" id="Fbx-zK-djA"/>
+                                                <constraint firstItem="Oqo-LP-ffm" firstAttribute="leading" secondItem="2rh-ep-6dj" secondAttribute="leading" id="Pnc-2U-jVG"/>
+                                                <constraint firstAttribute="trailing" secondItem="Oqo-LP-ffm" secondAttribute="trailing" id="PrT-7T-XYR"/>
+                                                <constraint firstItem="Oqo-LP-ffm" firstAttribute="top" secondItem="2rh-ep-6dj" secondAttribute="top" id="aXz-88-dW7"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="title" destination="Oqo-LP-ffm" id="D4O-y0-NDP"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="profileChoiceCell" id="KLj-w1-y5I" customClass="ProfileChoiceCell" customModule="Decide" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="72" width="335" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KLj-w1-y5I" id="6Gb-BE-mnS">
+                                            <rect key="frame" x="0.0" y="0.0" width="335" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zNC-Fa-V8q">
+                                                    <rect key="frame" x="15" y="11" width="305" height="22"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="ErO-3P-zsC" secondAttribute="trailing" constant="34" id="9Kr-dy-Lep"/>
-                                                <constraint firstItem="ErO-3P-zsC" firstAttribute="leading" secondItem="s28-jm-dMy" secondAttribute="leading" constant="15" id="Md0-cC-uym"/>
-                                                <constraint firstItem="ErO-3P-zsC" firstAttribute="top" secondItem="s28-jm-dMy" secondAttribute="top" constant="10" id="VEZ-8B-Aa4"/>
-                                                <constraint firstAttribute="bottom" secondItem="ErO-3P-zsC" secondAttribute="bottom" constant="9.5" id="neb-bQ-LLw"/>
+                                                <constraint firstItem="zNC-Fa-V8q" firstAttribute="bottom" secondItem="6Gb-BE-mnS" secondAttribute="bottomMargin" id="0AF-vE-Tr5"/>
+                                                <constraint firstItem="zNC-Fa-V8q" firstAttribute="top" secondItem="6Gb-BE-mnS" secondAttribute="topMargin" id="TwC-YF-KjR"/>
+                                                <constraint firstItem="zNC-Fa-V8q" firstAttribute="leading" secondItem="6Gb-BE-mnS" secondAttribute="leadingMargin" id="XXN-Jy-ASW"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="zNC-Fa-V8q" secondAttribute="trailing" id="kpY-Ln-FPM"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="questionLabel" destination="ErO-3P-zsC" id="Swx-qQ-D7T"/>
-                                            <segue destination="3C1-vD-xXR" kind="show" id="exl-Ng-wlh"/>
+                                            <outlet property="choice" destination="zNC-Fa-V8q" id="X1j-at-fN0"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -80,12 +106,16 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="gaU-4t-ODd" firstAttribute="trailing" secondItem="Ann-dM-god" secondAttribute="trailing" constant="50" id="3co-xk-um0"/>
                             <constraint firstItem="ut8-Aa-SeT" firstAttribute="leading" secondItem="gaU-4t-ODd" secondAttribute="leading" id="5wT-Nk-LDb"/>
                             <constraint firstItem="gaU-4t-ODd" firstAttribute="trailing" secondItem="ut8-Aa-SeT" secondAttribute="trailing" id="7bf-qm-zUC"/>
-                            <constraint firstItem="Ann-dM-god" firstAttribute="leading" secondItem="gaU-4t-ODd" secondAttribute="leading" constant="50" id="92s-uU-ItL"/>
+                            <constraint firstItem="U8B-Rj-MsO" firstAttribute="leading" secondItem="gaU-4t-ODd" secondAttribute="leading" constant="20" id="8EO-wb-DSl"/>
                             <constraint firstItem="ut8-Aa-SeT" firstAttribute="top" secondItem="gaU-4t-ODd" secondAttribute="top" constant="-20" id="G8G-7A-Sab"/>
-                            <constraint firstItem="Ann-dM-god" firstAttribute="top" secondItem="ut8-Aa-SeT" secondAttribute="bottom" constant="50" id="oRO-KB-CHf"/>
+                            <constraint firstItem="gaU-4t-ODd" firstAttribute="bottom" secondItem="Ann-dM-god" secondAttribute="bottom" id="T26-U1-OX0"/>
+                            <constraint firstItem="gaU-4t-ODd" firstAttribute="trailing" secondItem="Ann-dM-god" secondAttribute="trailing" constant="20" id="Wcv-p9-L9r"/>
+                            <constraint firstItem="Ann-dM-god" firstAttribute="top" secondItem="ut8-Aa-SeT" secondAttribute="bottom" constant="100" id="XeU-Z3-vKk"/>
+                            <constraint firstItem="U8B-Rj-MsO" firstAttribute="top" secondItem="ut8-Aa-SeT" secondAttribute="bottom" id="Xso-Cg-oBJ"/>
+                            <constraint firstItem="Ann-dM-god" firstAttribute="top" secondItem="U8B-Rj-MsO" secondAttribute="bottom" id="XuD-Zw-5KY"/>
+                            <constraint firstItem="Ann-dM-god" firstAttribute="leading" secondItem="gaU-4t-ODd" secondAttribute="leading" constant="20" id="wyq-QD-M9o"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="gaU-4t-ODd"/>
                     </view>
@@ -93,6 +123,7 @@
                         <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                     </tabBarItem>
                     <connections>
+                        <outlet property="headerLabel" destination="U8B-Rj-MsO" id="Z6H-zp-HU5"/>
                         <outlet property="tableView" destination="Ann-dM-god" id="SVs-qh-ttJ"/>
                     </connections>
                 </viewController>

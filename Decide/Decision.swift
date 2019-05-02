@@ -10,95 +10,108 @@ import Foundation
 import UIKit
 import FirebaseDatabase
 import Firebase
-//data structure for the decisions displayed on the home page
-class HomeDecision {
-    //each post has a title, decisions, and percentages for those decisions
-    class Post {
-        var title: String! //the title or question
-        var decisions: [String]! //the decisions
-        var numVotes: [Int]! //distribution of votes
-        var totalVotes: Int!
-        var didDisplayPercents = false //marks whether cell was clicked on or not
-        var isVoteable = true
-        var userVote: Int? // locally keeps track of which option this specific user has voted
-        var username: String?
-        var key: String! //unique key for the post, used for referencing Firebase
-        init(title: String, decisions: [String], numVotes: [Int], key: String) {
-            self.title = title
-            self.decisions = decisions
-            self.numVotes = numVotes
-            self.key = key
-            recalculateTotal()
-        }
 
-        func getPercentage(forDecisionAt index: Int) -> Double {
-            if index >= 0 && index < numVotes.count {
-                return Double(numVotes[index])/Double(totalVotes)
-            } else {
-                print("Post;getPercentage(): INVALID accessing, Index \(index) vs Size \(numVotes.count))")
-                return 0
-            }
+class ProfileChoiceCell: UITableViewCell {
+    @IBOutlet weak var choice: UILabel!
+    var decision: String! //the text of the decision
+    var bar: UIView?//creates the bar that highlights percentages
+    var percentage: Double! //percentage
+    var shouldRound = false //decides whether the row should be rounded
+    var color1 = UIColor.white
+    //default color
+    var color2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)  //the color of what was chosen
+    var barColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.2) //color of bar
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if shouldRound {
+            roundCorners([.bottomLeft, .bottomRight], radius: 15)
+        } else {
+            roundCorners([.bottomLeft, .bottomRight], radius: 0)
         }
-        func getDecision(at index: Int) -> String {
-            if index >= 0 && index < decisions.count {
-                return decisions[index]
-            } else {
-                print("Post;getDecision(): INVALID accessing, Index \(index) vs Size \(decisions.count))")
-                return ""
-            }
+    }
+    func configure(text: String, percentage: Double, color: UIColor) {
+        //make sure subviews to leave the view
+        clipsToBounds = true
+        selectionStyle = .none
+        //set the information
+        choice.text = text
+        decision = text
+        self.percentage = percentage
+        //bar
+        if bar == nil {
+            bar = UIView(frame: self.frame)
+            bar!.sizeToFit()
+            self.addSubview(bar!)
+            bar!.layer.backgroundColor = barColor.cgColor
+            bar!.isHidden = true
+            bar!.alpha = 0
+            bar!.frame.size.width = 0
         }
-        func getVotes(at index: Int) -> Int{
-            if index >= 0 && index < numVotes.count {
-                return numVotes[index]
-            } else {
-                print("Post;getVotes(): INVALID accessing, Index \(index) vs Size \(numVotes.count))")
-                return 0
-            }
+        self.sendSubviewToBack(bar!)
+        //cell aesthetics
+        backgroundColor = color
+        //label aesthetics
+        choice.backgroundColor = UIColor.clear
+        choice.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        choice.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1) //color of bar
+    }
+    func updatePercent(newPercent: Double) {
+        percentage = newPercent
+    }
+    func displayText() {
+        if let bar = bar {
+            UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
+                bar.alpha = 0
+                bar.frame.size.width = 0
+                self.choice.alpha = 0
+            })
+            UIView.animate(withDuration: 0.3, delay: 0.2, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
+                self.choice.alpha = 1
+            })
+            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
+                self.choice.text = self.decision
+            })
         }
-        func getUserVote() -> Int? {
-            return userVote
-        }
-        func vote(forDecisionAt index: Int) {
-            if isVoteable {
-                if numVotes.count > index && index >= 0{
-                    numVotes[index] += 1
-                    let ref = Database.database().reference()
-                    ref.child("posts").child(key).child("votes").setValue(numVotes)
-                    guard let UID = Auth.auth().currentUser?.uid else {return}
-                    ref.child("posts").child(key).child("user-votes").child(UID).setValue(index)
-                } else {
-                    print("Post;vote(): INVALID accessing, Index \(index) vs Size \(numVotes.count))")
-                }
-            } else {
-                print("Post;vote(): POST ALREADY VOTED ON")
-            }
-            isVoteable = false
-            userVote = index
-            recalculateTotal()
-        }
-        func getTotal() -> Int {
-            return totalVotes
-        }
-        private func recalculateTotal() {
-            totalVotes = 0
-            for i in 0..<numVotes.count {
-                totalVotes += numVotes[i]
-            }
+    }
+    func displayPercentage() {
+        if let bar = bar {
+            bar.isHidden = false
+            //animate bar
+            UIView.animate(withDuration: 0.3, delay: 0.2, options: .curveEaseOut, animations: {
+                bar.alpha = 1
+                bar.frame.size.width = self.frame.size.width * CGFloat(self.percentage)
+            }, completion: nil)
+            //animate shifting of choice alpha
+            UIView.animate(withDuration: 0.5, delay: 0.2, options: .curveEaseIn, animations: {
+                self.choice.alpha = 0
+                self.choice.alpha = 1
+            }, completion: nil)
+            UIView.animate(withDuration: 0.1, delay: 0.2, options: .transitionCrossDissolve, animations: {
+                self.choice.text = String("\((self.percentage * 100).truncate(places: 1))%") //this step must happen before the shift of choice, otherwise animation wont work
+            }, completion: nil)
         }
     }
     
-    var posts = [Post]()
-    var maxPosts: Int = 20
-  
-    func getPost(at index: Int) -> Post? {
-        if index >= 0 && index < posts.count {
-            return posts[index]
-        } else {
-            print("HomeDecision;getPost(): INVALID accessing, Index \(index) vs Size \(posts.count))")
-            return nil
-        }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        bar!.isHidden = true
+        bar!.alpha = 0
+        bar!.frame.size.width = 0
     }
-   
+}
+class ProfileTitleCell: UITableViewCell {
+    @IBOutlet weak var title: UITextView!
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        roundCorners([.topLeft, .topRight], radius: 15)
+    }
+    func configure(text: String) {
+        title.text = text
+        title.textColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1)
+        selectionStyle = .none
+        title.font = UIFont(name: "AvenirNext-DemiBold", size: 30)
+        title.textContainerInset = UIEdgeInsets(top: 10, left: 7, bottom: 5, right: 7)
+    }
 }
 class ChoiceCell: UITableViewCell {
     @IBOutlet weak var choice: UILabel!
@@ -222,113 +235,6 @@ class UserCell: UITableViewCell {
         self.username.font = UIFont(name: "AvenirNext-DemiBold", size: 15)
         backgroundColor = UIColor.white
     }
-}
-
-//data structure for a new decision
-class Decision: DecisionHandler {
-    
-    var decisionItemList: [String] = []
-    var tagList: [Bool] = []
-    var activeFieldIndex: IndexPath?
-    var keyboardSize: CGRect?
-    func configure(withSize size: Int) {
-        while decisionItemList.count < size {
-            decisionItemList.append("")
-        }
-        for _ in 0..<12 {
-            tagList.append(false)
-        }
-    }
-    func setTitle(text: String) {
-        if decisionItemList.count > 0 {
-            decisionItemList[0] = text
-        } else {
-            decisionItemList.append(text)
-        }
-    }
-    func totalCells() -> Int {
-        return decisionItemList.count
-    }
-    func add(decision: String) {
-        decisionItemList.append(decision)
-    }
-    func removeDecision(at index: Int) {
-        if index > 0 && index < decisionItemList.count {
-            decisionItemList.remove(at: index)
-        } else {
-            print("DECISION HANDLER func \"removeDecision\" TRIED TO ACCESS OUT OF BOUNDS at index: \(index)")
-        }
-    }
-    func insertDecision(at index: Int, with decision: String) {
-        if index > 0 && index < decisionItemList.count {
-            decisionItemList.insert(decision, at: index)
-        } else {
-            print("DECISION HANDLER func \"insertDecision\" TRIED TO ACCESS OUT OF BOUNDS at index: \(index)")
-        }
-    }
-    func setDecision(at index: Int, with decision: String) {
-        if index > 0 && index < decisionItemList.count {
-            decisionItemList[index] = decision
-        } else {
-            print("DECISION HANDLER func \"setDecision\" TRIED TO ACCESS OUT OF BOUNDS at index: \(index)")
-        }
-    }
-    func getDecision(at index: Int) -> String {
-        if index > 0 && index < decisionItemList.count {
-            return decisionItemList[index]
-        } else {
-            print("DECISION HANDLER func \"getDecision\" TRIED TO ACCESS OUT OF BOUNDS at index: \(index)")
-            return ""
-        }
-    }
-    func getTitle() -> String {
-        if decisionItemList.count > 0 {
-            return decisionItemList[0]
-        } else {
-            print("DECISION HANLDER ATTEMPTED TO RETRIEVE A TITLE THAT DIDN'T EXIST")
-            return ""
-        }
-    }
-    func numTagged() -> Int {
-        var count = 0
-        for i in 0..<tagList.count {
-            if tagList[i] { count += 1}
-        }
-        return count
-    }
-    func isTagged(at index: Int) -> Bool {
-        if index >= 0 && index < 12 {
-            if tagList[index] {
-                return true
-            } else {
-                return false
-            }
-        } else {
-            print("Decision;isTagged(): index out of bounds")
-            return false
-        }
-    }
-    func markTag(at index: Int) {
-        if index >= 0 && index < 12 {
-            if tagList[index] {
-                tagList[index] = false
-            } else if numTagged() < 2 {
-                tagList[index] = true
-            } else {
-                print("Decision;markTag(): max number of tags achieved")
-            }
-        } else {
-            print("Decision;markTag(): index out of bounds")
-        }
-    }
-}
-protocol DecisionHandler {
-    func setTitle(text: String)
-    func totalCells() -> Int
-    func removeDecision(at index: Int)
-    func insertDecision(at index: Int, with decision: String)
-    func setDecision(at index: Int, with decision: String)
-    func getDecision(at index: Int) -> String
 }
 
 

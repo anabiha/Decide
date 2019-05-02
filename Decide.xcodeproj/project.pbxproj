@@ -35,6 +35,7 @@
 		65E7918422247D7100537D95 /* NewDecision.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65E7918322247D7100537D95 /* NewDecision.storyboard */; };
 		65E7918722247E0000537D95 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65E7918622247E0000537D95 /* Profile.storyboard */; };
 		65F21E6E218F594F00A74B52 /* NewDecisionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F21E6C218F527A00A74B52 /* NewDecisionViewController.swift */; };
+		65FAC95D227A01BC00BF3B44 /* DataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FAC95C227A01BC00BF3B44 /* DataModels.swift */; };
 		B14A058F58E3E44900DBD1D0 /* Pods_Decide.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9A6D4B7F112FA74F23CEEB /* Pods_Decide.framework */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +70,7 @@
 		65E7918322247D7100537D95 /* NewDecision.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = NewDecision.storyboard; sourceTree = "<group>"; };
 		65E7918622247E0000537D95 /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		65F21E6C218F527A00A74B52 /* NewDecisionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDecisionViewController.swift; sourceTree = "<group>"; };
+		65FAC95C227A01BC00BF3B44 /* DataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModels.swift; sourceTree = "<group>"; };
 		BF3503CA55741D1DBCF832B8 /* Pods-Decide.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Decide.release.xcconfig"; path = "Pods/Target Support Files/Pods-Decide/Pods-Decide.release.xcconfig"; sourceTree = "<group>"; };
 		D3662C2BE9CC9C962C839A73 /* Pods-Decide.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Decide.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Decide/Pods-Decide.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -118,6 +120,7 @@
 			children = (
 				35105AD12185EE2F00C93FE8 /* AppDelegate.swift */,
 				653912AD219E13920003C0B6 /* Decision.swift */,
+				65FAC95C227A01BC00BF3B44 /* DataModels.swift */,
 				65622EC921960B1F00C96D0D /* HomeViewController.swift */,
 				65C42979218FDD4000B7768C /* ProfileViewController.swift */,
 				65C5F0DC21934F3E00E426BB /* MainTabBarController.swift */,
@@ -335,6 +338,7 @@
 				35916AAF222611E600126476 /* Storyboard+Utility.swift in Sources */,
 				35743941223E919F000E0040 /* ShowPostViewController.swift in Sources */,
 				3562280E225FF7CA007DC860 /* Post.swift in Sources */,
+				65FAC95D227A01BC00BF3B44 /* DataModels.swift in Sources */,
 				65ABA2EF21DE82F10012446A /* Animate.swift in Sources */,
 				35916AAD2226119400126476 /* Constants.swift in Sources */,
 			);
