@@ -172,6 +172,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             let cell = self.tableView.dequeueReusableCell(withIdentifier: usernameIdentifier) as! UserCell
             cell.configure(username: "USER")
             if let post = homeDecision.getPost(at: indexPath.section) {
+                cell.removeButtonTargets() //just to make sure that this wont point to the wrong cell once reused
                 cell.setButtonTarget(post, #selector(HomeDecision.Post.report(_:))) //the flag button
                 cell.setButtonTarget(self, #selector(showFlagPopup(_:)))
             }
