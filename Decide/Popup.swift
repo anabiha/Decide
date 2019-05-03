@@ -10,14 +10,160 @@
 import Foundation
 import UIKit
 
+class FlagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
+    
+    var title: UILabel!
+    var flagTable: UITableView!
+    var postButton: CustomButton!
+    var data: FlagHandler!
+    var options: [String]!
+    var text: String!
+    var exitButton: CustomButton!
+    func configure(text: String, optionList: [String], handler: FlagHandler!) {
+        data = handler
+        options = optionList
+        self.text = text
+        clipsToBounds = false
+        self.translatesAutoresizingMaskIntoConstraints = false //important
+        //title instantiation
+        title = UILabel(frame: CGRect.zero)
+        title.translatesAutoresizingMaskIntoConstraints = false //important
+        //table instantiation
+        flagTable = UITableView()
+        flagTable.delegate = self
+        flagTable.dataSource = self
+        flagTable.separatorStyle = .none
+        flagTable.contentInsetAdjustmentBehavior = .never
+        flagTable.contentInset = UIEdgeInsets.zero
+        flagTable.register(UITableViewCell.self, forCellReuseIdentifier: "flagCell") //important bc we didn't use interface builder
+        flagTable.translatesAutoresizingMaskIntoConstraints = false
+        //button instantiation
+        postButton = CustomButton()
+        postButton.translatesAutoresizingMaskIntoConstraints = false
+        exitButton = CustomButton()
+        exitButton.translatesAutoresizingMaskIntoConstraints = false
+        //add subviews
+        self.addSubview(title)
+        self.addSubview(flagTable)
+        self.addSubview(postButton)
+        self.addSubview(exitButton)
+        self.bringSubviewToFront(flagTable)
+        //popup constraints
+        if let view = self.superview {
+            print("Helloo")
+            self.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            self.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+            self.widthAnchor.constraint(equalToConstant: 290).isActive = true
+        } else {
+            print("FlagPopup;configure(): CALL CONFIGURE AFTER ADDING TO SUPERVIEW")
+        }
+        //title constraints
+        title.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        title.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
+        title.widthAnchor.constraint(equalToConstant: 280).isActive = true
+        //table constraints
+        flagTable.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        flagTable.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10).isActive = true
+        flagTable.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+        flagTable.heightAnchor.constraint(equalToConstant: 350).isActive = true
+        flagTable.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        //exit button constraints
+        exitButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
+        exitButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true
+        exitButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        exitButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        //okay button constraints
+        postButton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        postButton.topAnchor.constraint(equalTo: flagTable.bottomAnchor, constant: 20).isActive = true
+        postButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
+        postButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        postButton.widthAnchor.constraint(equalToConstant: 260).isActive = true
+        //button aesthetics
+        postButton.configure(tuple: button.popupReport)
+        exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
+        //title aesthetics
+        title.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        title.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8)
+        title.lineBreakMode = .byWordWrapping
+        title.textAlignment = .center
+        title.numberOfLines = 0
+        title.text = text
+        //popup aesthetics
+        self.alpha = 0
+        self.backgroundColor = UIColor.white
+        self.layer.cornerRadius = 15
+        self.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        self.isHidden = true
+    }
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return options.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let text = options[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "flagCell") as! UITableViewCell
+        cell.textLabel!.text = text
+        cell.textLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        cell.textLabel?.textColor = UIColor.black.withAlphaComponent(0.6)
+        cell.selectionStyle = .none
+        if data.isTagged(at: indexPath.row) {
+            cell.accessoryType = .checkmark
+            cell.backgroundColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.3)
+        } else {
+            cell.accessoryType = .none
+            cell.backgroundColor = UIColor.white
+        }
+        return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("Tapped tag at: \(indexPath.row)")
+        if let cell = tableView.cellForRow(at: indexPath) {
+            if cell.accessoryType == .checkmark {
+                cell.accessoryType = .none
+                UIView.animate(withDuration: 0.1) {
+                    cell.backgroundColor = UIColor.white
+                }
+            } else if data.numTagged() < 1 {
+                cell.accessoryType = .checkmark
+                UIView.animate(withDuration: 0.1) {
+                    cell.backgroundColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.3)
+                }
+            }
+        }
+        data.markTag(at: indexPath.row) //telling the data structure that this tag was marked
+    }
+    func setMainButtonTarget(_ target: Any?, _ selector: Selector) {
+        postButton.addTarget(target, action: selector, for: .touchUpInside)
+    }
+    func setExitButtonTarget(_ target: Any?, _ selector: Selector) {
+        exitButton.addTarget(target, action: selector, for: .touchUpInside)
+    }
+    func removeMainButtonTargets() {
+        postButton.removeTarget(nil, action: nil, for: .allEvents)
+    }
+    func removeExitButtonTargets() {
+        exitButton.removeTarget(nil, action: nil, for: .allEvents)
+    }
+}
 class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     
     var title: UILabel!
     var tagTable: UITableView!
     var postButton: CustomButton!
     var decision: Decision!
-    func configure(handler: Decision!) {
+    var options: [String]!
+    var text: String!
+    func configure(text: String, optionList: [String], handler: Decision!) {
         decision = handler
+        options = optionList
+        self.text = text
+        
         clipsToBounds = false
         self.translatesAutoresizingMaskIntoConstraints = false //important
         
@@ -46,6 +192,8 @@ class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
             self.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
             self.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
             self.widthAnchor.constraint(equalToConstant: 290).isActive = true
+        } else {
+            print("TagPopup;configure(): CALL CONFIGURE AFTER ADDING TO SUPERVIEW")
         }
         //title constraints
         title.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
@@ -71,7 +219,7 @@ class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
         title.lineBreakMode = .byWordWrapping
         title.textAlignment = .center
         title.numberOfLines = 0
-        title.text = "Add up to 2 tags"
+        title.text = text
         //popup aesthetics
         self.alpha = 0
         self.backgroundColor = UIColor.white
@@ -87,48 +235,7 @@ class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var text = ""
-        switch (indexPath.row) {
-        case 0:
-            text = "Food"
-            break
-        case 1:
-            text = "Sports"
-            break
-        case 2:
-            text = "Education"
-            break
-        case 3:
-            text = "Entertainment"
-            break
-        case 4:
-            text = "Travel"
-            break
-        case 5:
-            text = "Technology"
-            break
-        case 6:
-            text = "Fashion"
-            break
-        case 7:
-            text = "Politics"
-            break
-        case 8:
-            text = "Finances"
-            break
-        case 9:
-            text = "Politics"
-            break
-        case 10:
-            text = "Life Advice"
-            break
-        case 11:
-            text = "Outdoors"
-            break
-        default:
-            text = "Misc"
-            break
-        }
+        let text = options[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "tagCell") as! UITableViewCell
         cell.textLabel!.text = text
         cell.textLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
@@ -196,6 +303,8 @@ class Popup: UIView {
             self.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
             self.widthAnchor.constraint(equalToConstant: 290).isActive = true
             
+        } else {
+            print("Popup;configure(): CALL CONFIGURE AFTER ADDING TO SUPERVIEW")
         }
         //title constraints
         title.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
@@ -385,9 +494,12 @@ struct button {
     static let createAccount = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Create Account")
     static let getStarted = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Let's get started!")
     static let popupOkay = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Okay")
+    static let popupReport = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Report")
     static let popupCancel = (UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1), UIColor(red: 205/255, green: 205/255, blue: 205/255, alpha: 1), UIColor.black, UIColor.black,"Cancel")
+    static let popupX = (UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1), UIColor(red: 205/255, green: 205/255, blue: 205/255, alpha: 1), UIColor.black, UIColor.black,"X")
     static let popupDelete = (UIColor(red: 244/255, green: 66/255, blue: 66/255, alpha: 0.8), UIColor(red: 216/255, green: 41/255, blue: 41/255, alpha: 0.8), UIColor.white, UIColor.white, "Delete")
     static let popupPost = (UIColor(red: 59/255, green: 230/255, blue: 115/255, alpha: 1), UIColor(red: 29/255, green: 209/255, blue: 80/255, alpha: 1), UIColor.white, UIColor.white, "Post")
+    
 }
 
 //class that instantiates buttons based on the tuple passed in

@@ -62,17 +62,24 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="En4-s3-GfY" customClass="CustomButton" customModule="Decide" customModuleProvider="target">
+                                                    <rect key="frame" x="274" y="11" width="46" height="30"/>
+                                                    <state key="normal" title="Button"/>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="kg2-ds-u5s" secondAttribute="bottom" id="0MP-wI-6Hl"/>
                                                 <constraint firstItem="kg2-ds-u5s" firstAttribute="top" secondItem="pBM-mg-csr" secondAttribute="topMargin" id="3xg-iC-zQd"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="En4-s3-GfY" secondAttribute="trailing" id="8ZS-jD-yhZ"/>
                                                 <constraint firstItem="xE4-VJ-Ac3" firstAttribute="leading" secondItem="pBM-mg-csr" secondAttribute="leading" id="8rf-9s-hZR"/>
                                                 <constraint firstItem="kg2-ds-u5s" firstAttribute="leading" secondItem="xE4-VJ-Ac3" secondAttribute="trailing" id="H42-iD-dFb"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="kg2-ds-u5s" secondAttribute="trailing" id="avS-zD-N08"/>
+                                                <constraint firstItem="En4-s3-GfY" firstAttribute="top" secondItem="pBM-mg-csr" secondAttribute="topMargin" id="csL-so-gsZ"/>
                                                 <constraint firstItem="xE4-VJ-Ac3" firstAttribute="top" secondItem="pBM-mg-csr" secondAttribute="top" id="klj-lU-I42"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="flagButton" destination="En4-s3-GfY" id="V3e-ed-UrE"/>
                                             <outlet property="profilePicture" destination="xE4-VJ-Ac3" id="tVy-CN-xjq"/>
                                             <outlet property="username" destination="kg2-ds-u5s" id="jWZ-Sk-clu"/>
                                         </connections>

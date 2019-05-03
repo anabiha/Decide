@@ -224,16 +224,23 @@ class UserCell: UITableViewCell {
     
     @IBOutlet weak var username: UILabel!
     @IBOutlet weak var profilePicture: UIImageView!
-    
+    @IBOutlet weak var flagButton: CustomButton!
     override func layoutSubviews() {
         super.layoutSubviews()
         roundCorners([.topLeft, .topRight], radius: 15)
     }
     func configure(username: String) {
         clipsToBounds = true
+        selectionStyle = .none
         self.username.text = username
         self.username.font = UIFont(name: "AvenirNext-DemiBold", size: 15)
         backgroundColor = UIColor.white
+    }
+    func setButtonTarget(_ target: Any?, _ selector: Selector) {
+        flagButton.addTarget(target, action: selector, for: .touchUpInside)
+    }
+    func removeButtonTargets() {
+        flagButton.removeTarget(nil, action: nil, for: .allEvents)
     }
 }
 
@@ -368,9 +375,7 @@ extension UIView {
         mask.path = path.cgPath
         self.layer.mask = mask
     }
-    
-    
-    
+
 }
 //this is how our cell accesses its own tableview
 extension UITableViewCell {

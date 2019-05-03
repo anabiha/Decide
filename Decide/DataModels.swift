@@ -23,11 +23,14 @@ class HomeDecision {
         var userVote: Int? // locally keeps track of which option this specific user has voted
         var username: String?
         var key: String! //unique key for the post, used for referencing Firebase
-        init(title: String, decisions: [String], numVotes: [Int], key: String) {
+        var popup = Popup()
+        var flagHandler: FlagHandler!
+        init(title: String, decisions: [String], numVotes: [Int], flagHandler: FlagHandler, key: String) {
             self.title = title
             self.decisions = decisions
             self.numVotes = numVotes
             self.key = key
+            self.flagHandler = flagHandler
             recalculateTotal()
         }
         
@@ -58,6 +61,7 @@ class HomeDecision {
         func getUserVote() -> Int? {
             return userVote
         }
+        
         func vote(forDecisionAt index: Int) {
             if isVoteable {
                 if numVotes.count > index && index >= 0{
@@ -85,7 +89,12 @@ class HomeDecision {
                 totalVotes += numVotes[i]
             }
         }
-    }
+        //tells the flaghandler that THIS is this post to be reported
+        @objc func report(_ sender: Any) {
+            flagHandler.post = self
+        }
+        
+     }
     
     var posts = [Post]()
     var maxPosts: Int = 20
@@ -100,7 +109,54 @@ class HomeDecision {
     }
     
 }
-
+class FlagHandler {
+    var options: [Bool] = []
+    var post: HomeDecision.Post?
+    func configure(length: Int) {
+        options = []
+        for _ in 0..<length {
+            options.append(false)
+        }
+    }
+    func numTagged() -> Int {
+        var count = 0
+        for i in 0..<options.count {
+            if options[i] { count += 1}
+        }
+        return count
+    }
+    func isTagged(at index: Int) -> Bool {
+        if index >= 0 && index < 12 {
+            if options[index] {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            print("FlagHandler;isTagged(): index out of bounds")
+            return false
+        }
+    }
+    func markTag(at index: Int) {
+        if index >= 0 && index < options.count {
+            if options[index] {
+                options[index] = false
+            } else if numTagged() < 1 {
+                options[index] = true
+            } else {
+                print("FlagHandler;markTag(): max number of tags achieved")
+            }
+        } else {
+            print("FlagHandler;markTag(): index out of bounds")
+        }
+    }
+    func clear() {
+        post = nil
+        for i in 0..<options.count {
+            options[i] = false
+        }
+    }
+}
 //data structure for a new decision
 class Decision: DecisionHandler {
     

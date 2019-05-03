@@ -19,6 +19,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     let cellSpacingHeight: CGFloat = 40
     let homeDecision = HomeDecision()
     var refreshTriggered = false
+    var flagPopup = FlagPopup()
+    var dimBackground: UIView!
+    var flagHandler = FlagHandler()
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -29,6 +32,24 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.rowHeight = UITableView.automaticDimension
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
+        //add dim background
+        dimBackground = UIView(frame: UIScreen.main.bounds)
+        dimBackground.alpha = 0
+        dimBackground.isHidden = true
+        dimBackground.backgroundColor = UIColor.black
+        view.addSubview(dimBackground)
+        //add flagging popup
+        view.addSubview(flagPopup)
+        let flagOptions: [String] = ["Bullying", "Harassment"]
+        flagPopup.configure(text: "Report Post", optionList: flagOptions, handler: flagHandler)
+        flagPopup.setExitButtonTarget(self, #selector(cancelReport(_:)))
+        flagPopup.setMainButtonTarget(self, #selector(saveReport(_:)))
+        //flag handler (the data model for flags)
+        flagHandler.configure(length: flagOptions.count)
+
+        self.view.bringSubviewToFront(dimBackground)
+        self.view.bringSubviewToFront(flagPopup)
+        
         updateData()
     }
     //displays the data from firebase in the homepage
@@ -44,7 +65,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 for case let post as DataSnapshot in snapshot.children { //create the post and check if this user has voted on it yet.
                     //NOT using snapshot.value allows for chronological order
                     let postData = post.value as! [String : Any]
-                    let currentPost = HomeDecision.Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], key: post.key)
+                    let currentPost = HomeDecision.Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], flagHandler: self.flagHandler, key: post.key)
                     //retrieve whether the user voted on this post or not, then show it
                     if let userVote = postData["user-votes"] as? [String : Any]{
                         guard let UID = Auth.auth().currentUser?.uid else {return}
@@ -113,13 +134,47 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         headerView.backgroundColor = UIColor.clear
         return headerView
     }
-    
+    @objc func showFlagPopup(_ sender: Any) {
+        self.flagPopup.isHidden = false
+        self.dimBackground.isHidden = false
+        UIView.transition(with: flagPopup, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.flagPopup.alpha = 1
+            self.dimBackground.alpha = 0.5
+        }, completion: nil )
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.flagPopup.transform = CGAffineTransform(scaleX: 1, y: 1)
+        })
+    }
+    func closeFlagPopup() {
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.flagPopup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        }, completion: nil)
+        
+        UIView.transition(with: flagPopup, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.flagPopup.alpha = 0
+            self.dimBackground.alpha = 0
+        }, completion: { finished in
+            self.flagPopup.isHidden = true
+            self.dimBackground.isHidden = true
+        })
+    }
+    @objc func cancelReport(_ sender: Any) {
+        flagHandler.clear()
+        closeFlagPopup()
+    }
+    @objc func saveReport(_ sender: Any) {
+        //save all the data for flags
+        closeFlagPopup()
+    }
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 { //username/profile pic bar
             let cell = self.tableView.dequeueReusableCell(withIdentifier: usernameIdentifier) as! UserCell
             cell.configure(username: "USER")
-            cell.selectionStyle = .none
+            if let post = homeDecision.getPost(at: indexPath.section) {
+                cell.setButtonTarget(post, #selector(HomeDecision.Post.report(_:))) //the flag button
+                cell.setButtonTarget(self, #selector(showFlagPopup(_:)))
+            }
             return cell
         } else if indexPath.row == 1 { //title bar
             let cell = self.tableView.dequeueReusableCell(withIdentifier: titleIdentifier) as! HomeTitleCell
@@ -227,4 +282,5 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         //the height of the post, to be implemented later
         return UITableView.automaticDimension
     }
+   
 }

@@ -71,7 +71,11 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         
         tagPopup = TagPopup()
         self.view.addSubview(tagPopup)
-        tagPopup.configure(handler: decision)
+        let options = ["Food","Sports","Education","Entertainment","Travel","Technology","Fashion","Politics","Finances",
+            "Life Advice",
+            "Outdoors",
+            "Misc"]
+        tagPopup.configure(text: "Add up to 2 tags", optionList: options, handler: decision)
         tagPopup.setButtonTarget(self, #selector(saveDecision(_:)))
         //view controller is behind dim background which is behind the popup
         self.view.bringSubviewToFront(dimBackground)
