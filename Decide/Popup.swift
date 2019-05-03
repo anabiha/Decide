@@ -10,33 +10,27 @@
 import Foundation
 import UIKit
 
-class FlagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
+class FlagPopup: UIView, UITextViewDelegate {
     
     var title: UILabel!
-    var flagTable: UITableView!
+    var reason: UITextView!
     var postButton: CustomButton!
     var data: FlagHandler!
-    var options: [String]!
     var text: String!
     var exitButton: CustomButton!
-    func configure(text: String, optionList: [String], handler: FlagHandler!) {
+    var placeholder = "Please explain your issue here..."
+    func configure(text: String, handler: FlagHandler!) {
         data = handler
-        options = optionList
         self.text = text
         clipsToBounds = false
         self.translatesAutoresizingMaskIntoConstraints = false //important
         //title instantiation
         title = UILabel(frame: CGRect.zero)
         title.translatesAutoresizingMaskIntoConstraints = false //important
-        //table instantiation
-        flagTable = UITableView()
-        flagTable.delegate = self
-        flagTable.dataSource = self
-        flagTable.separatorStyle = .none
-        flagTable.contentInsetAdjustmentBehavior = .never
-        flagTable.contentInset = UIEdgeInsets.zero
-        flagTable.register(UITableViewCell.self, forCellReuseIdentifier: "flagCell") //important bc we didn't use interface builder
-        flagTable.translatesAutoresizingMaskIntoConstraints = false
+        //textview instantiation
+        reason = UITextView()
+        reason.delegate = self
+        reason.translatesAutoresizingMaskIntoConstraints = false
         //button instantiation
         postButton = CustomButton()
         postButton.translatesAutoresizingMaskIntoConstraints = false
@@ -44,10 +38,10 @@ class FlagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
         exitButton.translatesAutoresizingMaskIntoConstraints = false
         //add subviews
         self.addSubview(title)
-        self.addSubview(flagTable)
+        self.addSubview(reason)
         self.addSubview(postButton)
         self.addSubview(exitButton)
-        self.bringSubviewToFront(flagTable)
+        self.bringSubviewToFront(reason)
         //popup constraints
         if let view = self.superview {
             print("Helloo")
@@ -62,11 +56,11 @@ class FlagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
         title.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
         title.widthAnchor.constraint(equalToConstant: 280).isActive = true
         //table constraints
-        flagTable.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        flagTable.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10).isActive = true
-        flagTable.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
-        flagTable.heightAnchor.constraint(equalToConstant: 350).isActive = true
-        flagTable.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        reason.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        reason.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10).isActive = true
+        reason.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
+        reason.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        reason.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15).isActive = true
         //exit button constraints
         exitButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
         exitButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true
@@ -74,10 +68,17 @@ class FlagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
         exitButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
         //okay button constraints
         postButton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        postButton.topAnchor.constraint(equalTo: flagTable.bottomAnchor, constant: 20).isActive = true
+        postButton.topAnchor.constraint(equalTo: reason.bottomAnchor, constant: 20).isActive = true
         postButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
         postButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
         postButton.widthAnchor.constraint(equalToConstant: 260).isActive = true
+        //reason aesthetics
+        reason.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        reason.text = placeholder
+        reason.textColor = UIColor.lightGray
+        reason.selectedTextRange = reason.textRange(from: reason.beginningOfDocument, to: reason.beginningOfDocument)
+        //places cursor at beginning
+        reason.returnKeyType = .done
         //button aesthetics
         postButton.configure(tuple: button.popupReport)
         exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
@@ -95,48 +96,45 @@ class FlagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
         self.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
         self.isHidden = true
     }
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+
+    func textViewDidChange(_ textView: UITextView) {
+        data.setReason(reason: textView.text)
     }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return options.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let text = options[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "flagCell") as! UITableViewCell
-        cell.textLabel!.text = text
-        cell.textLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
-        cell.textLabel?.textColor = UIColor.black.withAlphaComponent(0.6)
-        cell.selectionStyle = .none
-        if data.isTagged(at: indexPath.row) {
-            cell.accessoryType = .checkmark
-            cell.backgroundColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.3)
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let currentText:String = textView.text
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        //dismiss keyboard upon hitting return key
+        if(text == "\n") {
+            textView.resignFirstResponder()
+            return false
+        } else if textView.text.count + (text.count - range.length) > 280 {
+            return false
+        } else if updatedText.isEmpty { //show the placeholder if text is empty
+            textView.text = placeholder
+            textView.textColor = UIColor.lightGray
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+        } else if textView.textColor == UIColor.lightGray && !text.isEmpty { //if the user types something and there's a nonempty string, remove the placeholder and make the textcolor black
+            textView.textColor = UIColor.black
+            textView.text = text
         } else {
-            cell.accessoryType = .none
-            cell.backgroundColor = UIColor.white
+            //
+            return true
         }
-        return cell
+        return false
     }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Tapped tag at: \(indexPath.row)")
-        if let cell = tableView.cellForRow(at: indexPath) {
-            if cell.accessoryType == .checkmark {
-                cell.accessoryType = .none
-                UIView.animate(withDuration: 0.1) {
-                    cell.backgroundColor = UIColor.white
-                }
-            } else if data.numTagged() < 1 {
-                cell.accessoryType = .checkmark
-                UIView.animate(withDuration: 0.1) {
-                    cell.backgroundColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.3)
-                }
+    //makes the cursor immovable when placeholder is visible
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        if self.window != nil {
+            if textView.textColor == UIColor.lightGray {
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
             }
         }
-        data.markTag(at: indexPath.row) //telling the data structure that this tag was marked
+    }
+    func clearText() {
+        reason.text = placeholder
+        reason.textColor = UIColor.lightGray
+        reason.selectedTextRange = reason.textRange(from: reason.beginningOfDocument, to: reason.beginningOfDocument)
+        reason.endEditing(true)
     }
     func setMainButtonTarget(_ target: Any?, _ selector: Selector) {
         postButton.addTarget(target, action: selector, for: .touchUpInside)

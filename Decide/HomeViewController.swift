@@ -21,6 +21,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var refreshTriggered = false
     var flagPopup = FlagPopup()
     var dimBackground: UIView!
+    var popupDefaultFrame: CGRect!
     var flagHandler = FlagHandler()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,21 +38,23 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         dimBackground.alpha = 0
         dimBackground.isHidden = true
         dimBackground.backgroundColor = UIColor.black
-        view.addSubview(dimBackground)
+        tabBarController!.view.addSubview(dimBackground)
         //add flagging popup
-        view.addSubview(flagPopup)
-        let flagOptions: [String] = ["Bullying", "Harassment"]
-        flagPopup.configure(text: "Report Post", optionList: flagOptions, handler: flagHandler)
+        tabBarController!.view.addSubview(flagPopup)
+        flagPopup.configure(text: "Report Post", handler: flagHandler)
         flagPopup.setExitButtonTarget(self, #selector(cancelReport(_:)))
         flagPopup.setMainButtonTarget(self, #selector(saveReport(_:)))
-        //flag handler (the data model for flags)
-        flagHandler.configure(length: flagOptions.count)
-
-        self.view.bringSubviewToFront(dimBackground)
-        self.view.bringSubviewToFront(flagPopup)
-        
+        //flag handler (the data model for reporting)
+        flagHandler.configure()
+        //bringing subviews to front
+        tabBarController!.view.bringSubviewToFront(dimBackground)
+        tabBarController!.view.bringSubviewToFront(flagPopup)
+         //allows detection of keyboard appearing/disappearing
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         updateData()
     }
+   
     //displays the data from firebase in the homepage
     func updateData() {
         let ref = Database.database().reference().child("posts")
@@ -98,6 +101,24 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         })
         refreshTriggered = false
     }
+    //shift view up when keyboard appears
+    @objc func keyboardWillShow(_ notification:Notification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if !flagPopup.isHidden {
+                let rect = flagPopup.frame
+                print(rect)
+                if rect.intersects(keyboardSize) {
+                    let offsetDist = rect.maxY - keyboardSize.minY + 10
+                    flagPopup.frame = flagPopup.frame.offsetBy(dx: 0, dy: -offsetDist)
+                    print(flagPopup.frame)
+                }
+            }
+        }
+    }
+    //shift view down when keyboard disappears
+    @objc func keyboardWillHide(_ notification:Notification) {
+        flagPopup.frame = popupDefaultFrame
+    }
     //data refresh when scrolling down!
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         //increase size of button and scroll down when scrolling tableview down
@@ -135,6 +156,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         return headerView
     }
     @objc func showFlagPopup(_ sender: Any) {
+        
         self.flagPopup.isHidden = false
         self.dimBackground.isHidden = false
         UIView.transition(with: flagPopup, duration: 0.1, options: .transitionCrossDissolve, animations: {
@@ -144,6 +166,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
             self.flagPopup.transform = CGAffineTransform(scaleX: 1, y: 1)
         })
+        popupDefaultFrame = flagPopup.frame
     }
     func closeFlagPopup() {
         UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
@@ -159,11 +182,17 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         })
     }
     @objc func cancelReport(_ sender: Any) {
+        
         flagHandler.clear()
+        flagPopup.clearText()
         closeFlagPopup()
     }
     @objc func saveReport(_ sender: Any) {
         //save all the data for flags
+        //make a branch
+        let reason = flagHandler.getReason()
+        flagHandler.clear()
+        flagPopup.clearText()
         closeFlagPopup()
     }
     // create a cell for each table view row

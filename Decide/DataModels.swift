@@ -110,51 +110,19 @@ class HomeDecision {
     
 }
 class FlagHandler {
-    var options: [Bool] = []
+    var reason: String!
     var post: HomeDecision.Post?
-    func configure(length: Int) {
-        options = []
-        for _ in 0..<length {
-            options.append(false)
-        }
+    func configure() {
+        reason = ""
     }
-    func numTagged() -> Int {
-        var count = 0
-        for i in 0..<options.count {
-            if options[i] { count += 1}
-        }
-        return count
+    func setReason(reason: String) {
+        self.reason = reason
     }
-    func isTagged(at index: Int) -> Bool {
-        if index >= 0 && index < 12 {
-            if options[index] {
-                return true
-            } else {
-                return false
-            }
-        } else {
-            print("FlagHandler;isTagged(): index out of bounds")
-            return false
-        }
-    }
-    func markTag(at index: Int) {
-        if index >= 0 && index < options.count {
-            if options[index] {
-                options[index] = false
-            } else if numTagged() < 1 {
-                options[index] = true
-            } else {
-                print("FlagHandler;markTag(): max number of tags achieved")
-            }
-        } else {
-            print("FlagHandler;markTag(): index out of bounds")
-        }
+    func getReason() -> String {
+        return reason
     }
     func clear() {
-        post = nil
-        for i in 0..<options.count {
-            options[i] = false
-        }
+        reason = ""
     }
 }
 //data structure for a new decision

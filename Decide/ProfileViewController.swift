@@ -51,37 +51,38 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         ref.observe(DataEventType.value, with: { (snapshot) in
             
             var finalList: [String] = []
-            let rawPostList = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: UID).childSnapshot(forPath: "posts").value as! [String : Any]
-            for post in rawPostList {
-                let key = post.key
-                finalList.insert(key, at: 0)
-            }
-           
-            for key in finalList {
-                let postData = snapshot.childSnapshot(forPath: "posts").childSnapshot(forPath: key).value as! [String : Any]
-                let currentPost = HomeDecision.Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], flagHandler: FlagHandler(), key: key) //flaghandler is irrelevant here
-                currentPost.isVoteable = false
-                self.userPosts.posts.append(currentPost)
-            }
+            if let rawPostList = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: UID).childSnapshot(forPath: "posts").value as? [String : Any] {
+                for post in rawPostList {
+                    let key = post.key
+                    finalList.insert(key, at: 0)
+                }
+                
+                for key in finalList {
+                    let postData = snapshot.childSnapshot(forPath: "posts").childSnapshot(forPath: key).value as! [String : Any]
+                    let currentPost = HomeDecision.Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], flagHandler: FlagHandler(), key: key) //flaghandler is irrelevant here
+                    currentPost.isVoteable = false
+                    self.userPosts.posts.append(currentPost)
+                }
                 DispatchQueue.main.async {
-
+                    
                     self.tableView.beginUpdates()
                     let indexPath = IndexPath(row: 1, section: self.cellCount-1)
                     let index = IndexSet([indexPath.section])
-
+                    
                     if(self.cellCount-1 > indexPath.section) {
-
+                        
                         self.tableView.insertSections(index, with: .automatic)
                         
                     }
-
+                    
                     self.tableView.endUpdates()
-
+                    
                 }
-
+                
                 self.tableView.reloadData()
-
+            }
         })
+        
         refreshTriggered = false
     }
     //data refresh when scrolling down!
@@ -131,15 +132,15 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     func numberOfSections(in tableView: UITableView) -> Int {
         return userPosts.posts.count
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       
-            if let post = userPosts.getPost(at: section) {
-                return post.decisions.count + 1 // +1 to account for title
-            } else {
-                return 0
-            }
-      
+        
+        if let post = userPosts.getPost(at: section) {
+            return post.decisions.count + 1 // +1 to account for title
+        } else {
+            return 0
+        }
+        
     }
     // Set the spacing between sections
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -162,7 +163,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       if indexPath.row == 0 { //title bar
+        if indexPath.row == 0 { //title bar
             let cell = self.tableView.dequeueReusableCell(withIdentifier: titleIdentifier) as! ProfileTitleCell
             if let post = userPosts.getPost(at: indexPath.section) {
                 cell.configure(text: post.title)
@@ -233,7 +234,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             
         }
-    
+        
     }
     
     
