@@ -21,7 +21,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     
     var cancelTriggered: Bool = false
     var decision = Decision() //data manager
-    var insets: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 0, bottom: 0, right: 0) //content inset for tableview
+    var insets: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 0, bottom: 100, right: 0) //content inset for tableview
     var cellCount = 4 //current number of cells, start at 4
     let maxCellCount = 8 //max number of cells, should be an even number
     let cellReuseIdentifier = "decisionItemCell" //reuse identifiers
@@ -36,7 +36,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     //Background is an IMAGEVIEW
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.automaticallyAdjustsScrollViewInsets = false
+        self.tableView.contentInsetAdjustmentBehavior = .never
         //DO NOT REGISTER THE CELL CLASSES HERE, ALREADY DONE IN INTERFACEBUILDER!!!!!!!
         tableView.delegate = self
         tableView.dataSource = self

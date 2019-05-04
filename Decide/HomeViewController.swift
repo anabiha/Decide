@@ -49,10 +49,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         //bringing subviews to front
         tabBarController!.view.bringSubviewToFront(dimBackground)
         tabBarController!.view.bringSubviewToFront(flagPopup)
-         //allows detection of keyboard appearing/disappearing
+        updateData()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+              //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        updateData()
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        //removes keyboard detection of view once it disappears, used to prevent detection when keyboard appears on NEWDECISION
+        NotificationCenter.default.removeObserver(self)
     }
    
     //displays the data from firebase in the homepage
@@ -106,11 +112,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if !flagPopup.isHidden {
                 let rect = flagPopup.frame
-                print(rect)
                 if rect.intersects(keyboardSize) {
                     let offsetDist = rect.maxY - keyboardSize.minY + 10
                     flagPopup.frame = flagPopup.frame.offsetBy(dx: 0, dy: -offsetDist)
-                    print(flagPopup.frame)
                 }
             }
         }
@@ -123,7 +127,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         //increase size of button and scroll down when scrolling tableview down
         
-        if !refreshTriggered && scrollView.contentOffset.y < -130 {
+        if !refreshTriggered && scrollView.contentOffset.y < -100 {
             refreshTriggered = true
             updateData()
             
@@ -156,7 +160,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         return headerView
     }
     @objc func showFlagPopup(_ sender: Any) {
-        
         self.flagPopup.isHidden = false
         self.dimBackground.isHidden = false
         UIView.transition(with: flagPopup, duration: 0.1, options: .transitionCrossDissolve, animations: {

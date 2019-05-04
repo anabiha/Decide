@@ -49,7 +49,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         let ref = Database.database().reference().root
         
         ref.observe(DataEventType.value, with: { (snapshot) in
-            
+            self.userPosts.posts.removeAll()
             var finalList: [String] = []
             if let rawPostList = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: UID).childSnapshot(forPath: "posts").value as? [String : Any] {
                 for post in rawPostList {

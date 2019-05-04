@@ -301,9 +301,10 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
             let rectInTable = self.tableView!.rectForRow(at: index)
             let rectInView = self.tableView!.convert(rectInTable, to: self.tableView!.superview)
             if keyboardSize.intersects(rectInView) {
+                print("intersects")
                 let dist = rectInView.maxY - keyboardSize.minY + 30
                 UIView.animate(withDuration: 0.25) {
-                    self.tableView!.contentInset.bottom = dist
+                    self.tableView!.contentInset.bottom = dist + self.tableView!.contentInset.bottom
                     self.tableView!.contentOffset.y = self.tableView!.contentOffset.y + dist
                 }
             }
@@ -503,7 +504,7 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
             textView.resignFirstResponder()
             return false
         } else {
-            return true
+            return textView.text.count + (text.count - range.length) <= 80
         }
     }
     //tells the view controller which cell is currently being edited

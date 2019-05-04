@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yOl-bh-KXq">
-                                <rect key="frame" x="30" y="20" width="315" height="572"/>
+                                <rect key="frame" x="30" y="20" width="315" height="617"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="questionBarCell" id="qrw-Yf-HBz" customClass="QuestionBar" customModule="Decide" customModuleProvider="target">
@@ -30,7 +30,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="eBD-WZ-GQJ">
-                                                    <rect key="frame" x="10" y="0.0" width="329" height="44"/>
+                                                    <rect key="frame" x="10" y="0.0" width="290" height="44"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="done"/>
@@ -55,7 +55,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="nOo-zx-Dca">
-                                                    <rect key="frame" x="10" y="0.0" width="334" height="44"/>
+                                                    <rect key="frame" x="10" y="0.0" width="295" height="44"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -94,6 +94,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t2C-8Y-p2p" customClass="CustomButton" customModule="Decide" customModuleProvider="target">
                                 <rect key="frame" x="40" y="607" width="295" height="40"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" constant="295" id="8Oc-mm-vP0"/>
                                     <constraint firstAttribute="height" constant="40" id="ROk-dN-mht"/>
                                 </constraints>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="35" maxX="0.0" maxY="0.0"/>
@@ -106,13 +107,12 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="t2C-8Y-p2p" firstAttribute="bottom" secondItem="WIR-KR-om7" secondAttribute="bottom" constant="-20" id="2Hy-Np-ZD3"/>
+                            <constraint firstItem="WIR-KR-om7" firstAttribute="bottom" secondItem="yOl-bh-KXq" secondAttribute="bottom" constant="30" id="CqJ-h1-8ig"/>
                             <constraint firstItem="I5M-vc-2jn" firstAttribute="centerX" secondItem="skA-mO-84H" secondAttribute="centerX" id="QqD-ag-fEm"/>
                             <constraint firstItem="I5M-vc-2jn" firstAttribute="centerY" secondItem="skA-mO-84H" secondAttribute="top" constant="-20" id="U0x-Pa-9zD"/>
                             <constraint firstItem="yOl-bh-KXq" firstAttribute="leading" secondItem="WIR-KR-om7" secondAttribute="leading" constant="30" id="WTF-1P-ZqB"/>
-                            <constraint firstItem="WIR-KR-om7" firstAttribute="trailing" secondItem="t2C-8Y-p2p" secondAttribute="trailing" constant="40" id="bbp-J5-mbg"/>
+                            <constraint firstItem="t2C-8Y-p2p" firstAttribute="centerX" secondItem="skA-mO-84H" secondAttribute="centerX" id="dqJ-0i-3WL"/>
                             <constraint firstItem="WIR-KR-om7" firstAttribute="trailing" secondItem="yOl-bh-KXq" secondAttribute="trailing" constant="30" id="kJ7-Gh-aqO"/>
-                            <constraint firstItem="t2C-8Y-p2p" firstAttribute="leading" secondItem="WIR-KR-om7" secondAttribute="leading" constant="40" id="oQK-9V-kfO"/>
-                            <constraint firstItem="t2C-8Y-p2p" firstAttribute="top" secondItem="yOl-bh-KXq" secondAttribute="bottom" constant="15" id="sO7-6P-8zz"/>
                             <constraint firstItem="yOl-bh-KXq" firstAttribute="top" secondItem="WIR-KR-om7" secondAttribute="top" id="vp7-w4-n1L"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="WIR-KR-om7"/>
@@ -132,6 +132,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="CancelButton" width="52.799999237060547" height="51.840000152587891"/>
+        <image name="CancelButton" width="55" height="54"/>
     </resources>
 </document>
