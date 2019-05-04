@@ -49,6 +49,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         //bringing subviews to front
         tabBarController!.view.bringSubviewToFront(dimBackground)
         tabBarController!.view.bringSubviewToFront(flagPopup)
+                //allows detection of keyboard appearing/disappearing
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         updateData()
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -121,7 +124,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     //shift view down when keyboard disappears
     @objc func keyboardWillHide(_ notification:Notification) {
-        flagPopup.frame = popupDefaultFrame
+        if popupDefaultFrame != nil {
+            flagPopup.frame = popupDefaultFrame
+        } else {
+            print("HomeViewController;keyboardWillHide(): POPUPDEFAULTFRAME DOES NOT EXIST")
+        }
     }
     //data refresh when scrolling down!
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
