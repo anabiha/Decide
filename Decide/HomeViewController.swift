@@ -74,7 +74,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 for case let post as DataSnapshot in snapshot.children { //create the post and check if this user has voted on it yet.
                     //NOT using snapshot.value allows for chronological order
                     let postData = post.value as! [String : Any]
-                    let currentPost = HomeDecision.Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], flagHandler: self.flagHandler, key: post.key)
+                    let currentPost = Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], flagHandler: self.flagHandler, key: post.key)
                     //retrieve whether the user voted on this post or not, then show it
                     if let userVote = postData["user-votes"] as? [String : Any]{
                         guard let UID = Auth.auth().currentUser?.uid else {return}
@@ -185,18 +185,30 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         })
     }
     @objc func cancelReport(_ sender: Any) {
-        
         flagHandler.clear()
         flagPopup.clearText()
         closeFlagPopup()
     }
     @objc func saveReport(_ sender: Any) {
         //save all the data for flags
-        //make a branch
         let reason = flagHandler.getReason()
-        flagHandler.clear()
-        flagPopup.clearText()
-        closeFlagPopup()
+        //their reason must contain letters... so check for them
+        if let range = reason.rangeOfCharacter(from: NSCharacterSet.letters) {
+            print("HomeViewController;saveReport(): REPORT SENT")
+            guard let post = flagHandler.getPost() else {return}
+            guard let UID = Auth.auth().currentUser?.uid else {return}
+            let ref = Database.database().reference().child("reported").child(post.key)
+            ref.child("Reason").setValue(reason)
+            ref.child("Reporter").setValue(UID)
+            flagHandler.clear()
+            flagPopup.clearText()
+            closeFlagPopup()
+        } else { //if the report doesn't contain any letters...
+            print("HomeViewController;saveReport(): INVALID REPORT")
+            flagHandler.clear()
+            flagPopup.clearText()
+            flagPopup.reason.shake()
+        }
     }
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -205,7 +217,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.configure(username: "USER")
             if let post = homeDecision.getPost(at: indexPath.section) {
                 cell.removeButtonTargets() //just to make sure that this wont point to the wrong cell once reused
-                cell.setButtonTarget(post, #selector(HomeDecision.Post.report(_:))) //the flag button
+                cell.setButtonTarget(post, #selector(Post.report(_:))) //the flag button
                 cell.setButtonTarget(self, #selector(showFlagPopup(_:)))
             }
             return cell
