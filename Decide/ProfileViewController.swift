@@ -13,10 +13,7 @@ import FirebaseAuth
 
 
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
-    
     @IBOutlet weak var tableView: UITableView!
-    
     @IBOutlet weak var headerLabel: UILabel!
     var insets: UIEdgeInsets = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0) //content inset for tableview
     let cellSpacingHeight: CGFloat = 14
@@ -27,7 +24,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     let choiceIdentifier = "profileChoiceCell"
     let headerIdentifier = "headerCell"
     override func viewDidLoad() {
-        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView() //hides unused cells
@@ -156,7 +152,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     //the height of the post
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
         return UITableView.automaticDimension
     }
     

@@ -205,8 +205,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             guard let post = flagHandler.getPost() else {return}
             guard let UID = Auth.auth().currentUser?.uid else {return}
             let ref = Database.database().reference().child("reported").child(post.key)
-            ref.child("Reason").setValue(reason)
-            ref.child("Reporter").setValue(UID)
+            ref.child(UID).setValue(reason)
             flagHandler.clear()
             flagPopup.clearText()
             closeFlagPopup()
