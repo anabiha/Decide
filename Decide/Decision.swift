@@ -202,13 +202,7 @@ class ChoiceCell: UITableViewCell {
     }
 }
 
-extension Double
-{
-    func truncate(places : Int)-> Double
-    {
-        return Double(floor(pow(10.0, Double(places)) * self)/pow(10.0, Double(places)))
-    }
-}
+
 
 class HomeTitleCell: UITableViewCell {
     @IBOutlet weak var title: UITextView!
@@ -357,40 +351,8 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         return indexPath
     }
 }
-//allows shaking of cells
-extension UIView {
-    func shake() {
-        let animation = CABasicAnimation(keyPath: "position")
-        animation.duration = 0.08
-        animation.repeatCount = 3
-        animation.autoreverses = true
-        animation.fromValue = NSValue(cgPoint: CGPoint(x: self.center.x - 12, y: self.center.y))
-        animation.toValue = NSValue(cgPoint: CGPoint(x: self.center.x + 12, y: self.center.y))
-        self.layer.add(animation, forKey: "position")
-    }
-    
-    
-    func roundCorners(_ corners: UIRectCorner, radius: CGFloat) {
-        let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        let mask = CAShapeLayer()
-        mask.path = path.cgPath
-        self.layer.mask = mask
-    }
 
-}
-//this is how our cell accesses its own tableview
-extension UITableViewCell {
-    /// Search up the view hierarchy of the table view cell to find the containing table view
-    var tableView: UITableView? {
-        get {
-            var table: UIView? = superview
-            while !(table is UITableView) && table != nil {
-                table = table?.superview
-            }
-            return table as? UITableView
-        }
-    }
-}
+
 
 
 class AddButton: UITableViewCell {

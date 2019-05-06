@@ -10,6 +10,57 @@
 import Foundation
 import UIKit
 
+class ProfilePopup: UIView {
+    var header: UILabel!
+    var title: UILabel!
+    var exitButton: CustomButton!
+    var previousFrame: CGRect! //used for determining what frame the
+    func configure() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        header = UILabel()
+        header.translatesAutoresizingMaskIntoConstraints = false
+        title = UILabel()
+        title.translatesAutoresizingMaskIntoConstraints = false
+        exitButton = CustomButton()
+        exitButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(header)
+        addSubview(title)
+        addSubview(exitButton)
+        
+        exitButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
+        exitButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true
+        exitButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        exitButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        
+        
+        if let view = superview {
+            centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+            widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width - 50).isActive = true
+            heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height - 50).isActive = true
+        }
+        
+        exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
+        
+        self.alpha = 0
+        self.isHidden = true
+        layer.cornerRadius = 15
+        backgroundColor = UIColor.white
+    }
+    func setSize(toFrame frame: CGRect) {
+        previousFrame = frame
+        let scaleX = frame.size.width/self.frame.size.width
+        let scaleY = frame.size.height/self.frame.size.height
+        self.transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
+    }
+    func setExitButtonTarget(_ target: Any?, _ selector: Selector) {
+        exitButton.addTarget(target, action: selector, for: .touchUpInside)
+    }
+    func removeExitButtonTargets() {
+        exitButton.removeTarget(nil, action: nil, for: .allEvents)
+    }
+}
 class FlagPopup: UIView, UITextViewDelegate {
     
     var title: UILabel!

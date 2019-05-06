@@ -23,6 +23,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     let titleIdentifier = "profileTitleCell"
     let choiceIdentifier = "profileChoiceCell"
     let headerIdentifier = "headerCell"
+    var moreInfo: ProfilePopup!
+    var dimBackground: UIView!
     override func viewDidLoad() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -36,6 +38,16 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.separatorStyle = .none
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: headerIdentifier)
         updateData()
+        //instantiation and addition of subviews
+        moreInfo = ProfilePopup()
+        dimBackground = UIView(frame: UIScreen.main.bounds)
+        dimBackground.alpha = 0
+        dimBackground.isHidden = true
+        dimBackground.backgroundColor = UIColor.black
+        tabBarController!.view.addSubview(dimBackground)
+        tabBarController!.view.addSubview(moreInfo)
+        moreInfo.configure()
+        moreInfo.setExitButtonTarget(self, #selector(closeMoreInfo(_:)))
         self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
         super.viewDidLoad()
     }
@@ -85,7 +97,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         //increase size of button and scroll down when scrolling tableview down
         if scrollView.contentOffset.y < 0 {
-            setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0), forView: headerLabel)
+            headerLabel.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0))
             headerLabel.transform = CGAffineTransform(scaleX: 1 + abs(scrollView.contentOffset.y)/250, y: 1 + abs(scrollView.contentOffset.y)/250)
         }
         if !refreshTriggered && scrollView.contentOffset.y < -130 {
@@ -93,27 +105,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             updateData()
         }
     }
-    func setAnchorPoint(anchorPoint: CGPoint, forView view: UIView) {
-        var newPoint = CGPoint(x: view.bounds.size.width * anchorPoint.x,
-                               y: view.bounds.size.height * anchorPoint.y)
-        
-        
-        var oldPoint = CGPoint(x: view.bounds.size.width * view.layer.anchorPoint.x,
-                               y: view.bounds.size.height * view.layer.anchorPoint.y)
-        
-        newPoint = newPoint.applying(view.transform)
-        oldPoint = oldPoint.applying(view.transform)
-        
-        var position = view.layer.position
-        position.x -= oldPoint.x
-        position.x += newPoint.x
-        
-        position.y -= oldPoint.y
-        position.y += newPoint.y
-        
-        view.layer.position = position
-        view.layer.anchorPoint = anchorPoint
-    }
+   
     //scrolls the tableview upward when the keyboard shows
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
@@ -190,27 +182,54 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // note that indexPath.section is used rather than indexPath.row
-        print("You tapped cell number \(indexPath.row). at post number: \(indexPath.section)")
-        if let post = userPosts.getPost(at: indexPath.section) {
-            post.didDisplayPercents = !post.didDisplayPercents //mark the cell as displayed, regardless of whether whole post is visible, switch it each time it is pressed
-            for index in 1..<post.decisions.count + 1 {
-                if let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: indexPath.section)) as? ProfileChoiceCell {
-                    if post.didDisplayPercents {
-                        UIView.animate(withDuration: 0.2) {
-                            cell.backgroundColor = cell.color1
-                        }
-                        cell.displayPercentage()
-                    } else {
-                        cell.displayText()
-                    }
-                }
-            }
-        }
-        
+//        print("You tapped cell number \(indexPath.row). at post number: \(indexPath.section)")
+//        if let post = userPosts.getPost(at: indexPath.section) {
+//            post.didDisplayPercents = !post.didDisplayPercents //mark the cell as displayed, regardless of whether whole post is visible, switch it each time it is pressed
+//            for index in 1..<post.decisions.count + 1 {
+//                if let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: indexPath.section)) as? ProfileChoiceCell {
+//                    if post.didDisplayPercents {
+//                        UIView.animate(withDuration: 0.2) {
+//                            cell.backgroundColor = cell.color1
+//                        }
+//                        cell.displayPercentage()
+//                    } else {
+//                        cell.displayText()
+//                    }
+//                }
+//            }
+//        }
+        let frame = tableView.convert(tableView.rect(forSection: indexPath.section), to: self.view)
+            showMoreInfo(withFrame: frame)
     }
     
-    
-    
+    @objc func closeMoreInfo(_ sender: Any) {
+        UIView.animate(withDuration: 0.3, delay: 0, options: [.transitionCrossDissolve, .curveEaseIn], animations: {
+            let scaleX = self.moreInfo.previousFrame.width/self.moreInfo.frame.width
+            let scaleY = self.moreInfo.previousFrame.height/self.moreInfo.frame.height
+            self.moreInfo.transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
+        }, completion: nil)
+        UIView.transition(with: moreInfo, duration: 0.5, options: .transitionCrossDissolve, animations: {
+            self.moreInfo.alpha = 0
+            self.dimBackground.alpha = 0
+        }, completion: { finished in
+            self.moreInfo.isHidden = true
+            self.dimBackground.isHidden = true
+        })
+    }
+    func showMoreInfo(withFrame frame: CGRect) {
+        //moreInfo.setAnchorPoint(anchorPoint: CGPoint(x: frame.midX, y: frame.midY))
+        moreInfo.setSize(toFrame: frame) //not working! replace in method header!
+        self.moreInfo.transform = CGAffineTransform(scaleX: 0.2, y: 0.2)
+        self.moreInfo.isHidden = false
+        self.dimBackground.isHidden = false
+        UIView.transition(with: moreInfo, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.moreInfo.alpha = 1
+            self.dimBackground.alpha = 0.3
+        }, completion: nil )
+        UIView.animate(withDuration: 0.5, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.moreInfo.transform = CGAffineTransform(scaleX: 1, y: 1)
+        })
+    }
     
     @IBAction func logOutButton(_ sender: Any) {
         
