@@ -10,37 +10,76 @@
 import Foundation
 import UIKit
 
-class ProfilePopup: UIView {
+class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
+    
     var header: UILabel!
     var title: UILabel!
+    var totalVotes: UILabel!
     var exitButton: CustomButton!
-    var previousFrame: CGRect! //used for determining what frame the
+    var post: Post?
+    var tableView: UITableView!
+    let height = UIScreen.main.bounds.height - 150
+    let width = UIScreen.main.bounds.width - 40
     func configure() {
+        clipsToBounds = true
         self.translatesAutoresizingMaskIntoConstraints = false
         header = UILabel()
         header.translatesAutoresizingMaskIntoConstraints = false
         title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false
+        totalVotes = UILabel()
+        totalVotes.translatesAutoresizingMaskIntoConstraints = false
         exitButton = CustomButton()
         exitButton.translatesAutoresizingMaskIntoConstraints = false
+        tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.delegate = self
+        tableView.dataSource = self
         
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         addSubview(header)
         addSubview(title)
+        addSubview(totalVotes)
         addSubview(exitButton)
+        addSubview(tableView)
+        
+        if let view = superview {
+            centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+            widthAnchor.constraint(equalToConstant: width).isActive = true
+            heightAnchor.constraint(equalToConstant: height).isActive = true
+        }
+        
+        header.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        header.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
+        
+        title.topAnchor.constraint(equalTo: exitButton.bottomAnchor, constant: 25).isActive = true
+        title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        title.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        
+        totalVotes.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 15).isActive = true
+        totalVotes.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 22).isActive = true
+        totalVotes.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        
+        tableView.topAnchor.constraint(equalTo: totalVotes.bottomAnchor, constant: 15).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 10).isActive = true
         
         exitButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
         exitButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true
         exitButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
         exitButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
         
+        header.text = "Analytics"
+        header.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
         
-        if let view = superview {
-            centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-            widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width - 50).isActive = true
-            heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height - 50).isActive = true
-        }
+        title.text = "Title"
+        title.font = UIFont(name: "AvenirNext-DemiBold", size: 30)
         
+        totalVotes.text = "Total Votes: 564"
+        totalVotes.textColor = UIColor.darkGray
+        totalVotes.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
         exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
         
         self.alpha = 0
@@ -48,18 +87,55 @@ class ProfilePopup: UIView {
         layer.cornerRadius = 15
         backgroundColor = UIColor.white
     }
+    func setPost(to post: Post) {
+        tableView.beginUpdates()
+        if self.post != nil {
+            let count = self.post!.decisions.count
+            tableView.deleteRows(at: (0..<count).map({ (i) in IndexPath(row: i, section: 0)}), with: .none)
+        }
+        
+        self.post = post
+        for i in 0..<self.post!.decisions.count {
+            tableView.insertRows(at: [IndexPath(row: i, section: 0)], with: .none)
+        }
+        
+        tableView.endUpdates()
+    }
+    
     func setSize(toFrame frame: CGRect) {
-        previousFrame = frame
-        let scaleX = frame.size.width/self.frame.size.width
-        let scaleY = frame.size.height/self.frame.size.height
+        let scaleX = frame.size.width/width
+        let scaleY = frame.size.height/height
         self.transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
     }
+    
     func setExitButtonTarget(_ target: Any?, _ selector: Selector) {
         exitButton.addTarget(target, action: selector, for: .touchUpInside)
     }
     func removeExitButtonTargets() {
         exitButton.removeTarget(nil, action: nil, for: .allEvents)
     }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if post != nil {
+            return post!.decisions.count
+        } else {
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! UITableViewCell
+        if post != nil {
+            cell.textLabel?.text = post?.getDecision(at: indexPath.row)
+        } else {
+            print("post is nil")
+        }
+        return cell
+    }
+    
 }
 class FlagPopup: UIView, UITextViewDelegate {
     

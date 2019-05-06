@@ -199,16 +199,17 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
 //            }
 //        }
         let frame = tableView.convert(tableView.rect(forSection: indexPath.section), to: self.view)
-            showMoreInfo(withFrame: frame)
+        if let post = userPosts.getPost(at: indexPath.section) {
+             moreInfo.setPost(to: post)
+        }
+        showMoreInfo(withFrame: frame)
     }
     
     @objc func closeMoreInfo(_ sender: Any) {
         UIView.animate(withDuration: 0.3, delay: 0, options: [.transitionCrossDissolve, .curveEaseIn], animations: {
-            let scaleX = self.moreInfo.previousFrame.width/self.moreInfo.frame.width
-            let scaleY = self.moreInfo.previousFrame.height/self.moreInfo.frame.height
-            self.moreInfo.transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
+            self.moreInfo.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
         }, completion: nil)
-        UIView.transition(with: moreInfo, duration: 0.5, options: .transitionCrossDissolve, animations: {
+        UIView.transition(with: moreInfo, duration: 0.1, options: .transitionCrossDissolve, animations: {
             self.moreInfo.alpha = 0
             self.dimBackground.alpha = 0
         }, completion: { finished in
@@ -217,16 +218,14 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         })
     }
     func showMoreInfo(withFrame frame: CGRect) {
-        //moreInfo.setAnchorPoint(anchorPoint: CGPoint(x: frame.midX, y: frame.midY))
-        moreInfo.setSize(toFrame: frame) //not working! replace in method header!
-        self.moreInfo.transform = CGAffineTransform(scaleX: 0.2, y: 0.2)
+        moreInfo.setSize(toFrame: frame)
         self.moreInfo.isHidden = false
         self.dimBackground.isHidden = false
         UIView.transition(with: moreInfo, duration: 0.1, options: .transitionCrossDissolve, animations: {
             self.moreInfo.alpha = 1
             self.dimBackground.alpha = 0.3
         }, completion: nil )
-        UIView.animate(withDuration: 0.5, delay: 0, options: .transitionCrossDissolve, animations: {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .transitionCrossDissolve, animations: {
             self.moreInfo.transform = CGAffineTransform(scaleX: 1, y: 1)
         })
     }

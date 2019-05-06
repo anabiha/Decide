@@ -324,7 +324,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
             textView.resignFirstResponder()
             return false
         } else {
-            return textView.text.count + (text.count - range.length) <= 65
+            return textView.text.count + (text.count - range.length) <= 35
         }
     }
     //shifts color of background
