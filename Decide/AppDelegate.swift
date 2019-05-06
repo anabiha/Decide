@@ -19,31 +19,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FirebaseApp.configure()
         
+        var initialViewController: UIViewController!
+        
         if Auth.auth().currentUser != nil { // if user is signed in
             
-            let storyboard = UIStoryboard(name: "Main", bundle: .main)
+            initialViewController = UIStoryboard.initialViewController(for: .main)
             
-            if let initialViewController = storyboard.instantiateInitialViewController() {
-                
-                window?.rootViewController = initialViewController
-                
-                window?.makeKeyAndVisible()
-                
-            }
+        } else { // if no user is signed in
             
-        } else { // no user is signed in
-            
-            let storyboard = UIStoryboard(name: "Login", bundle: .main)
-            
-            if let initialViewController = storyboard.instantiateInitialViewController() {
-                
-                window?.rootViewController = initialViewController
-                
-                window?.makeKeyAndVisible()
-                
-            }
+            initialViewController = UIStoryboard.initialViewController(for: .login)
             
         }
+        window?.rootViewController = initialViewController
+        window?.makeKeyAndVisible()
+        
+    
         
         return true
     }
@@ -72,4 +62,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    
 
 }
+
+
 

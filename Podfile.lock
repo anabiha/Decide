@@ -74,6 +74,7 @@ PODS:
     - nanopb/encode (= 0.3.901)
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
+  - TransitionButton (0.5.2)
 
 DEPENDENCIES:
   - Firebase/Auth
@@ -81,6 +82,7 @@ DEPENDENCIES:
   - Firebase/Database
   - Firebase/Storage
   - FirebaseUI/Auth
+  - TransitionButton
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -98,6 +100,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - leveldb-library
     - nanopb
+    - TransitionButton
 
 SPEC CHECKSUMS:
   Firebase: 6df9a6114bc9f106a98fe83d5438d4d9833c2019
@@ -114,7 +117,8 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
+  TransitionButton: fb271583d9c9e4bb116b97103047e5157653f233
 
-PODFILE CHECKSUM: 1971027d92e868d45612cf71dc7ad1acd4c982e8
+PODFILE CHECKSUM: c3c768c7d8bd4288af66b6fb275eb3acd8de5943
 
 COCOAPODS: 1.5.3

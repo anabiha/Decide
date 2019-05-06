@@ -24,7 +24,9 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         }
         
         if (viewController.tabBarItem.tag == 1) {
-           animateToTab(toIndex: 1) //initiate slide up animation if new decision is pressed
+           let vc = self.storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
+           self.present(vc, animated: true, completion: nil)
+//            animateToTab(toIndex: 1) //initiate slide up animation if new decision is pressed
             //also note that the tab bar is hidden in this view
         }
         //switch statement used to change previouslySelectedIndex
@@ -36,6 +38,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         case 1: //don't change previously selected if they press newdecision
             print ("Add decision button pressed")
             print ("Previously selected index is still: \(previouslySelectedIndex!)")
+            return false
         case 2:
             previouslySelectedIndex = viewController.tabBarItem.tag //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
             print ("Profile button pressed")
@@ -46,7 +49,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         return true
     }
     
-   //slide up animation!!!
+    //slide up animation!!!
     
     
 }
