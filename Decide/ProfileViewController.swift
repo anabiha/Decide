@@ -235,7 +235,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         if Auth.auth().currentUser != nil {
             
             do {
-                
                 try Auth.auth().signOut()
                 let storyboard = UIStoryboard(name: "Login", bundle:nil).instantiateInitialViewController()
                 present(storyboard!, animated: true, completion: nil)

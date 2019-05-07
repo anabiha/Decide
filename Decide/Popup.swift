@@ -98,7 +98,9 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         for i in 0..<self.post!.decisions.count {
             tableView.insertRows(at: [IndexPath(row: i, section: 0)], with: .none)
         }
-        
+        title.numberOfLines = 0
+        title.text = post.title
+        totalVotes.text = "Total Votes: \(post.getTotal())"
         tableView.endUpdates()
     }
     
