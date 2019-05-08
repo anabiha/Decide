@@ -35,6 +35,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.tableFooterView = UIView()
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         addSubview(header)
@@ -76,6 +77,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         
         title.text = "Title"
         title.font = UIFont(name: "AvenirNext-DemiBold", size: 30)
+        title.lineBreakMode = .byWordWrapping
         
         totalVotes.text = "Total Votes: 564"
         totalVotes.textColor = UIColor.darkGray
@@ -132,6 +134,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! UITableViewCell
         if post != nil {
             cell.textLabel?.text = post?.getDecision(at: indexPath.row)
+            
         } else {
             print("post is nil")
         }

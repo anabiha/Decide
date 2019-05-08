@@ -10,7 +10,22 @@ import Foundation
 import UIKit
 import FirebaseDatabase
 import Firebase
-
+class ProfilePopupCell: UITableViewCell {
+    var decision: String!
+    var voteCount: Int!
+    var decisionLabel: UILabel!
+    var voteCountLabel: UILabel!
+    func configure(decision: String, voteCount: Int) {
+        decisionLabel = UILabel()
+        decisionLabel.translatesAutoresizingMaskIntoConstraints = false
+        voteCountLabel = UILabel()
+        voteCountLabel.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(decisionLabel)
+        addSubview(voteCountLabel)
+        decisionLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        decisionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10).isActive = true
+    }
+}
 class ProfileChoiceCell: UITableViewCell {
     @IBOutlet weak var choice: UILabel!
     var decision: String! //the text of the decision
