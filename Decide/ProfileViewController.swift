@@ -18,13 +18,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     var insets: UIEdgeInsets = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0) //content inset for tableview
     let cellSpacingHeight: CGFloat = 14
     var cellCount = 1
-    var refreshTriggered = false
     let userPosts = HomeDecision()
     let titleIdentifier = "profileTitleCell"
     let choiceIdentifier = "profileChoiceCell"
     let headerIdentifier = "headerCell"
     var moreInfo: ProfilePopup!
     var dimBackground: UIView!
+    private let refreshControl = UIRefreshControl()
     override func viewDidLoad() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -37,6 +37,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.contentInset = insets
         tableView.separatorStyle = .none
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: headerIdentifier)
+        instantiateRefreshControl()
         updateData()
         //instantiation and addition of subviews
         moreInfo = ProfilePopup()
@@ -50,6 +51,18 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         moreInfo.setExitButtonTarget(self, #selector(closeMoreInfo(_:)))
         self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
         super.viewDidLoad()
+    }
+    func instantiateRefreshControl() {
+        if #available(iOS 10.0, *) {
+            tableView.refreshControl = refreshControl
+        }else{
+            tableView.addSubview(refreshControl)
+        }
+        refreshControl.addTarget(self, action:#selector(refreshData(_:)), for: .valueChanged)
+    }
+    
+    @objc private func refreshData(_ sender: Any) {
+        updateData()
     }
     func updateData() {
         
@@ -89,10 +102,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
                 
                 self.tableView.reloadData()
-            
+                self.refreshControl.endRefreshing()
         })
-        
-        refreshTriggered = false
     }
     //data refresh when scrolling down!
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -100,10 +111,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         if scrollView.contentOffset.y < 0 {
             headerLabel.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0))
             headerLabel.transform = CGAffineTransform(scaleX: 1 + abs(scrollView.contentOffset.y)/250, y: 1 + abs(scrollView.contentOffset.y)/250)
-        }
-        if !refreshTriggered && scrollView.contentOffset.y < -100 {
-            refreshTriggered = true
-            updateData()
         }
     }
    

@@ -19,7 +19,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     let cellSpacingHeight: CGFloat = 40
     let homeDecision = HomeDecision()
     
-    var refreshTriggered = false
     private let refreshControl = UIRefreshControl()
     var customView : UIView!
     
@@ -128,7 +127,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             
         })
-        refreshTriggered = false
     }
     //shift view up when keyboard appears
     @objc func keyboardWillShow(_ notification:Notification) {
@@ -150,17 +148,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             print("HomeViewController;keyboardWillHide(): POPUPDEFAULTFRAME DOES NOT EXIST")
         }
     }
-    //data refresh when scrolling down!
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        //increase size of button and scroll down when scrolling tableview down
-        
-        if !refreshTriggered && scrollView.contentOffset.y < -100 {
-            refreshTriggered = true
-            //updateData()
-        }
-        
-    }
-    
     // MARK: - Table View delegate methods
     func numberOfSections(in tableView: UITableView) -> Int {
             
