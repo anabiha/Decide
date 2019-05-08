@@ -18,7 +18,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     let choiceIdentifier = "choiceCell"
     let cellSpacingHeight: CGFloat = 40
     let homeDecision = HomeDecision()
+    
     var refreshTriggered = false
+    private let refreshControl = UIRefreshControl()
+    var customView : UIView!
+    
     var flagPopup = FlagPopup()
     var dimBackground: UIView!
     var popupDefaultFrame: CGRect!
@@ -52,8 +56,26 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        instantiateRefreshControl()
         updateData()
     }
+    
+    func instantiateRefreshControl() {
+        if #available(iOS 10.0, *) {
+            tableView.refreshControl = refreshControl
+        }else{
+            tableView.addSubview(refreshControl)
+        }
+        refreshControl.addTarget(self, action:#selector(refreshData(_:)), for: .valueChanged)
+    }
+    
+    @objc private func refreshData(_ sender: Any) {
+        updateData()
+    }
+    
+    
+   
+    
     override func viewWillAppear(_ animated: Bool) {
               //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -104,6 +126,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 }
                 
                 self.tableView.reloadData()
+                self.refreshControl.endRefreshing()
                 
             }
             
@@ -136,14 +159,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         if !refreshTriggered && scrollView.contentOffset.y < -100 {
             refreshTriggered = true
-            updateData()
-            
+            //updateData()
         }
         
     }
+    
     // MARK: - Table View delegate methods
     func numberOfSections(in tableView: UITableView) -> Int {
-        return homeDecision.posts.count
+            
+            return homeDecision.posts.count
+        
     }
     
     // There is just one row in every section

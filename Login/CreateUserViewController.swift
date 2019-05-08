@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 
+
 class CreateUserViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var username: UITextField!
@@ -136,4 +137,5 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
             }, withCancel: nil)
         }
     }
+    
 }

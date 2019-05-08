@@ -31,6 +31,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     let screenSize = UIScreen.main.bounds
     var defaultCancelFrame: CGRect?
     var popup: Popup!
+    var username = ""
     var tagPopup: TagPopup!
     var dimBackground: UIView!
     //Background is an IMAGEVIEW
@@ -349,6 +350,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             self.showTagPopup()
        
     }
+    
     //saves the decision
     @objc func saveDecision(_ sender: Any) {
         cancelTriggered = false
@@ -373,22 +375,31 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             votes.append(0)
         }
         
-        //dictionary uploaded to firebase for the post
-        let postData = [
-            "title": self.decision.getTitle(),
-            "options": post_options,
-            "owner": userKey,
-            "votes": votes,
-            ] as [String : Any]
         
-        let newPostKey = ref.child("posts").childByAutoId().key
-        //store the post under the posts branch
-        ref.child("posts").child(newPostKey!).setValue(postData)
-        //stores the child ID of the post into the users>posts branch
-        ref.child("users").child(userKey).child("posts").child(newPostKey!).setValue(newPostKey!) //the key == the value, didn't know how else to get it to work like this.
-        //animate the action of going back, switching tabs is also handled in animated
-        self.dismiss(animated: true, completion: nil)
+        let reference = Database.database().reference().child("users").child(userKey).child("username")
+        
+        reference.observeSingleEvent(of: .value) { (snapshot) in
+            
+            //dictionary uploaded to firebase for the post
+            let postData = [
+                "title": self.decision.getTitle(),
+                "options": post_options,
+                "uid": userKey,
+                "username": snapshot.value as! String,
+                "votes": votes,
+                ] as [String : Any]
+            
+            let newPostKey = ref.child("posts").childByAutoId().key
+            //store the post under the posts branch
+            ref.child("posts").child(newPostKey!).setValue(postData)
+            //stores the child ID of the post into the users>posts branch
+            ref.child("users").child(userKey).child("posts").child(newPostKey!).setValue(newPostKey!) //the key == the value, didn't know how else to get it to work like this.
+            //animate the action of going back, switching tabs is also handled in animated
+            self.dismiss(animated: true, completion: nil)
+    
+        }
     }
+    
     //deletes the decision
     @objc func deleteDecision(_ sender: Any) {
         closePopup()
