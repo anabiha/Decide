@@ -60,7 +60,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.userPosts.posts.removeAll()
             var finalList: [String] = []
             let rawPostList = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: UID).childSnapshot(forPath: "posts")
-                for case let post as DataSnapshot in rawPostList.children { //using children and not value allows chronological order
+                for case let post as DataSnapshot in rawPostList.children {
+                    //using children and not value allows chronological orderrrr
                     let key = post.key
                     finalList.insert(key, at: 0)
                 }
