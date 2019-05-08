@@ -18,7 +18,8 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     var exitButton: CustomButton!
     var post: Post?
     var tableView: UITableView!
-    let height = UIScreen.main.bounds.height - 150
+    var isShowingPercentages = false
+    let height = UIScreen.main.bounds.height - 200
     let width = UIScreen.main.bounds.width - 40
     func configure() {
         clipsToBounds = true
@@ -36,8 +37,8 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
-        
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.separatorStyle = .none
+        tableView.register(ProfilePopupCell.self, forCellReuseIdentifier: "cell")
         addSubview(header)
         addSubview(title)
         addSubview(totalVotes)
@@ -54,12 +55,12 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         header.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         header.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
         
-        title.topAnchor.constraint(equalTo: exitButton.bottomAnchor, constant: 25).isActive = true
+        title.topAnchor.constraint(equalTo: exitButton.bottomAnchor, constant: 10).isActive = true
         title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
         title.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         totalVotes.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 15).isActive = true
-        totalVotes.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 22).isActive = true
+        totalVotes.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
         totalVotes.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         tableView.topAnchor.constraint(equalTo: totalVotes.bottomAnchor, constant: 15).isActive = true
@@ -75,11 +76,11 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         header.text = "Analytics"
         header.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
         
-        title.text = "Title"
+        title.text = ""
         title.font = UIFont(name: "AvenirNext-DemiBold", size: 30)
         title.lineBreakMode = .byWordWrapping
         
-        totalVotes.text = "Total Votes: 564"
+        totalVotes.text = ""
         totalVotes.textColor = UIColor.darkGray
         totalVotes.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
         exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
@@ -131,16 +132,26 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! ProfilePopupCell
         if post != nil {
-            cell.textLabel?.text = post?.getDecision(at: indexPath.row)
-            
+            cell.configure(decision: post!.getDecision(at: indexPath.row), voteCount: post!.getVotes(at: indexPath.row))
         } else {
             print("post is nil")
         }
         return cell
     }
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        for i in 0..<post!.decisions.count {
+            if let cell = tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section)) as? ProfilePopupCell {
+                if isShowingPercentages {
+                    cell.setLabel(to: "\((post!.getPercentage(forDecisionAt: i) * 100).truncate(places: 1)) %")
+                } else {
+                    cell.setLabel(to: "\(post!.getVotes(at: i))")
+                }
+            }
+        }
+        isShowingPercentages = !isShowingPercentages
+    }
 }
 class FlagPopup: UIView, UITextViewDelegate {
     

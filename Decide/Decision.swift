@@ -16,14 +16,36 @@ class ProfilePopupCell: UITableViewCell {
     var decisionLabel: UILabel!
     var voteCountLabel: UILabel!
     func configure(decision: String, voteCount: Int) {
-        decisionLabel = UILabel()
-        decisionLabel.translatesAutoresizingMaskIntoConstraints = false
-        voteCountLabel = UILabel()
-        voteCountLabel.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(decisionLabel)
-        addSubview(voteCountLabel)
+       
+        if decisionLabel == nil {
+            decisionLabel = UILabel()
+            decisionLabel.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(decisionLabel)
+        }
+        if voteCountLabel == nil {
+            voteCountLabel = UILabel()
+            voteCountLabel.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(voteCountLabel)
+        }
+        
         decisionLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        decisionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10).isActive = true
+        decisionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        voteCountLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        voteCountLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        decisionLabel.trailingAnchor.constraint(greaterThanOrEqualTo: voteCountLabel.leadingAnchor, constant: 10).isActive = true
+        
+        decisionLabel.text = decision
+        decisionLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        decisionLabel.textColor = UIColor.darkGray
+        voteCountLabel.text = "\(voteCount)"
+        voteCountLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        voteCountLabel.textColor = UIColor.darkGray
+        
+        
+        selectionStyle = .none
+    }
+    func setLabel(to text: String) {
+        voteCountLabel.text = text
     }
 }
 class ProfileChoiceCell: UITableViewCell {

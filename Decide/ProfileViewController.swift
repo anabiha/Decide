@@ -59,8 +59,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         ref.observe(DataEventType.value, with: { (snapshot) in
             self.userPosts.posts.removeAll()
             var finalList: [String] = []
-            if let rawPostList = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: UID).childSnapshot(forPath: "posts").value as? [String : Any] {
-                for post in rawPostList {
+            let rawPostList = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: UID).childSnapshot(forPath: "posts")
+                for case let post as DataSnapshot in rawPostList.children { //using children and not value allows chronological order
                     let key = post.key
                     finalList.insert(key, at: 0)
                 }
@@ -88,7 +88,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
                 
                 self.tableView.reloadData()
-            }
+            
         })
         
         refreshTriggered = false
@@ -100,7 +100,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             headerLabel.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0))
             headerLabel.transform = CGAffineTransform(scaleX: 1 + abs(scrollView.contentOffset.y)/250, y: 1 + abs(scrollView.contentOffset.y)/250)
         }
-        if !refreshTriggered && scrollView.contentOffset.y < -130 {
+        if !refreshTriggered && scrollView.contentOffset.y < -100 {
             refreshTriggered = true
             updateData()
         }
