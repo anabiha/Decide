@@ -24,7 +24,7 @@
 		35995CCB22381E5900A845E6 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35995CCA22381E5900A845E6 /* SignUpViewController.swift */; };
 		35995CCE22396E9800A845E6 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35995CCD22396E9800A845E6 /* ResetPasswordViewController.swift */; };
 		35995CD02239CF1B00A845E6 /* CreateUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35995CCF2239CF1B00A845E6 /* CreateUserViewController.swift */; };
-		35F1010D222464F50074DA6F /* (null) in Resources */ = {isa = PBXBuildFile; };
+		35F1010D222464F50074DA6F /* BuildFile in Resources */ = {isa = PBXBuildFile; };
 		653912AE219E13920003C0B6 /* Decision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653912AD219E13920003C0B6 /* Decision.swift */; };
 		65622ECA21960B1F00C96D0D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65622EC921960B1F00C96D0D /* HomeViewController.swift */; };
 		657F5CEB2245B5160096224E /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657F5CEA2245B5160096224E /* Popup.swift */; };
@@ -234,7 +234,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35F1010D222464F50074DA6F /* (null) in Resources */,
+				35F1010D222464F50074DA6F /* BuildFile in Resources */,
 				35105ADC2185EE3000C93FE8 /* LaunchScreen.storyboard in Resources */,
 				354A800821AF0FE400B54A47 /* GoogleService-Info.plist in Resources */,
 				65E7917F222465C200537D95 /* Main.storyboard in Resources */,
@@ -482,11 +482,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5SWG32R39H;
+				DEVELOPMENT_TEAM = 3EMU544M8V;
 				INFOPLIST_FILE = Decide/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.daniel.Decide;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AyPeDa.Decide;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -502,11 +502,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5SWG32R39H;
+				DEVELOPMENT_TEAM = 3EMU544M8V;
 				INFOPLIST_FILE = Decide/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.daniel.Decide;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AyPeDa.Decide;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = wholemodule;

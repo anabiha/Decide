@@ -45,15 +45,16 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         ref.observe(DataEventType.value, with: { (snapshot) in
             
             var finalList: [String] = []
-            let rawPostList = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: UID).childSnapshot(forPath: "posts").value as! [String : Any]
-            for post in rawPostList {
+            if let rawPostList = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: UID).childSnapshot(forPath: "posts").value as? [String : Any] {
+              for post in rawPostList {
                 let key = post.key
                 finalList.insert(key, at: 0)
-            }
+                }
+            
            
             for key in finalList {
                 let postData = snapshot.childSnapshot(forPath: "posts").childSnapshot(forPath: key).value as! [String : Any]
-                let currentPost = HomeDecision.Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], key: key)
+                let currentPost = HomeDecision.Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], key: key, username:postData["username"] as! String)
                 currentPost.isVoteable = false
                 self.userPosts.posts.append(currentPost)
             }
@@ -75,6 +76,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
 
                 self.tableView.reloadData()
+            }
 
         })
     }

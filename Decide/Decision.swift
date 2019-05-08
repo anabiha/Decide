@@ -23,11 +23,12 @@ class HomeDecision {
         var userVote: Int? // locally keeps track of which option this specific user has voted
         var username: String?
         var key: String! //unique key for the post, used for referencing Firebase
-        init(title: String, decisions: [String], numVotes: [Int], key: String) {
+        init(title: String, decisions: [String], numVotes: [Int], key: String, username: String) {
             self.title = title
             self.decisions = decisions
             self.numVotes = numVotes
             self.key = key
+            self.username = username
             recalculateTotal()
         }
 
@@ -58,6 +59,11 @@ class HomeDecision {
         func getUserVote() -> Int? {
             return userVote
         }
+        func getUsername() -> String? {
+            return username
+        }
+
+        
         func vote(forDecisionAt index: Int) {
             if isVoteable {
                 if numVotes.count > index && index >= 0{

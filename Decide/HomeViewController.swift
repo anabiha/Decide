@@ -18,7 +18,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     let choiceIdentifier = "choiceCell"
     let cellSpacingHeight: CGFloat = 40
     let homeDecision = HomeDecision()
+    
     var refreshTriggered = false
+    private let refreshControl = UIRefreshControl()
+    var customView : UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -29,8 +33,26 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.rowHeight = UITableView.automaticDimension
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
+        instantiateRefreshControl()
         updateData()
     }
+    
+    func instantiateRefreshControl() {
+        if #available(iOS 10.0, *) {
+            tableView.refreshControl = refreshControl
+        }else{
+            tableView.addSubview(refreshControl)
+        }
+        refreshControl.addTarget(self, action:#selector(refreshData(_:)), for: .valueChanged)
+    }
+    
+    @objc private func refreshData(_ sender: Any) {
+        updateData()
+    }
+    
+    
+   
+    
     //displays the data from firebase in the homepage
     func updateData() {
         let ref = Database.database().reference().child("posts")
@@ -44,7 +66,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 for case let post as DataSnapshot in snapshot.children { //create the post and check if this user has voted on it yet.
                     //NOT using snapshot.value allows for chronological order
                     let postData = post.value as! [String : Any]
-                    let currentPost = HomeDecision.Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], key: post.key)
+                    let currentPost = HomeDecision.Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], key: post.key, username:postData["username"] as! String)
+                    
                     //retrieve whether the user voted on this post or not, then show it
                     if let userVote = postData["user-votes"] as? [String : Any]{
                         guard let UID = Auth.auth().currentUser?.uid else {return}
@@ -71,6 +94,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 }
                 
                 self.tableView.reloadData()
+                self.refreshControl.endRefreshing()
                 
             }
             
@@ -82,12 +106,15 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         //increase size of button and scroll down when scrolling tableview down
         if !refreshTriggered && scrollView.contentOffset.y < -130 {
             refreshTriggered = true
-            updateData()
+            //updateData()
         }
     }
+    
     // MARK: - Table View delegate methods
     func numberOfSections(in tableView: UITableView) -> Int {
-        return homeDecision.posts.count
+            
+            return homeDecision.posts.count
+        
     }
     
     // There is just one row in every section
@@ -115,7 +142,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 { //username/profile pic bar
             let cell = self.tableView.dequeueReusableCell(withIdentifier: usernameIdentifier) as! UserCell
-            cell.configure(username: "USER")
+            cell.configure(username: ((homeDecision.getPost(at: indexPath.section)?.username)!))
             cell.selectionStyle = .none
             return cell
         } else if indexPath.row == 1 { //title bar
