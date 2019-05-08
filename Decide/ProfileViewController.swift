@@ -68,7 +68,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 for key in finalList {
                     let postData = snapshot.childSnapshot(forPath: "posts").childSnapshot(forPath: key).value as! [String : Any]
-                    let currentPost = Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], flagHandler: FlagHandler(), key: key) //flaghandler is irrelevant here
+                    let currentPost = Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], username: "N/A", flagHandler: FlagHandler(), key: key) //flaghandler is irrelevant here
                     currentPost.isVoteable = false
                     self.userPosts.posts.append(currentPost)
                 }

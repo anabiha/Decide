@@ -24,11 +24,12 @@ class Post {
     var key: String! //unique key for the post, used for referencing Firebase
     var popup = Popup()
     var flagHandler: FlagHandler!
-    init(title: String, decisions: [String], numVotes: [Int], flagHandler: FlagHandler, key: String) {
+    init(title: String, decisions: [String], numVotes: [Int], username: String, flagHandler: FlagHandler, key: String) {
         self.title = title
         self.decisions = decisions
         self.numVotes = numVotes
         self.key = key
+        self.username = username
         self.flagHandler = flagHandler
         recalculateTotal()
     }

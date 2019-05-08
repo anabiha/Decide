@@ -385,7 +385,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                 "title": self.decision.getTitle(),
                 "options": post_options,
                 "uid": userKey,
-                "username": snapshot.value as! String,
+                "username": snapshot.value as? String ?? "USER",
                 "votes": votes,
                 ] as [String : Any]
             

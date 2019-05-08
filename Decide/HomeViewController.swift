@@ -73,9 +73,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         updateData()
     }
     
-    
-   
-    
     override func viewWillAppear(_ animated: Bool) {
               //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -99,7 +96,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 for case let post as DataSnapshot in snapshot.children { //create the post and check if this user has voted on it yet.
                     //NOT using snapshot.value allows for chronological order
                     let postData = post.value as! [String : Any]
-                    let currentPost = Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], flagHandler: self.flagHandler, key: post.key)
+                    let currentPost = Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], username: postData["username"] as? String ?? "USER", flagHandler: self.flagHandler, key: post.key)
                     //retrieve whether the user voted on this post or not, then show it
                     if let userVote = postData["user-votes"] as? [String : Any]{
                         guard let UID = Auth.auth().currentUser?.uid else {return}
@@ -245,11 +242,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 { //username/profile pic bar
             let cell = self.tableView.dequeueReusableCell(withIdentifier: usernameIdentifier) as! UserCell
-            cell.configure(username: "USER")
             if let post = homeDecision.getPost(at: indexPath.section) {
+                cell.configure(username: post.username ?? "USER")
                 cell.removeButtonTargets() //just to make sure that this wont point to the wrong cell once reused
                 cell.setButtonTarget(post, #selector(Post.report(_:))) //the flag button
                 cell.setButtonTarget(self, #selector(showFlagPopup(_:)))
+            } else {
+                cell.configure(username: "USER")
             }
             return cell
         } else if indexPath.row == 1 { //title bar

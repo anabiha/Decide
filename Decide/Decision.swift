@@ -240,7 +240,6 @@ class ChoiceCell: UITableViewCell {
 }
 
 
-
 class HomeTitleCell: UITableViewCell {
     @IBOutlet weak var title: UITextView!
     func configure(text: String) {
