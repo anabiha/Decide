@@ -16,6 +16,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     var title: UILabel!
     var totalVotes: UILabel!
     var exitButton: CustomButton!
+    var deleteButton: CustomButton!
     var post: Post?
     var tableView: UITableView!
     var isShowingPercentages = false
@@ -32,6 +33,8 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         totalVotes.translatesAutoresizingMaskIntoConstraints = false
         exitButton = CustomButton()
         exitButton.translatesAutoresizingMaskIntoConstraints = false
+        deleteButton = CustomButton()
+        deleteButton.translatesAutoresizingMaskIntoConstraints = false
         tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
@@ -43,6 +46,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         addSubview(title)
         addSubview(totalVotes)
         addSubview(exitButton)
+        addSubview(deleteButton)
         addSubview(tableView)
         
         if let view = superview {
@@ -66,7 +70,11 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         tableView.topAnchor.constraint(equalTo: totalVotes.bottomAnchor, constant: 15).isActive = true
         tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
         tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 10).isActive = true
+        
+        deleteButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 10).isActive = true
+        deleteButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
+        deleteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15).isActive = true
+        deleteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
         
         exitButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
         exitButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true
@@ -84,7 +92,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         totalVotes.textColor = UIColor.darkGray
         totalVotes.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
         exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
-        
+        deleteButton.configure(tuple: button.popupDelete)
         self.alpha = 0
         self.isHidden = true
         layer.cornerRadius = 15
@@ -119,6 +127,12 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     func removeExitButtonTargets() {
         exitButton.removeTarget(nil, action: nil, for: .allEvents)
     }
+    func setDeleteButtonTarget(_ target: Any?, _ selector: Selector) {
+        deleteButton.addTarget(target, action: selector, for: .touchUpInside)
+    }
+    func removeDeleteButtonTargets() {
+        deleteButton.removeTarget(nil, action: nil, for: .allEvents)
+    }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -144,7 +158,11 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         for i in 0..<post!.decisions.count {
             if let cell = tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section)) as? ProfilePopupCell {
                 if isShowingPercentages {
-                    cell.setLabel(to: "\((post!.getPercentage(forDecisionAt: i) * 100).truncate(places: 1)) %")
+                    if post?.totalVotes != 0 {
+                        cell.setLabel(to: "\((post!.getPercentage(forDecisionAt: i) * 100).truncate(places: 1)) %")
+                    } else {
+                        cell.setLabel(to: "No votes")
+                    }
                 } else {
                     cell.setLabel(to: "\(post!.getVotes(at: i))")
                 }
@@ -152,6 +170,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         }
         isShowingPercentages = !isShowingPercentages
     }
+    
 }
 class FlagPopup: UIView, UITextViewDelegate {
     

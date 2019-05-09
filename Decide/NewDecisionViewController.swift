@@ -300,7 +300,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             self.dimBackground.alpha = 0
         }, completion: { finished in
             self.popup.isHidden = true
-//            self.dimBackground.isHidden = true
         })
     }
     //opens popup

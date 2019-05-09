@@ -23,6 +23,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     let choiceIdentifier = "profileChoiceCell"
     let headerIdentifier = "headerCell"
     var moreInfo: ProfilePopup!
+    var confirmDelete: Popup!
     var dimBackground: UIView!
     private let refreshControl = UIRefreshControl()
     override func viewDidLoad() {
@@ -41,14 +42,26 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         updateData()
         //instantiation and addition of subviews
         moreInfo = ProfilePopup()
+        confirmDelete = Popup()
         dimBackground = UIView(frame: UIScreen.main.bounds)
         dimBackground.alpha = 0
         dimBackground.isHidden = true
         dimBackground.backgroundColor = UIColor.black
         tabBarController!.view.addSubview(dimBackground)
         tabBarController!.view.addSubview(moreInfo)
+        tabBarController!.view.addSubview(confirmDelete)
+        
+        confirmDelete.configureTwoButtons()
+        confirmDelete.changeButton1(to: button.popupCancel)
+        confirmDelete.changeButton2(to: button.popupDelete)
+        confirmDelete.setButton1Target(self, #selector(closeConfirm(_:)))
+        confirmDelete.setButton2Target(self, #selector(deletePost(_:)))
+        confirmDelete.setTitle(to: "Delete Post")
+        confirmDelete.setText(to: "Are you sure you want to delete this post?")
+        
         moreInfo.configure()
         moreInfo.setExitButtonTarget(self, #selector(closeMoreInfo(_:)))
+        moreInfo.setDeleteButtonTarget(self, #selector(openConfirm(_:)))
         self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
         super.viewDidLoad()
     }
@@ -68,41 +81,40 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         guard let UID = Auth.auth().currentUser?.uid else {return}
         let ref = Database.database().reference().root
-        
-        ref.observe(DataEventType.value, with: { (snapshot) in
+        ref.observeSingleEvent(of: DataEventType.value, with: { (snapshot) in
             self.userPosts.posts.removeAll()
             var finalList: [String] = []
             let rawPostList = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: UID).childSnapshot(forPath: "posts")
-                for case let post as DataSnapshot in rawPostList.children {
-                    //using children and not value allows chronological orderrrr
-                    let key = post.key
-                    finalList.insert(key, at: 0)
-                }
+            for case let post as DataSnapshot in rawPostList.children {
+                //using children and not value allows chronological orderrrr
+                let key = post.key
+                finalList.insert(key, at: 0)
+            }
+            
+            for key in finalList {
+                let postData = snapshot.childSnapshot(forPath: "posts").childSnapshot(forPath: key).value as! [String : Any]
+                let currentPost = Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], username: "N/A", flagHandler: FlagHandler(), key: key) //flaghandler is irrelevant here
+                currentPost.isVoteable = false
+                self.userPosts.posts.append(currentPost)
+            }
+            DispatchQueue.main.async {
                 
-                for key in finalList {
-                    let postData = snapshot.childSnapshot(forPath: "posts").childSnapshot(forPath: key).value as! [String : Any]
-                    let currentPost = Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], username: "N/A", flagHandler: FlagHandler(), key: key) //flaghandler is irrelevant here
-                    currentPost.isVoteable = false
-                    self.userPosts.posts.append(currentPost)
-                }
-                DispatchQueue.main.async {
+                self.tableView.beginUpdates()
+                let indexPath = IndexPath(row: 1, section: self.cellCount-1)
+                let index = IndexSet([indexPath.section])
+                
+                if(self.cellCount-1 > indexPath.section) {
                     
-                    self.tableView.beginUpdates()
-                    let indexPath = IndexPath(row: 1, section: self.cellCount-1)
-                    let index = IndexSet([indexPath.section])
-                    
-                    if(self.cellCount-1 > indexPath.section) {
-                        
-                        self.tableView.insertSections(index, with: .automatic)
-                        
-                    }
-                    
-                    self.tableView.endUpdates()
+                    self.tableView.insertSections(index, with: .automatic)
                     
                 }
                 
-                self.tableView.reloadData()
-                self.refreshControl.endRefreshing()
+                self.tableView.endUpdates()
+                
+            }
+            
+            self.tableView.reloadData()
+            self.refreshControl.endRefreshing()
         })
     }
     //data refresh when scrolling down!
@@ -113,7 +125,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             headerLabel.transform = CGAffineTransform(scaleX: 1 + abs(scrollView.contentOffset.y)/250, y: 1 + abs(scrollView.contentOffset.y)/250)
         }
     }
-   
+    
     //scrolls the tableview upward when the keyboard shows
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
@@ -186,46 +198,62 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
-    
     // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // note that indexPath.section is used rather than indexPath.row
-//        print("You tapped cell number \(indexPath.row). at post number: \(indexPath.section)")
-//        if let post = userPosts.getPost(at: indexPath.section) {
-//            post.didDisplayPercents = !post.didDisplayPercents //mark the cell as displayed, regardless of whether whole post is visible, switch it each time it is pressed
-//            for index in 1..<post.decisions.count + 1 {
-//                if let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: indexPath.section)) as? ProfileChoiceCell {
-//                    if post.didDisplayPercents {
-//                        UIView.animate(withDuration: 0.2) {
-//                            cell.backgroundColor = cell.color1
-//                        }
-//                        cell.displayPercentage()
-//                    } else {
-//                        cell.displayText()
-//                    }
-//                }
-//            }
-//        }
+       
         let frame = tableView.convert(tableView.rect(forSection: indexPath.section), to: self.view)
         if let post = userPosts.getPost(at: indexPath.section) {
-             moreInfo.setPost(to: post)
+            moreInfo.setPost(to: post)
         }
-        showMoreInfo(withFrame: frame)
+        openMoreInfo(withFrame: frame)
     }
-    
-    @objc func closeMoreInfo(_ sender: Any) {
-        UIView.animate(withDuration: 0.3, delay: 0, options: [.transitionCrossDissolve, .curveEaseIn], animations: {
-            self.moreInfo.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+    @objc func deletePost(_ sender: Any) {
+        let ref = Database.database().reference().root
+        guard let UID = Auth.auth().currentUser?.uid else {return}
+        if let key = moreInfo.post?.key {
+            ref.child("users").child(UID).child("posts").child(key).removeValue()
+            ref.child("posts").child(key).removeValue()
+            updateData()
+            print("ProfileViewController;deletePost(): successfully deleted post with key: \(key)")
+        } else {
+            print("ProfileViewController;deletePost(): ERROR - popup does not have a post")
+        }
+        closeConfirm()
+    }
+    //objc wrapper for the close confirm func so that buttons can call it
+    @objc func closeConfirm(_ sender: Any) {
+        closeConfirm()
+    }
+    //close confirm popup
+    func closeConfirm() {
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.confirmDelete.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
         }, completion: nil)
-        UIView.transition(with: moreInfo, duration: 0.1, options: .transitionCrossDissolve, animations: {
-            self.moreInfo.alpha = 0
+        
+        UIView.transition(with: confirmDelete, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.confirmDelete.alpha = 0
             self.dimBackground.alpha = 0
         }, completion: { finished in
-            self.moreInfo.isHidden = true
+            self.confirmDelete.isHidden = true
             self.dimBackground.isHidden = true
         })
+        print("ProfileViewController;closeConfirm(): confirm popup closed")
     }
-    func showMoreInfo(withFrame frame: CGRect) {
+    //open confirm popup
+    @objc func openConfirm(_ sender: Any) {
+        closeMoreInfo()
+        self.confirmDelete.isHidden = false
+        self.dimBackground.isHidden = false
+        UIView.transition(with: confirmDelete, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.confirmDelete.alpha = 1
+            self.dimBackground.alpha = 0.5
+        }, completion: nil )
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.confirmDelete.transform = CGAffineTransform(scaleX: 1, y: 1)
+        })
+        print("ProfileViewController;openConfirm(): confirm popup opened")
+    }
+    func openMoreInfo(withFrame frame: CGRect) {
         moreInfo.setSize(toFrame: frame)
         self.moreInfo.isHidden = false
         self.dimBackground.isHidden = false
@@ -236,8 +264,26 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         UIView.animate(withDuration: 0.2, delay: 0, options: .transitionCrossDissolve, animations: {
             self.moreInfo.transform = CGAffineTransform(scaleX: 1, y: 1)
         })
+        print("ProfileViewController;openMoreInfo(): more info popup opened")
     }
     
+    func closeMoreInfo() {
+        UIView.animate(withDuration: 0.3, delay: 0, options: [.transitionCrossDissolve, .curveEaseIn], animations: {
+            self.moreInfo.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        }, completion: nil)
+        UIView.transition(with: moreInfo, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.moreInfo.alpha = 0
+            self.dimBackground.alpha = 0
+        }, completion: { finished in
+            self.moreInfo.isHidden = true
+        })
+        self.dimBackground.isHidden = true
+        print("ProfileViewController;closeMoreInfo(): more info popup closed")
+    }
+    //the objc wrapper for close more info, used by exit button on popup
+    @objc func closeMoreInfo(_ sender: Any) {
+        closeMoreInfo()
+    }
     @IBAction func logOutButton(_ sender: Any) {
         
         if Auth.auth().currentUser != nil {
