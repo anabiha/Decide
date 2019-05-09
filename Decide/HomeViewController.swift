@@ -32,7 +32,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.dataSource = self
         tableView.backgroundColor = UIColor.clear
         tableView.tableFooterView = UIView() //hides unused cells
-        tableView.estimatedRowHeight = 300
+        tableView.estimatedRowHeight = 43.5
+        tableView.estimatedSectionHeaderHeight = cellSpacingHeight;
+        tableView.estimatedSectionFooterHeight = 0;
+        
         tableView.rowHeight = UITableView.automaticDimension
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
@@ -59,39 +62,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         updateData()
     }
     
-    func instantiateRefreshControl() {
-        if #available(iOS 10.0, *) {
-            tableView.refreshControl = refreshControl
-        }else{
-            tableView.addSubview(refreshControl)
-        }
-        refreshControl.addTarget(self, action:#selector(refreshData(_:)), for: .valueChanged)
-    }
-    
-    @objc private func refreshData(_ sender: Any) {
-        updateData()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-              //allows detection of keyboard appearing/disappearing
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-    }
-    override func viewWillDisappear(_ animated: Bool) {
-        //removes keyboard detection of view once it disappears, used to prevent detection when keyboard appears on NEWDECISION
-        NotificationCenter.default.removeObserver(self)
-    }
-   
     //displays the data from firebase in the homepage
     func updateData() {
         let ref = Database.database().reference().child("posts")
-    
+        
         ref.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
             
             if snapshot.childrenCount > 0 {
                 //clear tableview for reload
                 self.homeDecision.posts.removeAll() //important
-             
+                
                 for case let post as DataSnapshot in snapshot.children { //create the post and check if this user has voted on it yet.
                     //NOT using snapshot.value allows for chronological order
                     let postData = post.value as! [String : Any]
@@ -106,28 +86,45 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                     self.homeDecision.posts.insert(currentPost, at: 0)
                 }
-      
-                DispatchQueue.main.async {
-                    
-                    self.tableView.beginUpdates()
-                    let indexPath = IndexPath(row: 1, section: self.homeDecision.posts.count-1)
-                    let index = IndexSet([indexPath.section])
-                    
-                    if(self.homeDecision.posts.count-1 > indexPath.section) {
-                        self.tableView.insertSections(index, with: .automatic)
-                    }
-                    
-                    self.tableView.endUpdates()
-                    
-                }
-                
                 self.tableView.reloadData()
+                DispatchQueue.main.async {
+                    self.tableView.beginUpdates()
+                    self.tableView.endUpdates()
+                }
                 self.refreshControl.endRefreshing()
-                
             }
             
         })
     }
+    func instantiateRefreshControl() {
+        if #available(iOS 10.0, *) {
+            tableView.refreshControl = refreshControl
+        }else{
+            tableView.addSubview(refreshControl)
+        }
+        refreshControl.addTarget(self, action:#selector(refreshData(_:)), for: .valueChanged)
+    }
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if refreshControl.isRefreshing {
+            updateData()
+        }
+    }
+    @objc private func refreshData(_ sender: Any) {
+        if !tableView.isDragging {
+            updateData()
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+              //allows detection of keyboard appearing/disappearing
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        //removes keyboard detection of view once it disappears, used to prevent detection when keyboard appears on NEWDECISION
+        NotificationCenter.default.removeObserver(self)
+    }
+   
     //shift view up when keyboard appears
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -150,9 +147,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     // MARK: - Table View delegate methods
     func numberOfSections(in tableView: UITableView) -> Int {
-            
             return homeDecision.posts.count
-        
     }
     
     // There is just one row in every section

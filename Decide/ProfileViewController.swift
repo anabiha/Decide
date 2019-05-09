@@ -25,6 +25,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     var moreInfo: ProfilePopup!
     var confirmDelete: Popup!
     var dimBackground: UIView!
+    var canLinkToScroll: Bool = true //unlinks the header "your posts" from scrollview when refreshing -> PREVENTS JITTERING
     private let refreshControl = UIRefreshControl()
     override func viewDidLoad() {
         tableView.delegate = self
@@ -32,7 +33,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.tableFooterView = UIView() //hides unused cells
         tableView.backgroundColor = UIColor.clear
         // Set automatic dimensions for row height
-        tableView.estimatedRowHeight = 60
+        tableView.estimatedRowHeight = 43.5
+        tableView.estimatedSectionHeaderHeight = cellSpacingHeight;
+        tableView.estimatedSectionFooterHeight = 0;
         tableView.rowHeight = UITableView.automaticDimension
         //keeps some space between bottom of screen and the bottom of the tableview
         tableView.contentInset = insets
@@ -47,10 +50,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         dimBackground.alpha = 0
         dimBackground.isHidden = true
         dimBackground.backgroundColor = UIColor.black
-        tabBarController!.view.addSubview(dimBackground)
+        tabBarController!.view.addSubview(dimBackground) //tab bar controller so that everything goes over the tab bar
         tabBarController!.view.addSubview(moreInfo)
         tabBarController!.view.addSubview(confirmDelete)
-        
+        //configuration of confirmation popup
         confirmDelete.configureTwoButtons()
         confirmDelete.changeButton1(to: button.popupCancel)
         confirmDelete.changeButton2(to: button.popupDelete)
@@ -58,27 +61,15 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         confirmDelete.setButton2Target(self, #selector(deletePost(_:)))
         confirmDelete.setTitle(to: "Delete Post")
         confirmDelete.setText(to: "Are you sure you want to delete this post?")
-        
+        //configuration of analytics popup
         moreInfo.configure()
         moreInfo.setExitButtonTarget(self, #selector(closeMoreInfo(_:)))
         moreInfo.setDeleteButtonTarget(self, #selector(openConfirm(_:)))
         self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
         super.viewDidLoad()
     }
-    func instantiateRefreshControl() {
-        if #available(iOS 10.0, *) {
-            tableView.refreshControl = refreshControl
-        }else{
-            tableView.addSubview(refreshControl)
-        }
-        refreshControl.addTarget(self, action:#selector(refreshData(_:)), for: .valueChanged)
-    }
-    
-    @objc private func refreshData(_ sender: Any) {
-        updateData()
-    }
+   
     func updateData() {
-        
         guard let UID = Auth.auth().currentUser?.uid else {return}
         let ref = Database.database().reference().root
         ref.observeSingleEvent(of: DataEventType.value, with: { (snapshot) in
@@ -97,35 +88,53 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 currentPost.isVoteable = false
                 self.userPosts.posts.append(currentPost)
             }
-            DispatchQueue.main.async {
-                
-                self.tableView.beginUpdates()
-                let indexPath = IndexPath(row: 1, section: self.cellCount-1)
-                let index = IndexSet([indexPath.section])
-                
-                if(self.cellCount-1 > indexPath.section) {
-                    
-                    self.tableView.insertSections(index, with: .automatic)
-                    
-                }
-                
-                self.tableView.endUpdates()
-                
-            }
-            
             self.tableView.reloadData()
+            DispatchQueue.main.async {
+                self.tableView.beginUpdates()
+                self.tableView.endUpdates()
+            }
             self.refreshControl.endRefreshing()
         })
     }
-    //data refresh when scrolling down!
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        //increase size of button and scroll down when scrolling tableview down
-        if scrollView.contentOffset.y < 0 {
-            headerLabel.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0))
-            headerLabel.transform = CGAffineTransform(scaleX: 1 + abs(scrollView.contentOffset.y)/250, y: 1 + abs(scrollView.contentOffset.y)/250)
+    func instantiateRefreshControl() {
+        if #available(iOS 10.0, *) {
+            tableView.refreshControl = refreshControl
+        }else{
+            tableView.addSubview(refreshControl)
+        }
+        refreshControl.addTarget(self, action:#selector(refreshData(_:)), for: .valueChanged)
+    }
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if refreshControl.isRefreshing {
+            UIView.animate(withDuration: 0.25) {
+                self.headerLabel.transform = CGAffineTransform(scaleX: 1, y: 1)
+            }
+            updateData()
         }
     }
     
+    //data refresh when scrolling down!
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y < 0 && canLinkToScroll {
+            headerLabel.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0))
+            headerLabel.transform = CGAffineTransform(scaleX: 1 + -scrollView.contentOffset.y/250, y: 1 + -scrollView.contentOffset.y/250)
+        }
+        if refreshControl.isRefreshing {
+            print("refresh")
+            canLinkToScroll = false
+            scrollView.setContentOffset(scrollView.contentOffset, animated: false)
+        }
+        //link it back when returning to start
+        if scrollView.contentOffset.y >= 0 {
+            canLinkToScroll = true
+        }
+    }
+    //prevents refresh before user lets go of drag
+    @objc private func refreshData(_ sender: Any) {
+        if !tableView.isDragging {
+            updateData()
+        }
+    }
     //scrolls the tableview upward when the keyboard shows
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
@@ -200,7 +209,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       
+        print(tableView.rectForRow(at: indexPath).height)
         let frame = tableView.convert(tableView.rect(forSection: indexPath.section), to: self.view)
         if let post = userPosts.getPost(at: indexPath.section) {
             moreInfo.setPost(to: post)
