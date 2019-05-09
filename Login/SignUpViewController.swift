@@ -20,9 +20,11 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
     var dimBackground: UIView!
    
     override func viewDidLoad() {
+        configure()
         super.viewDidLoad()
         configure()
     }
+    
     //what to do when view is about to disappear
     override func viewWillDisappear(_ animated: Bool) {
         self.email.endEditing(true)
@@ -96,10 +98,12 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
             }
         }
     }
+    
     //shifts view down when keyboard goes away
     @objc func keyboardWillHide(_ notification:Notification) {
         self.view.frame = defaultFrame
     }
+    
     //makes the keyboard disappear when pressing return
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if(string == "\n") {
@@ -109,6 +113,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
             return true
         }
     }
+    
     //preparing to segue back to the login page or to the create user page
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
@@ -157,5 +162,14 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
                 }
             })
         }
+        
+    
+        
     }
+
+    
+  
+    
+    
+
 }

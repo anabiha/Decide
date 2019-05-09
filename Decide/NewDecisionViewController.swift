@@ -21,20 +21,23 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     
     var cancelTriggered: Bool = false
     var decision = Decision() //data manager
-    var insets: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 0, bottom: 0, right: 0) //content inset for tableview
+    var insets: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 0, bottom: 100, right: 0) //content inset for tableview
     var cellCount = 4 //current number of cells, start at 4
     let maxCellCount = 8 //max number of cells, should be an even number
     let cellReuseIdentifier = "decisionItemCell" //reuse identifiers
     let addButtonCellReuseIdentifier = "addButtonCell"
     let questionBarCellReuseIdentifier = "questionBarCell"
-    let cellSpacingHeight: CGFloat = 14
+    let cellSpacingHeight: CGFloat = 10
     let screenSize = UIScreen.main.bounds
     var defaultCancelFrame: CGRect?
     var popup: Popup!
+    var username = ""
+    var tagPopup: TagPopup!
     var dimBackground: UIView!
     //Background is an IMAGEVIEW
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.contentInsetAdjustmentBehavior = .never
         //DO NOT REGISTER THE CELL CLASSES HERE, ALREADY DONE IN INTERFACEBUILDER!!!!!!!
         tableView.delegate = self
         tableView.dataSource = self
@@ -57,11 +60,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         //tell view what the frame of the cancelbutton looks like
         defaultCancelFrame = cancelButton.frame
         
-        //the dim background for popup
         dimBackground = UIView(frame: UIScreen.main.bounds)
-        dimBackground.alpha = 0
-        dimBackground.isHidden = true
-        dimBackground.backgroundColor = UIColor.black
         dimBackground.alpha = 0
         dimBackground.isHidden = true
         dimBackground.backgroundColor = UIColor.black
@@ -70,13 +69,27 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         popup = Popup()
         self.view.addSubview(popup)
         popup.configureTwoButtons()
+        
+        tagPopup = TagPopup()
+        self.view.addSubview(tagPopup)
+        let options = ["Food","Sports","Education","Entertainment","Travel","Technology","Fashion","Politics","Finances",
+            "Life Advice",
+            "Outdoors",
+            "Misc"]
+        tagPopup.configure(text: "Add up to 2 tags", optionList: options, handler: decision)
+        tagPopup.setButtonTarget(self, #selector(saveDecision(_:)))
         //view controller is behind dim background which is behind the popup
         self.view.bringSubviewToFront(dimBackground)
         self.view.bringSubviewToFront(popup)
+        self.view.bringSubviewToFront(tagPopup)
+        //keep cancelButton hidden while sliding up
         cancelButton.alpha = 0
     }
     override func viewDidAppear(_ animated: Bool) {
         cancelButton.alpha = 1
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        cancelButton.alpha = 0
     }
     /*
      Works in conjunction with decisionitem func "shift" which shifts the cell based on the keyboard size
@@ -278,16 +291,16 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     //closes popup
     func closePopup() {
-        UIView.animate(withDuration: 0.15, delay: 0, options: .transitionCrossDissolve, animations: {
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
             self.popup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
         }, completion: nil)
         
-        UIView.transition(with: popup, duration: 0.15, options: .transitionCrossDissolve, animations: {
+        UIView.transition(with: popup, duration: 0.1, options: .transitionCrossDissolve, animations: {
             self.popup.alpha = 0
             self.dimBackground.alpha = 0
         }, completion: { finished in
             self.popup.isHidden = true
-            self.dimBackground.isHidden = true
+//            self.dimBackground.isHidden = true
         })
     }
     //opens popup
@@ -302,15 +315,46 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             self.popup.transform = CGAffineTransform(scaleX: 1, y: 1)
         })
     }
+   func showTagPopup() {
+        self.tagPopup.isHidden = false
+        self.dimBackground.isHidden = false
+        UIView.transition(with: tagPopup, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.tagPopup.alpha = 1
+            self.dimBackground.alpha = 0.5
+        }, completion: nil )
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.tagPopup.transform = CGAffineTransform(scaleX: 1, y: 1)
+        })
+    }
+    func closeTagPopup() {
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.tagPopup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        }, completion: nil)
+        
+        UIView.transition(with: tagPopup, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.tagPopup.alpha = 0
+            self.dimBackground.alpha = 0
+        }, completion: { finished in
+            self.tagPopup.isHidden = true
+            self.dimBackground.isHidden = true
+        })
+    }
     //dismisses the popup
     @objc func cancelPopup(_ sender: Any) {
         cancelTriggered = false
         closePopup()
     }
+    @objc func moveToTags(_ sender: Any) {
+       
+            self.closePopup()
+            self.showTagPopup()
+       
+    }
+    
     //saves the decision
     @objc func saveDecision(_ sender: Any) {
         cancelTriggered = false
-        closePopup()
+        closeTagPopup()
         print("DECISION SAVED")
         print("Title: \(self.decision.getTitle())")
         print("Content: ")
@@ -325,10 +369,37 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         // removes the first element because it is the question
         post_options.remove(at: 0)
         
-        ref.child("posts").child(userKey).child("").child("Options").setValue(post_options)
-        ref.child("posts").child(userKey).child("").child("Title").setValue(self.decision.getTitle())
-        //animate the action of going back, switching tabs is also handled in animated
+        //creating an array for voting
+        var votes: [Int] = []
+        for _ in 0..<post_options.count {
+            votes.append(0)
+        }
+        
+        
+        let reference = Database.database().reference().child("users").child(userKey).child("username")
+        
+        reference.observeSingleEvent(of: .value) { (snapshot) in
+            
+            //dictionary uploaded to firebase for the post
+            let postData = [
+                "title": self.decision.getTitle(),
+                "options": post_options,
+                "uid": userKey,
+                "username": snapshot.value as? String ?? "USER",
+                "votes": votes,
+                ] as [String : Any]
+            
+            let newPostKey = ref.child("posts").childByAutoId().key
+            //store the post under the posts branch
+            ref.child("posts").child(newPostKey!).setValue(postData)
+            //stores the child ID of the post into the users>posts branch
+            ref.child("users").child(userKey).child("posts").child(newPostKey!).setValue(newPostKey!) //the key == the value, didn't know how else to get it to work like this.
+            //animate the action of going back, switching tabs is also handled in animated
+            self.dismiss(animated: true, completion: nil)
+    
+        }
     }
+    
     //deletes the decision
     @objc func deleteDecision(_ sender: Any) {
         closePopup()
@@ -342,6 +413,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         popup.setText(to: "Are you sure you want to delete this decision?")
         popup.changeButton1(to: button.popupCancel)
         popup.changeButton2(to: button.popupDelete)
+        popup.removeAllTargets()
         popup.setButton1Target(self, #selector(cancelPopup(_:)))
         popup.setButton2Target(self, #selector(deleteDecision(_:)))
         //fade it in while also zooming in
@@ -358,13 +430,15 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         }
         //if there are no empty cells....
         if blankCellList.count == 0 && decision.getTitle() != "" {
-            popup.setTitle(to: "Post Deicision")
+            popup.setTitle(to: "Post Decision")
             popup.setText(to: "Are you sure you want to post this decision?")
             popup.changeButton1(to: button.popupCancel)
             popup.changeButton2(to: button.popupPost)
+            popup.removeAllTargets()
             popup.setButton1Target(self, #selector(cancelPopup(_:)))
-            popup.setButton2Target(self, #selector(saveDecision(_:)))
+            popup.setButton2Target(self, #selector(moveToTags(_:)))
             showPopup()
+            
         } else { //otherwise...
             if blankCellList.count != 0 {
                 for section in 0..<blankCellList.count {

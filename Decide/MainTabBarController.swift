@@ -24,10 +24,8 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         }
         
         if (viewController.tabBarItem.tag == 1) {
-            
            let vc = self.storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
            self.present(vc, animated: true, completion: nil)
-            
 //            animateToTab(toIndex: 1) //initiate slide up animation if new decision is pressed
             //also note that the tab bar is hidden in this view
         }

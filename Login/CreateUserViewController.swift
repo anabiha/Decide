@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 
+
 class CreateUserViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var username: UITextField!
@@ -19,7 +20,6 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
     var dimBackground: UIView!
     //what to do when view loads
     override func viewDidLoad() {
-        super.viewDidLoad()
         configure()
     }
     //make things aesthetic
@@ -107,54 +107,35 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
         if username.text == "" {
             popup.setText(to: "Please enter a username.")
             openPopup()
+            
         } else {
             
-            //add the username to the database
-            let ref = Database.database().reference().root
+            // writing user to the database
+            let ref = Database.database().reference()
             guard let userKey = Auth.auth().currentUser?.uid else {return}
-            ref.child("users").child(userKey).child("username").setValue(username.text)
             
-            // ask if the user wants to add a profile picture
-            let alertController = UIAlertController(title: "Profile Picture", message: "Would you like to add a profile picture?", preferredStyle: .alert)
-            
-            alertController.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
-                
-                // bring up image picker to allow user to either pick a photo from the photo gallery or take a picture for their profile picture
-                let photoHelper = PhotoHelper()
-                
-                photoHelper.completionHandler = { image in
-                    
-                    print("handle image")
-                    
+            ref.child("users").observeSingleEvent(of: .value, with: {(snapshot) in
+                var validName = true
+                //checking for a name that hasn't been taken
+                for case let user as DataSnapshot in snapshot.children  {
+                    for case let name as DataSnapshot in user.children {
+                        if let unwrapped = name.value as? String {
+                            if self.username.text! == unwrapped {
+                                validName = false
+                            }
+                        }
+                    }
                 }
-                
-                photoHelper.presentActionSheet(from: self)
-                
-                //add the profile image to the database
-                
-                // go to home page
-                
-                let vc = UIStoryboard(type: .main).instantiateInitialViewController()
-                
-                self.present(vc!, animated: true, completion: nil)
-                
-            }))
-            
-            alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { action in
-                
-                //proceed to home page
-                let vc = UIStoryboard(type: .main).instantiateInitialViewController()
-                
-                self.present(vc!, animated: true, completion: nil)
-                
-            }))
-            
-            present(alertController, animated: true, completion: nil)
-            
-            
+                if validName {
+                    ref.child("users").child(userKey).child("username").setValue(self.username.text!)
+                    let vc = UIStoryboard(type: .main).instantiateInitialViewController()
+                    self.present(vc!, animated: true, completion: nil)
+                } else { //if username does not already exist
+                    self.popup.setText(to: "This username is already taken.")
+                    self.openPopup()
+                }
+            }, withCancel: nil)
         }
-        
     }
-    
     
 }
