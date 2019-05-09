@@ -69,9 +69,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         ref.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
             
             if snapshot.childrenCount > 0 {
-                //clear tableview for reload
                 self.homeDecision.posts.removeAll() //important
-                
+                self.tableView.reloadData() //delete sections before data reload
                 for case let post as DataSnapshot in snapshot.children { //create the post and check if this user has voted on it yet.
                     //NOT using snapshot.value allows for chronological order
                     let postData = post.value as! [String : Any]
@@ -86,11 +85,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                     self.homeDecision.posts.insert(currentPost, at: 0)
                 }
-                self.tableView.reloadData()
-                DispatchQueue.main.async {
-                    self.tableView.beginUpdates()
-                    self.tableView.endUpdates()
-                }
+                //inserting new sections
+                self.tableView.beginUpdates()
+                let indexSet = IndexSet(integersIn: 0..<self.homeDecision.posts.count)
+                self.tableView.insertSections(indexSet, with: .top)
+                self.tableView.endUpdates()
                 self.refreshControl.endRefreshing()
             }
             

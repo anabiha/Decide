@@ -74,6 +74,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         let ref = Database.database().reference().root
         ref.observeSingleEvent(of: DataEventType.value, with: { (snapshot) in
             self.userPosts.posts.removeAll()
+            self.tableView.reloadData()
             var finalList: [String] = []
             let rawPostList = snapshot.childSnapshot(forPath: "users").childSnapshot(forPath: UID).childSnapshot(forPath: "posts")
             for case let post as DataSnapshot in rawPostList.children {
@@ -81,18 +82,16 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 let key = post.key
                 finalList.insert(key, at: 0)
             }
-            
             for key in finalList {
                 let postData = snapshot.childSnapshot(forPath: "posts").childSnapshot(forPath: key).value as! [String : Any]
                 let currentPost = Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], username: "N/A", flagHandler: FlagHandler(), key: key) //flaghandler is irrelevant here
                 currentPost.isVoteable = false
                 self.userPosts.posts.append(currentPost)
             }
-            self.tableView.reloadData()
-            DispatchQueue.main.async {
-                self.tableView.beginUpdates()
-                self.tableView.endUpdates()
-            }
+            //inserting new sections
+            let indexSet = IndexSet(integersIn: 0..<self.userPosts.posts.count)
+            self.tableView.insertSections(indexSet, with: .top)
+            self.tableView.endUpdates()
             self.refreshControl.endRefreshing()
         })
     }
