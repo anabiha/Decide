@@ -88,7 +88,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 //inserting new sections
                 self.tableView.beginUpdates()
                 let indexSet = IndexSet(integersIn: 0..<self.homeDecision.posts.count)
-                self.tableView.insertSections(indexSet, with: .top)
+                self.tableView.insertSections(indexSet, with: .fade)
                 self.tableView.endUpdates()
                 self.refreshControl.endRefreshing()
             }

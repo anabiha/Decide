@@ -90,7 +90,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             //inserting new sections
             let indexSet = IndexSet(integersIn: 0..<self.userPosts.posts.count)
-            self.tableView.insertSections(indexSet, with: .top)
+            self.tableView.insertSections(indexSet, with: .fade)
             self.tableView.endUpdates()
             self.refreshControl.endRefreshing()
         })
@@ -114,12 +114,12 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     //data refresh when scrolling down!
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentOffset.y)
         if scrollView.contentOffset.y < 0 && canLinkToScroll {
             headerLabel.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0))
             headerLabel.transform = CGAffineTransform(scaleX: 1 + -scrollView.contentOffset.y/250, y: 1 + -scrollView.contentOffset.y/250)
         }
-        if refreshControl.isRefreshing {
-            print("refresh")
+        if refreshControl.isRefreshing && canLinkToScroll {
             canLinkToScroll = false
             scrollView.setContentOffset(scrollView.contentOffset, animated: false)
         }
