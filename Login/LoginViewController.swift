@@ -13,22 +13,7 @@ import FirebaseAuth
 
 
 typealias FIRUser = FirebaseAuth.User
-extension UIViewController {
-    func rephrase(error: NSError) -> String {
-        switch (error.code) {
-        case AuthErrorCode.invalidEmail.rawValue:
-            return "Please enter a valid email."
-        case AuthErrorCode.userNotFound.rawValue:
-            return "Invalid username or password. Please try again."
-        case AuthErrorCode.wrongPassword.rawValue:
-            return "Invalid username or password. Please try again."
-        case AuthErrorCode.emailAlreadyInUse.rawValue:
-            return "User account already exists."
-        default:
-            return error.localizedDescription
-        }
-    }
-}
+
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var logInButton: CustomButton!

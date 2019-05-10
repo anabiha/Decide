@@ -19,55 +19,62 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     let cellSpacingHeight: CGFloat = 40
     let homeDecision = HomeDecision()
     
-    var refreshTriggered = false
     private let refreshControl = UIRefreshControl()
     var customView : UIView!
     
+    var flagPopup = FlagPopup()
+    var dimBackground: UIView!
+    var popupDefaultFrame: CGRect!
+    var flagHandler = FlagHandler()
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = UIColor.clear
         tableView.tableFooterView = UIView() //hides unused cells
-        tableView.estimatedRowHeight = 300
+        tableView.estimatedRowHeight = 43.5
+        tableView.estimatedSectionHeaderHeight = cellSpacingHeight;
+        tableView.estimatedSectionFooterHeight = 0;
+        
         tableView.rowHeight = UITableView.automaticDimension
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
+        //add dim background
+        dimBackground = UIView(frame: UIScreen.main.bounds)
+        dimBackground.alpha = 0
+        dimBackground.isHidden = true
+        dimBackground.backgroundColor = UIColor.black
+        tabBarController!.view.addSubview(dimBackground)
+        //add flagging popup
+        tabBarController!.view.addSubview(flagPopup)
+        flagPopup.configure(text: "Report Post", handler: flagHandler)
+        flagPopup.setExitButtonTarget(self, #selector(cancelReport(_:)))
+        flagPopup.setMainButtonTarget(self, #selector(saveReport(_:)))
+        //flag handler (the data model for reporting)
+        flagHandler.configure()
+        //bringing subviews to front
+        tabBarController!.view.bringSubviewToFront(dimBackground)
+        tabBarController!.view.bringSubviewToFront(flagPopup)
+                //allows detection of keyboard appearing/disappearing
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         instantiateRefreshControl()
         updateData()
     }
     
-    func instantiateRefreshControl() {
-        if #available(iOS 10.0, *) {
-            tableView.refreshControl = refreshControl
-        }else{
-            tableView.addSubview(refreshControl)
-        }
-        refreshControl.addTarget(self, action:#selector(refreshData(_:)), for: .valueChanged)
-    }
-    
-    @objc private func refreshData(_ sender: Any) {
-        updateData()
-    }
-    
-    
-   
-    
     //displays the data from firebase in the homepage
     func updateData() {
         let ref = Database.database().reference().child("posts")
-    
+        
         ref.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
             
             if snapshot.childrenCount > 0 {
-                //clear tableview for reload
                 self.homeDecision.posts.removeAll() //important
-             
+                self.tableView.reloadData() //delete sections before data reload
                 for case let post as DataSnapshot in snapshot.children { //create the post and check if this user has voted on it yet.
                     //NOT using snapshot.value allows for chronological order
                     let postData = post.value as! [String : Any]
-                    let currentPost = HomeDecision.Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], key: post.key, username:postData["username"] as! String)
-                    
+                    let currentPost = Post(title: postData["title"] as? String ?? "Title", decisions: postData["options"] as? [String] ?? ["option"], numVotes: postData["votes"] as? [Int] ?? [0,0,0], username: postData["username"] as? String ?? "USER", flagHandler: self.flagHandler, key: post.key)
                     //retrieve whether the user voted on this post or not, then show it
                     if let userVote = postData["user-votes"] as? [String : Any]{
                         guard let UID = Auth.auth().currentUser?.uid else {return}
@@ -78,43 +85,68 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                     self.homeDecision.posts.insert(currentPost, at: 0)
                 }
-      
-                DispatchQueue.main.async {
-                    
-                    self.tableView.beginUpdates()
-                    let indexPath = IndexPath(row: 1, section: self.homeDecision.posts.count-1)
-                    let index = IndexSet([indexPath.section])
-                    
-                    if(self.homeDecision.posts.count-1 > indexPath.section) {
-                        self.tableView.insertSections(index, with: .automatic)
-                    }
-                    
-                    self.tableView.endUpdates()
-                    
-                }
-                
-                self.tableView.reloadData()
+                //inserting new sections
+                self.tableView.beginUpdates()
+                let indexSet = IndexSet(integersIn: 0..<self.homeDecision.posts.count)
+                self.tableView.insertSections(indexSet, with: .fade)
+                self.tableView.endUpdates()
                 self.refreshControl.endRefreshing()
-                
             }
             
         })
-        refreshTriggered = false
     }
-    //data refresh when scrolling down!
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        //increase size of button and scroll down when scrolling tableview down
-        if !refreshTriggered && scrollView.contentOffset.y < -130 {
-            refreshTriggered = true
-            //updateData()
+    func instantiateRefreshControl() {
+        if #available(iOS 10.0, *) {
+            tableView.refreshControl = refreshControl
+        }else{
+            tableView.addSubview(refreshControl)
+        }
+        refreshControl.addTarget(self, action:#selector(refreshData(_:)), for: .valueChanged)
+    }
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if refreshControl.isRefreshing {
+            updateData()
+        }
+    }
+    @objc private func refreshData(_ sender: Any) {
+        if !tableView.isDragging {
+            updateData()
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+              //allows detection of keyboard appearing/disappearing
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        //removes keyboard detection of view once it disappears, used to prevent detection when keyboard appears on NEWDECISION
+        NotificationCenter.default.removeObserver(self)
+    }
+   
+    //shift view up when keyboard appears
+    @objc func keyboardWillShow(_ notification:Notification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if !flagPopup.isHidden {
+                let rect = flagPopup.frame
+                if rect.intersects(keyboardSize) {
+                    let offsetDist = rect.maxY - keyboardSize.minY + 10
+                    flagPopup.frame = flagPopup.frame.offsetBy(dx: 0, dy: -offsetDist)
+                }
+            }
+        }
+    }
+    //shift view down when keyboard disappears
+    @objc func keyboardWillHide(_ notification:Notification) {
+        if popupDefaultFrame != nil {
+            flagPopup.frame = popupDefaultFrame
+        } else {
+            print("HomeViewController;keyboardWillHide(): POPUPDEFAULTFRAME DOES NOT EXIST")
+        }
+    }
     // MARK: - Table View delegate methods
     func numberOfSections(in tableView: UITableView) -> Int {
-            
             return homeDecision.posts.count
-        
     }
     
     // There is just one row in every section
@@ -137,13 +169,68 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         headerView.backgroundColor = UIColor.clear
         return headerView
     }
-    
+    @objc func showFlagPopup(_ sender: Any) {
+        self.flagPopup.isHidden = false
+        self.dimBackground.isHidden = false
+        UIView.transition(with: flagPopup, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.flagPopup.alpha = 1
+            self.dimBackground.alpha = 0.5
+        }, completion: nil )
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.flagPopup.transform = CGAffineTransform(scaleX: 1, y: 1)
+        })
+        popupDefaultFrame = flagPopup.frame
+    }
+    func closeFlagPopup() {
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.flagPopup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        }, completion: nil)
+        
+        UIView.transition(with: flagPopup, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.flagPopup.alpha = 0
+            self.dimBackground.alpha = 0
+        }, completion: { finished in
+            self.flagPopup.isHidden = true
+            self.dimBackground.isHidden = true
+        })
+    }
+    @objc func cancelReport(_ sender: Any) {
+        flagHandler.clear()
+        flagPopup.clearText()
+        closeFlagPopup()
+    }
+    @objc func saveReport(_ sender: Any) {
+        //save all the data for flags
+        let reason = flagHandler.getReason()
+        //their reason must contain letters... so check for them
+        if let range = reason.rangeOfCharacter(from: NSCharacterSet.letters) {
+            print("HomeViewController;saveReport(): REPORT SENT")
+            guard let post = flagHandler.getPost() else {return}
+            guard let UID = Auth.auth().currentUser?.uid else {return}
+            let ref = Database.database().reference().child("reported").child(post.key)
+            ref.child(UID).setValue(reason)
+            flagHandler.clear()
+            flagPopup.clearText()
+            closeFlagPopup()
+        } else { //if the report doesn't contain any letters...
+            print("HomeViewController;saveReport(): INVALID REPORT")
+            flagHandler.clear()
+            flagPopup.clearText()
+            flagPopup.reason.shake()
+        }
+    }
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 { //username/profile pic bar
             let cell = self.tableView.dequeueReusableCell(withIdentifier: usernameIdentifier) as! UserCell
-            cell.configure(username: ((homeDecision.getPost(at: indexPath.section)?.username)!))
-            cell.selectionStyle = .none
+            if let post = homeDecision.getPost(at: indexPath.section) {
+                cell.configure(username: post.username ?? "USER")
+                cell.removeButtonTargets() //just to make sure that this wont point to the wrong cell once reused
+                cell.setButtonTarget(post, #selector(Post.report(_:))) //the flag button
+                cell.setButtonTarget(self, #selector(showFlagPopup(_:)))
+            } else {
+                cell.configure(username: "USER")
+            }
             return cell
         } else if indexPath.row == 1 { //title bar
             let cell = self.tableView.dequeueReusableCell(withIdentifier: titleIdentifier) as! HomeTitleCell
@@ -251,4 +338,5 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         //the height of the post, to be implemented later
         return UITableView.automaticDimension
     }
+   
 }

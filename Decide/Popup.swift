@@ -10,14 +10,320 @@
 import Foundation
 import UIKit
 
+class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
+    
+    var header: UILabel!
+    var title: UILabel!
+    var totalVotes: UILabel!
+    var exitButton: CustomButton!
+    var deleteButton: CustomButton!
+    var post: Post?
+    var tableView: UITableView!
+    var isShowingPercentages = false
+    let height = UIScreen.main.bounds.height - 200
+    let width = UIScreen.main.bounds.width - 40
+    func configure() {
+        clipsToBounds = true
+        self.translatesAutoresizingMaskIntoConstraints = false
+        header = UILabel()
+        header.translatesAutoresizingMaskIntoConstraints = false
+        title = UILabel()
+        title.translatesAutoresizingMaskIntoConstraints = false
+        totalVotes = UILabel()
+        totalVotes.translatesAutoresizingMaskIntoConstraints = false
+        exitButton = CustomButton()
+        exitButton.translatesAutoresizingMaskIntoConstraints = false
+        deleteButton = CustomButton()
+        deleteButton.translatesAutoresizingMaskIntoConstraints = false
+        tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.tableFooterView = UIView()
+        tableView.separatorStyle = .none
+        tableView.register(ProfilePopupCell.self, forCellReuseIdentifier: "cell")
+        addSubview(header)
+        addSubview(title)
+        addSubview(totalVotes)
+        addSubview(exitButton)
+        addSubview(deleteButton)
+        addSubview(tableView)
+        
+        if let view = superview {
+            centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+            widthAnchor.constraint(equalToConstant: width).isActive = true
+            heightAnchor.constraint(equalToConstant: height).isActive = true
+        }
+        
+        header.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        header.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
+        
+        title.topAnchor.constraint(equalTo: exitButton.bottomAnchor, constant: 10).isActive = true
+        title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        title.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        
+        totalVotes.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 15).isActive = true
+        totalVotes.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        totalVotes.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        
+        tableView.topAnchor.constraint(equalTo: totalVotes.bottomAnchor, constant: 15).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        
+        deleteButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 10).isActive = true
+        deleteButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
+        deleteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15).isActive = true
+        deleteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
+        
+        exitButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
+        exitButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true
+        exitButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        exitButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        
+        header.text = "Analytics"
+        header.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        
+        title.text = ""
+        title.font = UIFont(name: "AvenirNext-DemiBold", size: 30)
+        title.lineBreakMode = .byWordWrapping
+        
+        totalVotes.text = ""
+        totalVotes.textColor = UIColor.darkGray
+        totalVotes.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
+        deleteButton.configure(tuple: button.popupDelete)
+        self.alpha = 0
+        self.isHidden = true
+        layer.cornerRadius = 15
+        backgroundColor = UIColor.white
+    }
+    func setPost(to post: Post) {
+        tableView.beginUpdates()
+        if self.post != nil {
+            let count = self.post!.decisions.count
+            tableView.deleteRows(at: (0..<count).map({ (i) in IndexPath(row: i, section: 0)}), with: .none)
+        }
+        
+        self.post = post
+        for i in 0..<self.post!.decisions.count {
+            tableView.insertRows(at: [IndexPath(row: i, section: 0)], with: .none)
+        }
+        title.numberOfLines = 0
+        title.text = post.title
+        totalVotes.text = "Total Votes: \(post.getTotal())"
+        tableView.endUpdates()
+    }
+    
+    func setSize(toFrame frame: CGRect) {
+        let scaleX = frame.size.width/width
+        let scaleY = frame.size.height/height
+        self.transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
+    }
+    
+    func setExitButtonTarget(_ target: Any?, _ selector: Selector) {
+        exitButton.addTarget(target, action: selector, for: .touchUpInside)
+    }
+    func removeExitButtonTargets() {
+        exitButton.removeTarget(nil, action: nil, for: .allEvents)
+    }
+    func setDeleteButtonTarget(_ target: Any?, _ selector: Selector) {
+        deleteButton.addTarget(target, action: selector, for: .touchUpInside)
+    }
+    func removeDeleteButtonTargets() {
+        deleteButton.removeTarget(nil, action: nil, for: .allEvents)
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if post != nil {
+            return post!.decisions.count
+        } else {
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! ProfilePopupCell
+        if post != nil {
+            cell.configure(decision: post!.getDecision(at: indexPath.row), voteCount: post!.getVotes(at: indexPath.row))
+        } else {
+            print("post is nil")
+        }
+        return cell
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        for i in 0..<post!.decisions.count {
+            if let cell = tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section)) as? ProfilePopupCell {
+                if isShowingPercentages {
+                    if post?.totalVotes != 0 {
+                        cell.setLabel(to: "\((post!.getPercentage(forDecisionAt: i) * 100).truncate(places: 1)) %")
+                    } else {
+                        cell.setLabel(to: "No votes")
+                    }
+                } else {
+                    cell.setLabel(to: "\(post!.getVotes(at: i))")
+                }
+            }
+        }
+        isShowingPercentages = !isShowingPercentages
+    }
+    
+}
+class FlagPopup: UIView, UITextViewDelegate {
+    
+    var title: UILabel!
+    var reason: UITextView!
+    var postButton: CustomButton!
+    var data: FlagHandler!
+    var text: String!
+    var exitButton: CustomButton!
+    var placeholder = "Please explain your issue here..."
+    func configure(text: String, handler: FlagHandler!) {
+        data = handler
+        self.text = text
+        clipsToBounds = false
+        self.translatesAutoresizingMaskIntoConstraints = false //important
+        //title instantiation
+        title = UILabel(frame: CGRect.zero)
+        title.translatesAutoresizingMaskIntoConstraints = false //important
+        //textview instantiation
+        reason = UITextView()
+        reason.delegate = self
+        reason.translatesAutoresizingMaskIntoConstraints = false
+        //button instantiation
+        postButton = CustomButton()
+        postButton.translatesAutoresizingMaskIntoConstraints = false
+        exitButton = CustomButton()
+        exitButton.translatesAutoresizingMaskIntoConstraints = false
+        //add subviews
+        self.addSubview(title)
+        self.addSubview(reason)
+        self.addSubview(postButton)
+        self.addSubview(exitButton)
+        self.bringSubviewToFront(reason)
+        //popup constraints
+        if let view = self.superview {
+            print("Helloo")
+            self.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            self.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+            self.widthAnchor.constraint(equalToConstant: 290).isActive = true
+        } else {
+            print("FlagPopup;configure(): CALL CONFIGURE AFTER ADDING TO SUPERVIEW")
+        }
+        //title constraints
+        title.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        title.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
+        title.widthAnchor.constraint(equalToConstant: 280).isActive = true
+        //table constraints
+        reason.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        reason.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10).isActive = true
+        reason.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
+        reason.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        reason.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15).isActive = true
+        //exit button constraints
+        exitButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
+        exitButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true
+        exitButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        exitButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        //okay button constraints
+        postButton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        postButton.topAnchor.constraint(equalTo: reason.bottomAnchor, constant: 20).isActive = true
+        postButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
+        postButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        postButton.widthAnchor.constraint(equalToConstant: 260).isActive = true
+        //reason aesthetics
+        reason.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        reason.text = placeholder
+        reason.textColor = UIColor.lightGray
+        reason.selectedTextRange = reason.textRange(from: reason.beginningOfDocument, to: reason.beginningOfDocument)
+        //places cursor at beginning
+        reason.returnKeyType = .done
+        //button aesthetics
+        postButton.configure(tuple: button.popupReport)
+        exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
+        //title aesthetics
+        title.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        title.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8)
+        title.lineBreakMode = .byWordWrapping
+        title.textAlignment = .center
+        title.numberOfLines = 0
+        title.text = text
+        //popup aesthetics
+        self.alpha = 0
+        self.backgroundColor = UIColor.white
+        self.layer.cornerRadius = 15
+        self.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        self.isHidden = true
+    }
+
+    func textViewDidChange(_ textView: UITextView) {
+        data.setReason(reason: textView.text)
+    }
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let currentText:String = textView.text
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        //dismiss keyboard upon hitting return key
+        if(text == "\n") {
+            textView.resignFirstResponder()
+            return false
+        } else if textView.text.count + (text.count - range.length) > 280 {
+            return false
+        } else if updatedText.isEmpty { //show the placeholder if text is empty
+            textView.text = placeholder
+            textView.textColor = UIColor.lightGray
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+        } else if textView.textColor == UIColor.lightGray && !text.isEmpty { //if the user types something and there's a nonempty string, remove the placeholder and make the textcolor black
+            textView.textColor = UIColor.black
+            textView.text = text
+        } else {
+            //
+            return true
+        }
+        return false
+    }
+    //makes the cursor immovable when placeholder is visible
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        if self.window != nil {
+            if textView.textColor == UIColor.lightGray {
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            }
+        }
+    }
+    func clearText() {
+        reason.text = placeholder
+        reason.textColor = UIColor.lightGray
+        reason.selectedTextRange = reason.textRange(from: reason.beginningOfDocument, to: reason.beginningOfDocument)
+        reason.endEditing(true)
+    }
+    func setMainButtonTarget(_ target: Any?, _ selector: Selector) {
+        postButton.addTarget(target, action: selector, for: .touchUpInside)
+    }
+    func setExitButtonTarget(_ target: Any?, _ selector: Selector) {
+        exitButton.addTarget(target, action: selector, for: .touchUpInside)
+    }
+    func removeMainButtonTargets() {
+        postButton.removeTarget(nil, action: nil, for: .allEvents)
+    }
+    func removeExitButtonTargets() {
+        exitButton.removeTarget(nil, action: nil, for: .allEvents)
+    }
+}
 class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     
     var title: UILabel!
     var tagTable: UITableView!
     var postButton: CustomButton!
     var decision: Decision!
-    func configure(handler: Decision!) {
+    var options: [String]!
+    var text: String!
+    func configure(text: String, optionList: [String], handler: Decision!) {
         decision = handler
+        options = optionList
+        self.text = text
+        
         clipsToBounds = false
         self.translatesAutoresizingMaskIntoConstraints = false //important
         
@@ -46,6 +352,8 @@ class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
             self.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
             self.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
             self.widthAnchor.constraint(equalToConstant: 290).isActive = true
+        } else {
+            print("TagPopup;configure(): CALL CONFIGURE AFTER ADDING TO SUPERVIEW")
         }
         //title constraints
         title.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
@@ -71,7 +379,7 @@ class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
         title.lineBreakMode = .byWordWrapping
         title.textAlignment = .center
         title.numberOfLines = 0
-        title.text = "Add up to 2 tags"
+        title.text = text
         //popup aesthetics
         self.alpha = 0
         self.backgroundColor = UIColor.white
@@ -87,48 +395,7 @@ class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var text = ""
-        switch (indexPath.row) {
-        case 0:
-            text = "Food"
-            break
-        case 1:
-            text = "Sports"
-            break
-        case 2:
-            text = "Education"
-            break
-        case 3:
-            text = "Entertainment"
-            break
-        case 4:
-            text = "Travel"
-            break
-        case 5:
-            text = "Technology"
-            break
-        case 6:
-            text = "Fashion"
-            break
-        case 7:
-            text = "Politics"
-            break
-        case 8:
-            text = "Finances"
-            break
-        case 9:
-            text = "Politics"
-            break
-        case 10:
-            text = "Life Advice"
-            break
-        case 11:
-            text = "Outdoors"
-            break
-        default:
-            text = "Misc"
-            break
-        }
+        let text = options[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "tagCell") as! UITableViewCell
         cell.textLabel!.text = text
         cell.textLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
@@ -196,6 +463,8 @@ class Popup: UIView {
             self.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
             self.widthAnchor.constraint(equalToConstant: 290).isActive = true
             
+        } else {
+            print("Popup;configure(): CALL CONFIGURE AFTER ADDING TO SUPERVIEW")
         }
         //title constraints
         title.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
@@ -379,15 +648,18 @@ class Popup: UIView {
 //button styles!
 struct button {
     //tuple: normal bg color, highlighted bg color, normal text color, highlighted text color, title
-    static let post = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Post")
+    static let post = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Post")
     static let logIn = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Sign In")
     static let resetPassword = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Reset Password")
     static let createAccount = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Create Account")
     static let getStarted = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Let's get started!")
     static let popupOkay = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Okay")
+    static let popupReport = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Report")
     static let popupCancel = (UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1), UIColor(red: 205/255, green: 205/255, blue: 205/255, alpha: 1), UIColor.black, UIColor.black,"Cancel")
+    static let popupX = (UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1), UIColor(red: 205/255, green: 205/255, blue: 205/255, alpha: 1), UIColor.black, UIColor.black,"X")
     static let popupDelete = (UIColor(red: 244/255, green: 66/255, blue: 66/255, alpha: 0.8), UIColor(red: 216/255, green: 41/255, blue: 41/255, alpha: 0.8), UIColor.white, UIColor.white, "Delete")
     static let popupPost = (UIColor(red: 59/255, green: 230/255, blue: 115/255, alpha: 1), UIColor(red: 29/255, green: 209/255, blue: 80/255, alpha: 1), UIColor.white, UIColor.white, "Post")
+    
 }
 
 //class that instantiates buttons based on the tuple passed in

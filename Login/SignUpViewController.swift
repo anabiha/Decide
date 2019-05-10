@@ -25,13 +25,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
         configure()
     }
     
-    
     //what to do when view is about to disappear
     override func viewWillDisappear(_ animated: Bool) {
-        
         self.email.endEditing(true)
         self.password.endEditing(true)
-        
     }
     //make things aesthetic
     func configure() {

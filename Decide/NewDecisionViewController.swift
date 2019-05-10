@@ -21,7 +21,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     
     var cancelTriggered: Bool = false
     var decision = Decision() //data manager
-    var insets: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 0, bottom: 0, right: 0) //content inset for tableview
+    var insets: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 0, bottom: 100, right: 0) //content inset for tableview
     var cellCount = 4 //current number of cells, start at 4
     let maxCellCount = 8 //max number of cells, should be an even number
     let cellReuseIdentifier = "decisionItemCell" //reuse identifiers
@@ -37,7 +37,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     //Background is an IMAGEVIEW
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.automaticallyAdjustsScrollViewInsets = false
+        self.tableView.contentInsetAdjustmentBehavior = .never
         //DO NOT REGISTER THE CELL CLASSES HERE, ALREADY DONE IN INTERFACEBUILDER!!!!!!!
         tableView.delegate = self
         tableView.dataSource = self
@@ -72,7 +72,11 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         
         tagPopup = TagPopup()
         self.view.addSubview(tagPopup)
-        tagPopup.configure(handler: decision)
+        let options = ["Food","Sports","Education","Entertainment","Travel","Technology","Fashion","Politics","Finances",
+            "Life Advice",
+            "Outdoors",
+            "Misc"]
+        tagPopup.configure(text: "Add up to 2 tags", optionList: options, handler: decision)
         tagPopup.setButtonTarget(self, #selector(saveDecision(_:)))
         //view controller is behind dim background which is behind the popup
         self.view.bringSubviewToFront(dimBackground)
@@ -296,7 +300,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             self.dimBackground.alpha = 0
         }, completion: { finished in
             self.popup.isHidden = true
-//            self.dimBackground.isHidden = true
         })
     }
     //opens popup
@@ -381,7 +384,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                 "title": self.decision.getTitle(),
                 "options": post_options,
                 "uid": userKey,
-                "username": snapshot.value as! String,
+                "username": snapshot.value as? String ?? "USER",
                 "votes": votes,
                 ] as [String : Any]
             
