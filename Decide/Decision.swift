@@ -35,10 +35,10 @@ class ProfilePopupCell: UITableViewCell {
         decisionLabel.trailingAnchor.constraint(greaterThanOrEqualTo: voteCountLabel.leadingAnchor, constant: 10).isActive = true
         
         decisionLabel.text = decision
-        decisionLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        decisionLabel.font = UIFont(name: Universal.fontName, size: 20)
         decisionLabel.textColor = UIColor.darkGray
         voteCountLabel.text = "\(voteCount)"
-        voteCountLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        voteCountLabel.font = UIFont(name: Universal.fontName, size: 20)
         voteCountLabel.textColor = UIColor.darkGray
         
         
@@ -57,7 +57,7 @@ class ProfileChoiceCell: UITableViewCell {
     var color1 = UIColor.white
     //default color
     var color2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)  //the color of what was chosen
-    var barColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.2) //color of bar
+    var barColor = Universal.blue.withAlphaComponent(0.2) //color of bar
     override func layoutSubviews() {
         super.layoutSubviews()
         if shouldRound {
@@ -98,8 +98,8 @@ class ProfileChoiceCell: UITableViewCell {
         backgroundColor = color
         //label aesthetics
         choice.backgroundColor = UIColor.clear
-        choice.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
-        choice.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1) //color of bar
+        choice.font = UIFont(name: Universal.fontName, size: 20)
+        choice.textColor = Universal.blue //color of bar
     }
     func updatePercent(newPercent: Double) {
         percentage = newPercent
@@ -159,6 +159,7 @@ class ProfileTitleCell: UITableViewCell {
         }
         title.translatesAutoresizingMaskIntoConstraints = false
         title.isUserInteractionEnabled = false
+        title.isScrollEnabled = false
         title.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         title.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         title.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
@@ -166,8 +167,8 @@ class ProfileTitleCell: UITableViewCell {
         title.text = text
         title.textColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1)
         selectionStyle = .none
-        title.font = UIFont(name: "AvenirNext-DemiBold", size: 30)
-        title.textContainerInset = UIEdgeInsets(top: 0, left: 7, bottom: 0, right: 7)
+        title.font = UIFont(name: Universal.fontName, size: 30)
+        title.textContainerInset = UIEdgeInsets(top: 5, left: 7, bottom: 5, right: 7)
     }
 }
 class ChoiceCell: UITableViewCell {
@@ -179,7 +180,7 @@ class ChoiceCell: UITableViewCell {
     var color1 = UIColor.white
         //default color
     var color2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)  //the color of what was chosen
-    var barColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.2) //color of bar
+    var barColor = Universal.blue.withAlphaComponent(0.2) //color of bar
     override func layoutSubviews() {
         super.layoutSubviews()
         if shouldRound {
@@ -211,8 +212,8 @@ class ChoiceCell: UITableViewCell {
         backgroundColor = color
         //label aesthetics
         choice.backgroundColor = UIColor.clear
-        choice.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
-        choice.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1) //color of bar
+        choice.font = UIFont(name: Universal.fontName, size: 20)
+        choice.textColor = Universal.blue //color of bar
     }
     func updatePercent(newPercent: Double) {
         percentage = newPercent
@@ -266,7 +267,7 @@ class HomeTitleCell: UITableViewCell {
         title.text = text
         title.textColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1)
         selectionStyle = .none
-        title.font = UIFont(name: "AvenirNext-DemiBold", size: 30)
+        title.font = UIFont(name: Universal.fontName, size: 30)
         title.textContainerInset = UIEdgeInsets(top: 0, left: 5, bottom: 5, right: 0)
     }
 }
@@ -283,7 +284,7 @@ class UserCell: UITableViewCell {
         clipsToBounds = true
         selectionStyle = .none
         self.username.text = username
-        self.username.font = UIFont(name: "AvenirNext-DemiBold", size: 15)
+        self.username.font = UIFont(name: Universal.fontName, size: 15)
         backgroundColor = UIColor.white
     }
     func setButtonTarget(_ target: Any?, _ selector: Selector) {
@@ -298,10 +299,10 @@ class UserCell: UITableViewCell {
 class DecisionItem: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var descriptionBox: UITextView!
     let normalBGColor: UIColor = UIColor.white
-    let normalBorderColor: CGColor = UIColor.lightGray.withAlphaComponent(0.2).cgColor
+    let normalBorderColor: CGColor = UIColor.white.cgColor
     let normalTextColor: UIColor = UIColor(red: 84/255, green: 84/255, blue: 84/255, alpha: 1)
-    let placeholderColor: UIColor = UIColor(red:200/255, green: 200/255, blue: 200/255, alpha: 0.5)
-    let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 25)
+    let placeholderColor: UIColor = UIColor(red:240/255, green: 240/255, blue: 240/255, alpha: 1)
+    let normalFont = UIFont(name: "AvenirNext-Medium", size: 25)
     var textViewPlaceholder: UILabel!
     var decisionHandler: Decision?
     public func configure(text: String?) { //sets everything in the cell up
@@ -316,7 +317,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         descriptionBox.backgroundColor = normalBGColor
         descriptionBox.layer.borderColor = normalBorderColor
         descriptionBox.layer.borderWidth = 2
-        descriptionBox.layer.cornerRadius = 15
+        descriptionBox.layer.cornerRadius = Universal.cornerRadius
         descriptionBox.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
         
         textViewPlaceholder = UILabel()
@@ -413,12 +414,12 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
 
 class AddButton: UITableViewCell {
     //198, 236, 255
-    let normalBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.2)
-    let normalTextColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
+    let normalBGColor = Universal.blue.withAlphaComponent(0.2)
+    let normalTextColor = Universal.blue
     //UIColor(red: 255/255, green: 147/255, blue: 33/155, alpha: 1)
     let greyBG = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 1)
     let greyText = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 1)
-    let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 15)
+    let normalFont = UIFont(name: Universal.fontName, size: 15)
     public func configure(BGColor: UIColor, TextColor: UIColor) { //sets everything in the cell up
         //addbutton aesthetics
         textLabel?.text = "+ Add an item"
@@ -429,7 +430,7 @@ class AddButton: UITableViewCell {
         backgroundColor = BGColor
         layer.borderColor = UIColor.clear.cgColor
         layer.borderWidth = 2
-        layer.cornerRadius = 8
+        layer.cornerRadius = Universal.cornerRadius
         clipsToBounds = true
     }
     //changes color of textview
@@ -468,9 +469,9 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var questionBar: UITextView!
     var textViewPlaceholder: UILabel!
     let normalBGColor = UIColor.clear
-    let normalTextColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
-    let placeholderColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
-    let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 34)
+    let normalTextColor = Universal.blue
+    let placeholderColor = Universal.blue
+    let normalFont = UIFont(name: Universal.fontName, size: 34)
     var decisionHandler: Decision?
     public func configure(text: String) {
         questionBar.delegate = self
@@ -480,7 +481,7 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
         questionBar.backgroundColor = normalBGColor
         questionBar.layer.borderColor = UIColor.clear.cgColor
         questionBar.textContainerInset = UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 10)
-        questionBar.layer.cornerRadius = 10
+        questionBar.layer.cornerRadius = Universal.cornerRadius
         selectionStyle = .none
         backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor

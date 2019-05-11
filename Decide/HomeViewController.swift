@@ -10,24 +10,42 @@ import UIKit
 import Firebase
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    
     @IBOutlet weak var tableView: UITableView!
-    
     let usernameIdentifier = "userCell"
     let titleIdentifier = "titleCell"
     let choiceIdentifier = "choiceCell"
     let cellSpacingHeight: CGFloat = 40
+    var insets = UIEdgeInsets(top: 60, left: 0, bottom: 50, right: 0)
     let homeDecision = HomeDecision()
-    
     private let refreshControl = UIRefreshControl()
-    var customView : UIView!
-    
     var flagPopup = FlagPopup()
     var dimBackground: UIView!
     var popupDefaultFrame: CGRect!
     var flagHandler = FlagHandler()
+    var header: UILabel!
+    var subheader: UILabel!
+    var canLinkToScroll = true
     override func viewDidLoad() {
         super.viewDidLoad()
+        //instantiation of labels
+        header = UILabel()
+        view.addSubview(header)
+        subheader = UILabel()
+        view.addSubview(subheader)
+        //header constraints and setup
+        header.translatesAutoresizingMaskIntoConstraints = false
+        header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        header.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 15).isActive = true
+        header.text = "Home"
+        header.font = UIFont(name: Universal.fontName, size: 35)
+        //subheader constraints and setup
+        subheader.translatesAutoresizingMaskIntoConstraints = false
+        subheader.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 23).isActive = true
+        subheader.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 0).isActive = true
+        subheader.text = "Welcome"
+        subheader.font = UIFont(name: "AvenirNext-Medium", size: 15)
+        subheader.textColor = UIColor.lightGray
+        //tableview data and setup
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = UIColor.clear
@@ -35,10 +53,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.estimatedRowHeight = 43.5
         tableView.estimatedSectionHeaderHeight = cellSpacingHeight;
         tableView.estimatedSectionFooterHeight = 0;
-        
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
-        self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
+        tableView.contentInset = insets
+        self.view.backgroundColor = Universal.viewBackgroundColor
         //add dim background
         dimBackground = UIView(frame: UIScreen.main.bounds)
         dimBackground.alpha = 0
@@ -91,6 +108,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.tableView.insertSections(indexSet, with: .fade)
                 self.tableView.endUpdates()
                 self.refreshControl.endRefreshing()
+                self.canLinkToScroll = true
             }
             
         })
@@ -101,19 +119,31 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }else{
             tableView.addSubview(refreshControl)
         }
-        refreshControl.addTarget(self, action:#selector(refreshData(_:)), for: .valueChanged)
     }
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if refreshControl.isRefreshing {
-            updateData()
+        if self.refreshControl.isRefreshing {
+            canLinkToScroll = false
+            UIView.animate(withDuration: 0.20, animations: {
+                self.header.transform = CGAffineTransform(scaleX: 1, y: 1)
+                self.subheader.transform = CGAffineTransform(scaleX: 1, y: 1)
+            }) { (finished) in
+                self.updateData()
+            }
         }
     }
-    @objc private func refreshData(_ sender: Any) {
-        if !tableView.isDragging {
-            updateData()
+    //data refresh when scrolling down!
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let actualOffset = scrollView.contentOffset.y + insets.top
+        if actualOffset < 0 && canLinkToScroll {
+            header.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0))
+            subheader.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0))
+            header.transform = CGAffineTransform(scaleX: 1 + -actualOffset/300, y: 1 + -actualOffset/300)
+            subheader.transform = CGAffineTransform(scaleX: 1 + -actualOffset/300, y: 1 + -actualOffset/300)
+        } else if actualOffset > 0 { //shifts header and subheader up when sliding up
+            header.transform = CGAffineTransform(translationX: 0, y: -actualOffset)
+            subheader.transform = CGAffineTransform(translationX: 0, y: -actualOffset)
         }
     }
-    
     override func viewWillAppear(_ animated: Bool) {
               //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)

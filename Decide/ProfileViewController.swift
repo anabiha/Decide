@@ -14,15 +14,16 @@ import FirebaseAuth
 
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var headerLabel: UILabel!
-    @IBOutlet weak var yourPostsView: UIView!
-    @IBOutlet weak var yourPostsViewHeight: NSLayoutConstraint!
-    var insets: UIEdgeInsets = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0) //content inset for tableview
+    
+    @IBOutlet weak var yourPostsView: UIView! //the white view with user's posts
+    @IBOutlet weak var yourPostsViewHeight: NSLayoutConstraint! //height of the view, will vary based on device
+    var insets: UIEdgeInsets = UIEdgeInsets.init(top: 0, left: 0, bottom: UIScreen.main.bounds.height/2, right: 0) //content inset for tableview
     let cellSpacingHeight: CGFloat = 14
     var cellCount = 1
     let titleIdentifier = "profileTitleCell"
     let choiceIdentifier = "profileChoiceCell"
     let userPosts = HomeDecision()
+    var headerLabel: UILabel!
     var tableView: UITableView!
     var moreInfo: ProfilePopup!
     var confirmDelete: Popup!
@@ -30,14 +31,15 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     var canLinkToScroll: Bool = true //unlinks the header "your posts" from scrollview when refreshing -> PREVENTS JITTERING
     private let refreshControl = UIRefreshControl()
     override func viewDidLoad() {
-        if tableView == nil {
-            tableView = UITableView()
-            yourPostsView.addSubview(tableView)
-        }
-        yourPostsView.bringSubviewToFront(tableView)
+        //instantiation and addition of subviews
+        tableView = UITableView()
+        yourPostsView.addSubview(tableView)
+        headerLabel = UILabel()
+        yourPostsView.addSubview(headerLabel)
+        
         //tableview constraints
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: yourPostsView.topAnchor, constant: 70).isActive = true
+        tableView.topAnchor.constraint(equalTo: yourPostsView.topAnchor, constant: 60).isActive = true
         tableView.leadingAnchor.constraint(equalTo: yourPostsView.leadingAnchor, constant: 20).isActive = true
         tableView.trailingAnchor.constraint(equalTo: yourPostsView.trailingAnchor, constant: -20).isActive = true
         tableView.bottomAnchor.constraint(equalTo: yourPostsView.bottomAnchor, constant: 0).isActive = true
@@ -57,10 +59,12 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         //keeps some space between bottom of screen and the bottom of the tableview
         tableView.contentInset = insets
         tableView.separatorStyle = .none
-        
+        //header text
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
-        headerLabel.leadingAnchor.constraint(equalTo: yourPostsView.leadingAnchor, constant: 10).isActive = true
-        headerLabel.topAnchor.constraint(equalTo: yourPostsView.topAnchor, constant: 10).isActive = true
+        headerLabel.topAnchor.constraint(equalTo: yourPostsView.topAnchor, constant: 15).isActive = true
+        headerLabel.leadingAnchor.constraint(equalTo: yourPostsView.leadingAnchor, constant: 20).isActive = true
+        headerLabel.text = "Your Posts"
+        headerLabel.font = UIFont(name: Universal.fontName, size: 35)
         //gesture recognizer
         let dragView = UIPanGestureRecognizer(target: self, action: #selector(wasDragged(gestureRecognizer:)))
         yourPostsView.addGestureRecognizer(dragView)
@@ -86,7 +90,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         confirmDelete.setButton2Target(self, #selector(deletePost(_:)))
         confirmDelete.setTitle(to: "Delete Post")
         confirmDelete.setText(to: "Are you sure you want to delete this post?")
-        self.yourPostsView.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
+        self.yourPostsView.backgroundColor = Universal.viewBackgroundColor
         instantiateRefreshControl() //refresh animation
         updateData()
         super.viewDidLoad()
@@ -128,7 +132,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             gestureRecognizer.setTranslation(.zero, in: self.view)
         }
-        
     }
     func instantiateRefreshControl() {
         if #available(iOS 10.0, *) {
@@ -136,7 +139,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         }else{
             tableView.addSubview(refreshControl)
         }
-        refreshControl.addTarget(self, action:#selector(refreshData(_:)), for: .valueChanged)
     }
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if self.refreshControl.isRefreshing {
@@ -155,12 +157,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             headerLabel.transform = CGAffineTransform(scaleX: 1 + -scrollView.contentOffset.y/300, y: 1 + -scrollView.contentOffset.y/300)
         }
     }
-    //prevents refresh before user lets go of drag
-    @objc private func refreshData(_ sender: Any) {
-        if !tableView.isDragging {
-            updateData()
-        }
-    }
     //scrolls the tableview upward when the keyboard shows
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
@@ -177,13 +173,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         if let post = userPosts.getPost(at: section) {
             return post.decisions.count + 1 // +1 to account for title
         } else {
             return 0
         }
-        
     }
     // Set the spacing between sections
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

@@ -48,7 +48,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.rowHeight = UITableView.automaticDimension
         //keeps some space between bottom of screen and the bottom of the tableview
         tableView.contentInset = insets
-        self.view.backgroundColor = UIColor(red:250/255, green: 250/255, blue: 250/255, alpha: 1)
+        self.view.backgroundColor = Universal.viewBackgroundColor
         //configure post button, popup buttons
         postButton.configure(tuple: button.post)
         //configure decision object with cells

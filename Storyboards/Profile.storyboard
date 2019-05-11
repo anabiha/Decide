@@ -43,19 +43,9 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oBw-Z3-3MY">
                                 <rect key="frame" x="0.0" y="220" width="375" height="500"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your Posts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U8B-Rj-MsO">
-                                        <rect key="frame" x="10" y="10" width="208" height="60.5"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="44"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="U8B-Rj-MsO" firstAttribute="leading" secondItem="oBw-Z3-3MY" secondAttribute="leading" constant="10" id="2Bj-iV-pZH"/>
                                     <constraint firstAttribute="height" constant="500" id="FSN-EU-PiP"/>
-                                    <constraint firstItem="U8B-Rj-MsO" firstAttribute="top" secondItem="oBw-Z3-3MY" secondAttribute="top" constant="10" id="ei8-fj-WAA"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -74,7 +64,6 @@
                         <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                     </tabBarItem>
                     <connections>
-                        <outlet property="headerLabel" destination="U8B-Rj-MsO" id="Z6H-zp-HU5"/>
                         <outlet property="yourPostsView" destination="oBw-Z3-3MY" id="ePp-xU-x1s"/>
                         <outlet property="yourPostsViewHeight" destination="FSN-EU-PiP" id="yrs-gF-fwJ"/>
                     </connections>

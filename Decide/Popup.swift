@@ -20,82 +20,84 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     var post: Post?
     var tableView: UITableView!
     var isShowingPercentages = false
-    let height = UIScreen.main.bounds.height - 300
     let width = UIScreen.main.bounds.width - 40
     func configure() {
         clipsToBounds = true
         self.translatesAutoresizingMaskIntoConstraints = false
-        header = UILabel()
+        header = UILabel() //the header at the top of the popup
         header.translatesAutoresizingMaskIntoConstraints = false
-        title = UILabel()
+        title = UILabel() //the decision's question
         title.translatesAutoresizingMaskIntoConstraints = false
-        totalVotes = UILabel()
+        totalVotes = UILabel() //label that counts total votes
         totalVotes.translatesAutoresizingMaskIntoConstraints = false
-        exitButton = CustomButton()
+        exitButton = CustomButton() //button to close popup
         exitButton.translatesAutoresizingMaskIntoConstraints = false
-        deleteButton = CustomButton()
+        deleteButton = CustomButton() //button to delete post
         deleteButton.translatesAutoresizingMaskIntoConstraints = false
-        tableView = UITableView()
+        tableView = UITableView() //tableview that shows all options
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.tableFooterView = UIView()
+        tableView.tableFooterView = UIView() //hides unused cells
         tableView.separatorStyle = .none
-        tableView.register(ProfilePopupCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(ProfilePopupCell.self, forCellReuseIdentifier: "cell") //register cell
+        //adding subviews
         addSubview(header)
         addSubview(title)
         addSubview(totalVotes)
         addSubview(exitButton)
         addSubview(deleteButton)
         addSubview(tableView)
-        
+        //popup constraints
         if let view = superview {
             centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
             centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
             widthAnchor.constraint(equalToConstant: width).isActive = true
-            heightAnchor.constraint(equalToConstant: height).isActive = true
         }
-        
+        //header constraints
         header.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         header.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
-        
+        //vote question/title constraints
         title.topAnchor.constraint(equalTo: exitButton.bottomAnchor, constant: 10).isActive = true
         title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
         title.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
-        
+        //vote counter label constraints
         totalVotes.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 15).isActive = true
         totalVotes.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
         totalVotes.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
-        
-        tableView.topAnchor.constraint(equalTo: totalVotes.bottomAnchor, constant: 15).isActive = true
+        //tableview constriants
+        tableView.topAnchor.constraint(equalTo: totalVotes.bottomAnchor, constant: 10).isActive = true
         tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
         tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
-        
+        tableView.heightAnchor.constraint(greaterThanOrEqualToConstant: 200).isActive = true
+        //delete button constraints
         deleteButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 10).isActive = true
         deleteButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
         deleteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15).isActive = true
         deleteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
-        
+        //exit button constraints
         exitButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
         exitButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true
         exitButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
         exitButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        
+        //header text
         header.text = "Analytics"
-        header.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
-        
+        header.font = UIFont(name: Universal.fontName, size: 20)
+        //title text
         title.text = ""
-        title.font = UIFont(name: "AvenirNext-DemiBold", size: 30)
+        title.font = UIFont(name: Universal.fontName, size: 30)
         title.lineBreakMode = .byWordWrapping
-        
+        //totalvotes text
         totalVotes.text = ""
         totalVotes.textColor = UIColor.darkGray
-        totalVotes.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        totalVotes.font = UIFont(name: Universal.fontName, size: 20)
+        //button config
         exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
         deleteButton.configure(tuple: button.popupDelete)
+        //view config
         self.alpha = 0
         self.isHidden = true
-        layer.cornerRadius = 15
+        layer.cornerRadius = Universal.cornerRadius
         backgroundColor = UIColor.white
     }
     func setPost(to post: Post) {
@@ -117,7 +119,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     
     func setSize(toFrame frame: CGRect) {
         let scaleX = frame.size.width/width
-        let scaleY = frame.size.height/height
+        let scaleY = frame.size.height/300
         self.transform = CGAffineTransform(scaleX: scaleX, y: scaleY)
     }
     
@@ -235,7 +237,7 @@ class FlagPopup: UIView, UITextViewDelegate {
         postButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
         postButton.widthAnchor.constraint(equalToConstant: 260).isActive = true
         //reason aesthetics
-        reason.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        reason.font = UIFont(name: Universal.fontName, size: 20)
         reason.text = placeholder
         reason.textColor = UIColor.lightGray
         reason.selectedTextRange = reason.textRange(from: reason.beginningOfDocument, to: reason.beginningOfDocument)
@@ -245,8 +247,8 @@ class FlagPopup: UIView, UITextViewDelegate {
         postButton.configure(tuple: button.popupReport)
         exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
         //title aesthetics
-        title.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
-        title.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8)
+        title.font = UIFont(name: Universal.fontName, size: 20)
+        title.textColor = Universal.blue.withAlphaComponent(0.8)
         title.lineBreakMode = .byWordWrapping
         title.textAlignment = .center
         title.numberOfLines = 0
@@ -254,7 +256,7 @@ class FlagPopup: UIView, UITextViewDelegate {
         //popup aesthetics
         self.alpha = 0
         self.backgroundColor = UIColor.white
-        self.layer.cornerRadius = 15
+        self.layer.cornerRadius = Universal.cornerRadius
         self.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
         self.isHidden = true
     }
@@ -374,8 +376,8 @@ class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
         //button aesthetics
         postButton.configure(tuple: button.popupOkay)
         //title aesthetics
-        title.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
-        title.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8)
+        title.font = UIFont(name: Universal.fontName, size: 20)
+        title.textColor = Universal.blue.withAlphaComponent(0.8)
         title.lineBreakMode = .byWordWrapping
         title.textAlignment = .center
         title.numberOfLines = 0
@@ -383,7 +385,7 @@ class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
         //popup aesthetics
         self.alpha = 0
         self.backgroundColor = UIColor.white
-        self.layer.cornerRadius = 15
+        self.layer.cornerRadius = Universal.cornerRadius
         self.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
         self.isHidden = true
     }
@@ -398,12 +400,12 @@ class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
         let text = options[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "tagCell") as! UITableViewCell
         cell.textLabel!.text = text
-        cell.textLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
+        cell.textLabel?.font = UIFont(name: Universal.fontName, size: 20)
         cell.textLabel?.textColor = UIColor.black.withAlphaComponent(0.6)
         cell.selectionStyle = .none
         if decision.isTagged(at: indexPath.row) {
             cell.accessoryType = .checkmark
-            cell.backgroundColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.3)
+            cell.backgroundColor = Universal.blue.withAlphaComponent(0.3)
         } else {
             cell.accessoryType = .none
             cell.backgroundColor = UIColor.white
@@ -424,7 +426,7 @@ class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
             } else if decision.numTagged() < 2 {
                 cell.accessoryType = .checkmark
                 UIView.animate(withDuration: 0.1) {
-                    cell.backgroundColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.3)
+                    cell.backgroundColor = Universal.blue.withAlphaComponent(0.3)
                 }
             }
         }
@@ -475,14 +477,14 @@ class Popup: UIView {
         label.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10).isActive = true
         label.widthAnchor.constraint(equalToConstant: 280).isActive = true
         //title aesthetics
-        title.font = UIFont(name: "AvenirNext-DemiBold", size: 19)
+        title.font = UIFont(name: Universal.fontName, size: 19)
         title.textColor = UIColor.black
         title.lineBreakMode = .byWordWrapping
         title.textAlignment = .center
         title.numberOfLines = 0
         title.text = "Delete Decision"
         //aesthetics
-        label.font = UIFont(name: "AvenirNext-DemiBold", size: 17)
+        label.font = UIFont(name: Universal.fontName, size: 17)
         label.textColor = UIColor.lightGray
         label.lineBreakMode = .byWordWrapping
         label.textAlignment = .center
@@ -491,7 +493,7 @@ class Popup: UIView {
         //popup aesthetics
         self.alpha = 0
         self.backgroundColor = UIColor.white
-        self.layer.cornerRadius = 15
+        self.layer.cornerRadius = Universal.cornerRadius
         self.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
         self.isHidden = true
     }
@@ -643,50 +645,3 @@ class Popup: UIView {
     
 }
 
-//button styles!
-struct button {
-    //tuple: normal bg color, highlighted bg color, normal text color, highlighted text color, title
-    static let post = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Post")
-    static let logIn = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Sign In")
-    static let resetPassword = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Reset Password")
-    static let createAccount = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Create Account")
-    static let getStarted = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Let's get started!")
-    static let popupOkay = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Okay")
-    static let popupReport = (UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Report")
-    static let popupCancel = (UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1), UIColor(red: 205/255, green: 205/255, blue: 205/255, alpha: 1), UIColor.black, UIColor.black,"Cancel")
-    static let popupX = (UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1), UIColor(red: 205/255, green: 205/255, blue: 205/255, alpha: 1), UIColor.black, UIColor.black,"X")
-    static let popupDelete = (UIColor(red: 244/255, green: 66/255, blue: 66/255, alpha: 0.8), UIColor(red: 216/255, green: 41/255, blue: 41/255, alpha: 0.8), UIColor.white, UIColor.white, "Delete")
-    static let popupPost = (UIColor(red: 59/255, green: 230/255, blue: 115/255, alpha: 1), UIColor(red: 29/255, green: 209/255, blue: 80/255, alpha: 1), UIColor.white, UIColor.white, "Post")
-    
-}
-
-//class that instantiates buttons based on the tuple passed in
-class CustomButton: UIButton {
-    var normalBGColor: UIColor!
-    var selectedBGColor: UIColor!
-    //normal bg color, highlighted bg color, normal text color, highlighted text color, title
-    func configure(tuple: (UIColor, UIColor, UIColor, UIColor, String)) {
-        backgroundColor = tuple.0
-        setTitleColor(tuple.2, for: .normal)
-        setTitleColor(tuple.3, for: .highlighted)
-        setTitleColor(tuple.3, for: .selected)
-        setTitle(tuple.4, for: .normal)
-        titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 18)
-        layer.cornerRadius = 10
-        
-        normalBGColor = tuple.0
-        selectedBGColor = tuple.1
-    }
-    //change the title of the button
-    func changeTitle(to newTitle: String) {
-        setTitle(newTitle, for: .normal)
-    }
-    //switches color of button when highlighted
-    override var isHighlighted: Bool {
-        didSet {
-            UIView.animate(withDuration: 0.2, animations: {
-                self.backgroundColor = self.isHighlighted ? self.selectedBGColor : self.normalBGColor
-            })
-        }
-    }
-}
