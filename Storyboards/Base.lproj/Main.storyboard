@@ -62,9 +62,13 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="En4-s3-GfY" customClass="CustomButton" customModule="Decide" customModuleProvider="target">
-                                                    <rect key="frame" x="274" y="11" width="46" height="30"/>
-                                                    <state key="normal" title="Button"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="En4-s3-GfY" customClass="CustomButton" customModule="Decide" customModuleProvider="target">
+                                                    <rect key="frame" x="300" y="11" width="20" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="20" id="JoK-Uf-8dF"/>
+                                                        <constraint firstAttribute="width" constant="20" id="lKY-uZ-gJr"/>
+                                                    </constraints>
+                                                    <state key="normal" title="Button" image="flag"/>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -225,5 +229,6 @@
         <image name="AddNew" width="25" height="25"/>
         <image name="GreyFireButton" width="258" height="259"/>
         <image name="HomeNew" width="25" height="25"/>
+        <image name="flag" width="21.333333969116211" height="21.333333969116211"/>
     </resources>
 </document>

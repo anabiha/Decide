@@ -49,7 +49,7 @@ class ProfilePopupCell: UITableViewCell {
     }
 }
 class ProfileChoiceCell: UITableViewCell {
-    @IBOutlet weak var choice: UILabel!
+    var choice: UILabel!
     var decision: String! //the text of the decision
     var bar: UIView?//creates the bar that highlights percentages
     var percentage: Double! //percentage
@@ -68,8 +68,17 @@ class ProfileChoiceCell: UITableViewCell {
     }
     func configure(text: String, percentage: Double, color: UIColor) {
         //make sure subviews to leave the view
-        clipsToBounds = true
         selectionStyle = .none
+        if choice == nil {
+            choice = UILabel()
+            addSubview(choice)
+        }
+        choice.translatesAutoresizingMaskIntoConstraints = false
+        choice.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        choice.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        choice.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 14).isActive = true
+        choice.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        choice.heightAnchor.constraint(greaterThanOrEqualToConstant: 45).isActive = true
         //set the information
         choice.text = text
         decision = text
@@ -137,17 +146,28 @@ class ProfileChoiceCell: UITableViewCell {
     }
 }
 class ProfileTitleCell: UITableViewCell {
-    @IBOutlet weak var title: UITextView!
+    var title: UITextView!
     override func layoutSubviews() {
         super.layoutSubviews()
         roundCorners([.topLeft, .topRight], radius: 15)
     }
     func configure(text: String) {
+        if title == nil {
+            title = UITextView()
+            addSubview(title)
+            
+        }
+        title.translatesAutoresizingMaskIntoConstraints = false
+        title.isUserInteractionEnabled = false
+        title.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        title.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        title.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        title.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         title.text = text
         title.textColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1)
         selectionStyle = .none
         title.font = UIFont(name: "AvenirNext-DemiBold", size: 30)
-        title.textContainerInset = UIEdgeInsets(top: 10, left: 7, bottom: 5, right: 7)
+        title.textContainerInset = UIEdgeInsets(top: 0, left: 7, bottom: 0, right: 7)
     }
 }
 class ChoiceCell: UITableViewCell {

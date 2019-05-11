@@ -20,7 +20,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     var post: Post?
     var tableView: UITableView!
     var isShowingPercentages = false
-    let height = UIScreen.main.bounds.height - 200
+    let height = UIScreen.main.bounds.height - 300
     let width = UIScreen.main.bounds.width - 40
     func configure() {
         clipsToBounds = true
@@ -474,8 +474,6 @@ class Popup: UIView {
         label.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         label.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10).isActive = true
         label.widthAnchor.constraint(equalToConstant: 280).isActive = true
-        label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
-        label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
         //title aesthetics
         title.font = UIFont(name: "AvenirNext-DemiBold", size: 19)
         title.textColor = UIColor.black
