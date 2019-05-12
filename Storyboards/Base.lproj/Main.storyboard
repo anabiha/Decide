@@ -33,13 +33,13 @@
         <!--Home-->
         <scene sceneID="OyD-t2-jzt">
             <objects>
-                <viewController title="Home" id="ppY-en-lAw" customClass="HomeViewController" customModule="Decide" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Home" hidesBottomBarWhenPushed="YES" id="ppY-en-lAw" customClass="HomeViewController" customModule="Decide" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5gs-X6-wLW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="200" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yeX-9j-FZC">
-                                <rect key="frame" x="20" y="44" width="335" height="685"/>
+                                <rect key="frame" x="20" y="44" width="335" height="734"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="userCell" rowHeight="100" id="ChM-Bf-MpZ" customClass="UserCell" customModule="Decide" customModuleProvider="target">
@@ -150,7 +150,7 @@
                         <viewLayoutGuide key="safeArea" id="3ps-9h-Rdy"/>
                     </view>
                     <navigationItem key="navigationItem" id="UvY-Ny-C9h"/>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="tableView" destination="yeX-9j-FZC" id="hfI-zJ-fNg"/>
                     </connections>

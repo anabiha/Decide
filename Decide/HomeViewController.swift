@@ -25,13 +25,17 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var header: UILabel!
     var subheader: UILabel!
     var canLinkToScroll = true
+    var addButton: CustomButton!
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.modalPresentationStyle = .overFullScreen //very important for transitions
         //instantiation of labels
         header = UILabel()
         view.addSubview(header)
         subheader = UILabel()
         view.addSubview(subheader)
+        addButton = CustomButton()
+        view.addSubview(addButton)
         //header constraints and setup
         header.translatesAutoresizingMaskIntoConstraints = false
         header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
@@ -45,6 +49,14 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         subheader.text = "Welcome"
         subheader.font = UIFont(name: Universal.mediumFont, size: 15)
         subheader.textColor = UIColor.lightGray
+        //add button
+        addButton.translatesAutoresizingMaskIntoConstraints = false
+        addButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
+        addButton.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20).isActive = true
+        addButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        addButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        addButton.configure(tuple: button.add)
+        addButton.addTarget(self, action: #selector(showNewDecision(_:)), for: .touchUpInside)
         //tableview data and setup
         tableView.delegate = self
         tableView.dataSource = self
@@ -172,6 +184,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             flagPopup.frame = popupDefaultFrame
         } else {
             print("HomeViewController;keyboardWillHide(): POPUPDEFAULTFRAME DOES NOT EXIST")
+        }
+    }
+    @objc func showNewDecision(_ sender: Any) {
+        if let tb = tabBarController as? MainTabBarController {
+            tb.animateTabSwitch(to: 1)
+            tb.selectedIndex = 1
         }
     }
     // MARK: - Table View delegate methods
