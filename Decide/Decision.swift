@@ -162,8 +162,8 @@ class ProfileTitleCell: UITableViewCell {
         title.isScrollEnabled = false
         title.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
         title.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        title.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        title.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10).isActive = true
+        title.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10).isActive = true
         title.text = text
         title.textColor = UIColor.black
         selectionStyle = .none
@@ -212,7 +212,7 @@ class HomeChoiceCell: UITableViewCell {
         backgroundColor = color
         //label aesthetics
         choice.backgroundColor = UIColor.clear
-        choice.font = UIFont(name: Universal.lightFont, size: 15)
+        choice.font = UIFont(name: Universal.lightFont, size: 18)
         choice.textColor = Universal.blue //color of bar
         choice.textAlignment = .center
     }
@@ -300,41 +300,43 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var descriptionBox: UITextView!
     let normalBGColor: UIColor = UIColor.white
     let normalBorderColor: CGColor = UIColor.white.cgColor
-    let normalTextColor: UIColor = UIColor(red: 84/255, green: 84/255, blue: 84/255, alpha: 1)
-    let placeholderColor: UIColor = UIColor(red:240/255, green: 240/255, blue: 240/255, alpha: 1)
-    let normalFont = UIFont(name: Universal.lightFont, size: 25)
-    var textViewPlaceholder: UILabel!
+    let normalTextColor: UIColor = UIColor.black
+    let placeholderColor: UIColor = Universal.lightGrey
+//        UIColor(red:240/255, green: 240/255, blue: 240/255, alpha: 1)
+    let normalFont = UIFont(name: Universal.lightFont, size: 20)
     var decisionHandler: Decision?
+    var placeholder = "Option"
     public func configure(text: String?) { //sets everything in the cell up
         descriptionBox.delegate = self //important
-        descriptionBox.text = text
+        if text == "" {
+            descriptionBox.text = placeholder
+            descriptionBox.textColor = placeholderColor
+        } else {
+            descriptionBox.text = text
+            descriptionBox.textColor = normalTextColor
+        }
         descriptionBox.font = normalFont
-        descriptionBox.textColor = normalTextColor
-        selectionStyle = .none//disables the "selected" animation when someone clicks on the cell, but still allows for interaction with the descriptionBox
+        
+        selectionStyle = .none
         //setting the colors of the descriptionBox and row
         descriptionBox.backgroundColor = normalBGColor
         descriptionBox.layer.borderColor = normalBorderColor
         descriptionBox.layer.borderWidth = 2
         descriptionBox.layer.cornerRadius = Universal.cornerRadius
-        descriptionBox.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
-        
-        textViewPlaceholder = UILabel()
-        textViewPlaceholder.font = normalFont
-        textViewPlaceholder.textColor = placeholderColor
-        textViewPlaceholder.text = "Option"
-        textViewPlaceholder.sizeToFit()
-        textViewPlaceholder.isHidden = !descriptionBox.text.isEmpty
-        textViewPlaceholder.frame.origin = CGPoint(x: 12, y: (descriptionBox.font?.pointSize)! / 2 - 3)
-        descriptionBox.addSubview(textViewPlaceholder)
-        
+        descriptionBox.textAlignment = .center
+        descriptionBox.textContainerInset = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
         backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor
-        clipsToBounds = true //important
     }
     //tells view controller which cell is currently being edited
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         if let index = self.tableView!.indexPath(for: self) {
             decisionHandler!.activeFieldIndex = index
+        }
+        if self.window != nil { //forces the cursor to the beginning
+            if textView.textColor == placeholderColor {
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            }
         }
         return true
     }
@@ -350,7 +352,6 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
             let rectInTable = self.tableView!.rectForRow(at: index)
             let rectInView = self.tableView!.convert(rectInTable, to: self.tableView!.superview)
             if keyboardSize.intersects(rectInView) {
-                print("intersects")
                 let dist = rectInView.maxY - keyboardSize.minY + 30
                 UIView.animate(withDuration: 0.25) {
                     self.tableView!.contentInset.bottom = dist + self.tableView!.contentInset.bottom
@@ -361,7 +362,6 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     }
     //changes cell height while text is changing
     func textViewDidChange(_ textView: UITextView) { //this only works because "scrolling" was disabled in interface builder
-        textViewPlaceholder.isHidden = !descriptionBox.text.isEmpty
         let startHeight = textView.frame.size.height
         let fixedWidth = textView.frame.size.width
         let newSize =  textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
@@ -373,13 +373,37 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         }
         decisionHandler!.setDecision(at: getIndexPath()!.section, with: descriptionBox.text)
     }
-    //restricts number of characters, hide keyboard when pressing return
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let currentText:String = textView.text
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        //dismiss keyboard upon hitting return key
         if(text == "\n") {
             textView.resignFirstResponder()
             return false
+        } else if textView.text.count + (text.count - range.length) > 35 {
+            return false
+        } else if updatedText.isEmpty { //show the placeholder if text is empty
+            textView.text = placeholder
+            textView.textColor = placeholderColor
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            decisionHandler!.setDecision(at: getIndexPath()!.section, with: descriptionBox.text)
+        } else if textView.textColor == placeholderColor && !text.isEmpty { //if the user types something and there's a nonempty string, remove the placeholder and make the textcolor black
+            textView.textColor = normalTextColor
+            textView.text = text
+            decisionHandler!.setDecision(at: getIndexPath()!.section, with: descriptionBox.text)
+            //must set text here as well, since textviewdidchange is not called
         } else {
-            return textView.text.count + (text.count - range.length) <= 35
+            return true
+        }
+        return false
+    }
+    
+    //makes the cursor immovable when placeholder is visible
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        if self.window != nil {
+            if textView.textColor == placeholderColor {
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            }
         }
     }
     //shifts color of background
@@ -408,16 +432,14 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
 }
 
 class AddButton: UITableViewCell {
-    //198, 236, 255
-    let normalBGColor = Universal.blue.withAlphaComponent(0.2)
+    let normalBGColor = UIColor.white
     let normalTextColor = Universal.blue
-    //UIColor(red: 255/255, green: 147/255, blue: 33/155, alpha: 1)
-    let greyBG = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 1)
+    let greyBG = Universal.lightGrey
     let greyText = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 1)
-    let normalFont = UIFont(name: Universal.mediumFont, size: 15)
+    let normalFont = UIFont(name: Universal.mediumFont, size: 25)
     public func configure(BGColor: UIColor, TextColor: UIColor) { //sets everything in the cell up
         //addbutton aesthetics
-        textLabel?.text = "+ Add an item"
+        textLabel?.text = "+"
         textLabel?.font = normalFont
         textLabel?.textAlignment = .center
         textLabel?.textColor = TextColor
@@ -456,45 +478,39 @@ class AddButton: UITableViewCell {
             super.frame = frame
         }
     }
-    
 }
 
 class QuestionBar: UITableViewCell, UITextViewDelegate {
-    
     @IBOutlet weak var questionBar: UITextView!
     var textViewPlaceholder: UILabel!
     let normalBGColor = UIColor.clear
-    let normalTextColor = Universal.blue
-    let placeholderColor = Universal.blue
+    let normalTextColor = UIColor.black
+    let placeholderColor = Universal.lightGrey
     let normalFont = UIFont(name: Universal.heavyFont, size: 30)
     var decisionHandler: Decision?
+    var placeholder = "Ask a question..."
     public func configure(text: String) {
         questionBar.delegate = self
-        questionBar.text = text
-        questionBar.textColor = normalTextColor
+        if text == "" {
+            questionBar.text = placeholder
+            questionBar.textColor = placeholderColor
+        } else {
+            questionBar.text = text
+            questionBar.textColor = normalTextColor
+        }
         questionBar.font = normalFont
         questionBar.backgroundColor = normalBGColor
         questionBar.layer.borderColor = UIColor.clear.cgColor
-        questionBar.textContainerInset = UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 10)
+        questionBar.textContainerInset = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
         questionBar.layer.cornerRadius = Universal.cornerRadius
+        questionBar.textAlignment = .center
         selectionStyle = .none
         backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor
-        
-        textViewPlaceholder = UILabel() //places a UILabel over the question bar to make a placeholder
-        textViewPlaceholder.font = normalFont
-        textViewPlaceholder.textColor = placeholderColor
-        textViewPlaceholder.text = "Ask a question..."
-        textViewPlaceholder.sizeToFit()
-        textViewPlaceholder.isHidden = !questionBar.text.isEmpty
-        questionBar.addSubview(textViewPlaceholder)
-        textViewPlaceholder.frame.origin = CGPoint(x: 5, y: (questionBar.font?.pointSize)! / 2 - 12)
-        
         clipsToBounds = true
     }
     //resizes the cell that the textview is in based on text size
     func textViewDidChange(_ textView: UITextView) { //this only works because "scrolling" was disabled in interface builder
-        textViewPlaceholder.isHidden = !questionBar.text.isEmpty
         let startHeight = textView.frame.size.height
         let fixedWidth = textView.frame.size.width
         let newSize =  textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
@@ -512,18 +528,45 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
             self.questionBar.backgroundColor = bgColor
         }, completion: nil)
     }
-    //hides keyboard when pressing return
-    public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if (text == "\n") {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let currentText:String = textView.text
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        //dismiss keyboard upon hitting return key
+        if(text == "\n") {
             textView.resignFirstResponder()
             return false
+        } else if textView.text.count + (text.count - range.length) > 80 {
+            return false
+        } else if updatedText.isEmpty { //show the placeholder if text is empty
+            textView.text = placeholder
+            textView.textColor = placeholderColor
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            decisionHandler!.setTitle(text: questionBar.text)
+        } else if textView.textColor == placeholderColor && !text.isEmpty { //if the user types something and there's a nonempty string, remove the placeholder and make the textcolor black
+            textView.textColor = normalTextColor
+            textView.text = text
+            decisionHandler!.setTitle(text: questionBar.text)
         } else {
-            return textView.text.count + (text.count - range.length) <= 80
+            return true
+        }
+        return false
+    }
+    //makes the cursor immovable when placeholder is visible
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        if self.window != nil {
+            if textView.textColor == placeholderColor {
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            }
         }
     }
     //tells the view controller which cell is currently being edited
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         decisionHandler!.activeFieldIndex = IndexPath(row: 0, section: 0)
+        if self.window != nil {
+            if textView.textColor == placeholderColor {
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            }
+        }
         return true
     }
     //method to invoke shake of the cell

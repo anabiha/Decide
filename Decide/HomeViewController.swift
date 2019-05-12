@@ -136,7 +136,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let actualOffset = scrollView.contentOffset.y + insets.top
         if actualOffset < 0 && canLinkToScroll {
             header.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0))
-            subheader.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0))
+            subheader.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: -1))
             header.transform = CGAffineTransform(scaleX: 1 + -actualOffset/300, y: 1 + -actualOffset/300)
             subheader.transform = CGAffineTransform(scaleX: 1 + -actualOffset/300, y: 1 + -actualOffset/300)
         } else if actualOffset > 0 { //shifts header and subheader up when sliding up

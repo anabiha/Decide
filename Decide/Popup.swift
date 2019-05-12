@@ -66,7 +66,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         totalVotes.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 23).isActive = true
         totalVotes.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         //tableview constriants
-        tableView.topAnchor.constraint(equalTo: totalVotes.bottomAnchor, constant: 5).isActive = true
+        tableView.topAnchor.constraint(equalTo: totalVotes.bottomAnchor, constant: 0).isActive = true
         tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
         tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
         tableView.heightAnchor.constraint(greaterThanOrEqualToConstant: 200).isActive = true
@@ -89,11 +89,11 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         //header text
         subtitle.text = "Analytics"
         subtitle.textColor = UIColor.darkText
-        subtitle.font = UIFont(name: Universal.lightFont, size: 15)
+        subtitle.font = UIFont(name: Universal.lightFont, size: 16)
         //totalvotes text
         totalVotes.text = ""
         totalVotes.textColor = UIColor.darkText
-        totalVotes.font = UIFont(name: Universal.mediumFont, size: 18)
+        totalVotes.font = UIFont(name: Universal.heavyFont, size: 18)
         //button config
         exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
         deleteButton.configure(tuple: button.popupDelete)
@@ -178,7 +178,6 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     
 }
 class FlagPopup: UIView, UITextViewDelegate {
-    
     var title: UILabel!
     var reason: UITextView!
     var postButton: CustomButton!
@@ -240,7 +239,8 @@ class FlagPopup: UIView, UITextViewDelegate {
         postButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
         postButton.widthAnchor.constraint(equalToConstant: 260).isActive = true
         //reason aesthetics
-        reason.font = UIFont(name: Universal.heavyFont, size: 20)
+        reason.font = UIFont(name: Universal.lightFont, size: 18)
+        reason.textAlignment = .center
         reason.text = placeholder
         reason.textColor = UIColor.lightGray
         reason.selectedTextRange = reason.textRange(from: reason.beginningOfDocument, to: reason.beginningOfDocument)
@@ -284,7 +284,6 @@ class FlagPopup: UIView, UITextViewDelegate {
             textView.textColor = UIColor.black
             textView.text = text
         } else {
-            //
             return true
         }
         return false
@@ -401,9 +400,9 @@ class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let text = options[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "tagCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "tagCell")!
         cell.textLabel!.text = text
-        cell.textLabel?.font = UIFont(name: Universal.heavyFont, size: 20)
+        cell.textLabel?.font = UIFont(name: Universal.mediumFont, size: 18)
         cell.textLabel?.textColor = UIColor.black.withAlphaComponent(0.6)
         cell.selectionStyle = .none
         if decision.isTagged(at: indexPath.row) {

@@ -95,7 +95,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0n-rI-5K2">
-                                                    <rect key="frame" x="3" y="5" width="329" height="90"/>
+                                                    <rect key="frame" x="5" y="5" width="325" height="90"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -103,8 +103,8 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="d0n-rI-5K2" secondAttribute="bottom" constant="5" id="Igp-ye-164"/>
-                                                <constraint firstItem="d0n-rI-5K2" firstAttribute="leading" secondItem="9th-0G-QBp" secondAttribute="leading" constant="3" id="WiS-v7-9f8"/>
-                                                <constraint firstAttribute="trailing" secondItem="d0n-rI-5K2" secondAttribute="trailing" constant="3" id="erT-R4-zHg"/>
+                                                <constraint firstItem="d0n-rI-5K2" firstAttribute="leading" secondItem="9th-0G-QBp" secondAttribute="leading" constant="5" id="WiS-v7-9f8"/>
+                                                <constraint firstAttribute="trailing" secondItem="d0n-rI-5K2" secondAttribute="trailing" constant="5" id="erT-R4-zHg"/>
                                                 <constraint firstItem="d0n-rI-5K2" firstAttribute="top" secondItem="9th-0G-QBp" secondAttribute="top" constant="5" id="p2z-F7-74H"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -120,16 +120,16 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qOM-2T-kGa">
-                                                    <rect key="frame" x="15" y="11" width="305" height="78"/>
+                                                    <rect key="frame" x="15" y="16" width="305" height="68"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="qOM-2T-kGa" firstAttribute="top" secondItem="UMm-ww-7uP" secondAttribute="topMargin" id="82E-Jt-RkL"/>
+                                                <constraint firstItem="qOM-2T-kGa" firstAttribute="top" secondItem="UMm-ww-7uP" secondAttribute="topMargin" constant="5" id="82E-Jt-RkL"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="qOM-2T-kGa" secondAttribute="trailing" id="XiS-WC-f1T"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="qOM-2T-kGa" secondAttribute="bottom" id="fzg-3g-sD0"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="qOM-2T-kGa" secondAttribute="bottom" constant="5" id="fzg-3g-sD0"/>
                                                 <constraint firstItem="qOM-2T-kGa" firstAttribute="leading" secondItem="UMm-ww-7uP" secondAttribute="leadingMargin" id="wpn-K2-7eE"/>
                                             </constraints>
                                         </tableViewCellContentView>

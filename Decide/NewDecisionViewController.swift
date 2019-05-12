@@ -27,7 +27,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     let cellReuseIdentifier = "decisionItemCell" //reuse identifiers
     let addButtonCellReuseIdentifier = "addButtonCell"
     let questionBarCellReuseIdentifier = "questionBarCell"
-    let cellSpacingHeight: CGFloat = 10
+    let cellSpacingHeight: CGFloat = 5
     let screenSize = UIScreen.main.bounds
     var defaultCancelFrame: CGRect?
     var popup: Popup!
@@ -162,18 +162,12 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         } else if indexPath.section == 0 {
             
             let cell: QuestionBar = self.tableView.dequeueReusableCell(withIdentifier: questionBarCellReuseIdentifier) as! QuestionBar// add button will be a normal cell
-            if let placeholder = cell.textViewPlaceholder {
-                placeholder.removeFromSuperview()
-            }
             cell.decisionHandler = decision
             cell.configure(text: decision.getTitle()) //refer to decision file
             print("CREATED questionBar at index: \(indexPath.section), with question: \(decision.getTitle() == "" ? "\"\"" : decision.getTitle())")
             return cell
         } else { //if it's not the add item button
             let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
-            if let placeholder = cell.textViewPlaceholder {
-                placeholder.removeFromSuperview()
-            }
             cell.decisionHandler = decision
             let text = decision.getDecision(at: indexPath.section)
             cell.configure(text: text)

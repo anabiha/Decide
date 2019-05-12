@@ -46,6 +46,11 @@ extension Double
     }
 }
 extension UIView {
+    /*sets the anchor to which animations are performed on a uiview. From experimentation:
+     CGPoint(0.5, 0.5) represents the center of the view
+     CGPoint(0, 0) represents the left corner
+     Use THAT SCALE^ to determine which point to use. Don't use the view's actual cgpoints
+    */
     func setAnchorPoint(anchorPoint: CGPoint) {
         var newPoint = CGPoint(x: self.bounds.size.width * anchorPoint.x,
                                y: self.bounds.size.height * anchorPoint.y)
