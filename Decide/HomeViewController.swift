@@ -111,14 +111,26 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     @objc func wasDragged(gestureRecognizer: UIPanGestureRecognizer) {
+        let translation = gestureRecognizer.translation(in: self.view)
         if gestureRecognizer.state == UIGestureRecognizer.State.began || gestureRecognizer.state == UIGestureRecognizer.State.changed {
-            let translation = gestureRecognizer.translation(in: self.view)
+            let minDist = UIScreen.main.bounds.width/6
+            if gestureRecognizer.view!.frame.minX + translation.x < 0 {
+                gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x + translation.x, y: gestureRecognizer.view!.center.y)
+                gestureRecognizer.setTranslation(.zero, in: view)
+                if gestureRecognizer.view!.frame.minX + translation.x < -minDist {
+                    print("HEY")
+                    if let tb = tabBarController as? MainTabBarController {
+                        gestureRecognizer.isEnabled = false
+                        tb.animateTabSwitch(to: 2)
+                        tb.selectedIndex = 2
+                    }
+                }
+            }
             
-            if gestureRecognizer.view!.frame.minX + translation.x < -10 {
-                if let tb = tabBarController as? MainTabBarController {
-                    gestureRecognizer.isEnabled = false
-                    tb.animateTabSwitch(to: 2)
-                    tb.selectedIndex = 2
+        } else if gestureRecognizer.state == UIGestureRecognizer.State.ended { //reset the frame if it didnt get dragged the minimum distance
+            if gestureRecognizer.view!.frame.minX + translation.x < 0 {
+                UIView.animate(withDuration: 0.2) {
+                    self.view.frame.origin = .zero
                 }
             }
         }

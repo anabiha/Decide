@@ -132,14 +132,24 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     //used for switching back to home page
     @objc func wasDraggedToHome(gestureRecognizer: UIPanGestureRecognizer) {
+        let translation = gestureRecognizer.translation(in: self.view)
         if gestureRecognizer.state == UIGestureRecognizer.State.began || gestureRecognizer.state == UIGestureRecognizer.State.changed {
-            let translation = gestureRecognizer.translation(in: self.view)
-            
+            let minDist = UIScreen.main.bounds.width/4
             if gestureRecognizer.view!.frame.minX + translation.x > 0 {
-                if let tb = tabBarController as? MainTabBarController {
-                    gestureRecognizer.isEnabled = false
-                    tb.animateTabSwitch(to: 0)
-                    tb.selectedIndex = 0
+                gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x + translation.x, y: gestureRecognizer.view!.center.y)
+                gestureRecognizer.setTranslation(.zero, in: view)
+                if gestureRecognizer.view!.frame.minX + translation.x > minDist {
+                    if let tb = tabBarController as? MainTabBarController {
+                        gestureRecognizer.isEnabled = false
+                        tb.animateTabSwitch(to: 0)
+                        tb.selectedIndex = 0
+                    }
+                }
+            }
+        } else if gestureRecognizer.state == UIGestureRecognizer.State.ended { //reset the frame if it didnt get dragged the minimum distance
+            if gestureRecognizer.view!.frame.minX + translation.x > 0 {
+                UIView.animate(withDuration: 0.2) {
+                    self.view.frame.origin = .zero
                 }
             }
         }
@@ -152,7 +162,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x, y: gestureRecognizer.view!.center.y + translation.y)
             }
             gestureRecognizer.setTranslation(.zero, in: self.view)
-        }
+        } 
     }
     func instantiateRefreshControl() {
         if #available(iOS 10.0, *) {

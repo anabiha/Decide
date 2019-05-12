@@ -15,6 +15,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         delegate = self
         tabBar.unselectedItemTintColor = .black
+        view.backgroundColor = Universal.viewBackgroundColor
     }
     
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
@@ -25,18 +26,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         }
         
         animateTabSwitch(to: toIndex)
-        //switch statement used to change previouslySelectedIndex
-        switch viewController.tabBarItem.tag {
-        case 0:
-            print("Home button pressed")
-        case 1: //don't change previously selected if they press newdecision
-            print ("Add decision button pressed")
-        case 2:
-           
-            print ("Profile button pressed")
-        default:
-            print("Unexpected tab bar item pressed")
-        }
+      
         return true
     }
     //FUNCTION DOES NOT HANDLE SWITCHING OF SELECTED TAB
@@ -65,7 +55,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         // Disable interaction during animation
         view.isUserInteractionEnabled = false
         
-        UIView.animate(withDuration: 0.3,
+        UIView.animate(withDuration: 0.4,
                        delay: 0,
                        options: .curveEaseOut,
                        animations: {
@@ -75,7 +65,6 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         }, completion: { finished in
             // Remove the old view from the tabbar view.
             fromView.removeFromSuperview()
-//            self.selectedIndex = index
             self.view.isUserInteractionEnabled = true
         })
     }
