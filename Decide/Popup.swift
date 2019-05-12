@@ -60,7 +60,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         title.trailingAnchor.constraint(equalTo: exitButton.leadingAnchor, constant: -24).isActive = true
         //header constraints
         subtitle.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 25).isActive = true
-        subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 0).isActive = true
+        subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 3).isActive = true
         //vote counter label constraints
         totalVotes.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 40).isActive = true
         totalVotes.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 23).isActive = true
@@ -83,7 +83,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         //title text
         title.text = ""
         title.textColor = UIColor.black
-        title.font = UIFont(name: Universal.heavyFont, size: 22)
+        title.font = UIFont(name: Universal.heavyFont, size: 23)
         title.lineBreakMode = .byWordWrapping
         title.textAlignment = .left
         //header text
@@ -93,7 +93,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         //totalvotes text
         totalVotes.text = ""
         totalVotes.textColor = UIColor.darkText
-        totalVotes.font = UIFont(name: Universal.mediumFont, size: 17)
+        totalVotes.font = UIFont(name: Universal.mediumFont, size: 18)
         //button config
         exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
         deleteButton.configure(tuple: button.popupDelete)

@@ -92,9 +92,9 @@
                                 <state key="normal" image="CancelButton"/>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t2C-8Y-p2p" customClass="CustomButton" customModule="Decide" customModuleProvider="target">
-                                <rect key="frame" x="40" y="607" width="295" height="40"/>
+                                <rect key="frame" x="27.5" y="607" width="320" height="40"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="295" id="8Oc-mm-vP0"/>
+                                    <constraint firstAttribute="width" constant="320" id="8Oc-mm-vP0"/>
                                     <constraint firstAttribute="height" constant="40" id="ROk-dN-mht"/>
                                 </constraints>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="35" maxX="0.0" maxY="0.0"/>

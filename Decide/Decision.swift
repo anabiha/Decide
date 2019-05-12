@@ -36,10 +36,10 @@ class ProfilePopupCell: UITableViewCell {
         voteCountLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         decisionLabel.text = decision
-        decisionLabel.font = UIFont(name: Universal.lightFont, size: 16)
+        decisionLabel.font = UIFont(name: Universal.lightFont, size: 17)
         decisionLabel.textColor = UIColor.darkText
         voteCountLabel.text = "\(voteCount)"
-        voteCountLabel.font = UIFont(name: Universal.heavyFont, size: 16)
+        voteCountLabel.font = UIFont(name: Universal.heavyFont, size: 17)
         voteCountLabel.textColor = UIColor.black
         selectionStyle = .none
     }
