@@ -35,7 +35,7 @@ class CustomButton: UIButton {
         setTitleColor(tuple.3, for: .highlighted)
         setTitleColor(tuple.3, for: .selected)
         setTitle(tuple.4, for: .normal)
-        titleLabel?.font = UIFont(name: Universal.fontName, size: 18)
+        titleLabel?.font = UIFont(name: Universal.heavyFont, size: 16)
         layer.cornerRadius = Universal.cornerRadius
         
         normalBGColor = tuple.0

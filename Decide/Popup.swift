@@ -12,7 +12,7 @@ import UIKit
 
 class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     
-    var header: UILabel!
+    var subtitle: UILabel!
     var title: UILabel!
     var totalVotes: UILabel!
     var exitButton: CustomButton!
@@ -24,8 +24,8 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     func configure() {
         clipsToBounds = true
         self.translatesAutoresizingMaskIntoConstraints = false
-        header = UILabel() //the header at the top of the popup
-        header.translatesAutoresizingMaskIntoConstraints = false
+        subtitle = UILabel() //the header at the top of the popup
+        subtitle.translatesAutoresizingMaskIntoConstraints = false
         title = UILabel() //the decision's question
         title.translatesAutoresizingMaskIntoConstraints = false
         totalVotes = UILabel() //label that counts total votes
@@ -42,7 +42,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         tableView.separatorStyle = .none
         tableView.register(ProfilePopupCell.self, forCellReuseIdentifier: "cell") //register cell
         //adding subviews
-        addSubview(header)
+        addSubview(subtitle)
         addSubview(title)
         addSubview(totalVotes)
         addSubview(exitButton)
@@ -54,19 +54,19 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
             centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
             widthAnchor.constraint(equalToConstant: width).isActive = true
         }
-        //header constraints
-        header.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        header.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
         //vote question/title constraints
-        title.topAnchor.constraint(equalTo: exitButton.bottomAnchor, constant: 10).isActive = true
-        title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
-        title.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        title.topAnchor.constraint(equalTo: self.topAnchor, constant: 25).isActive = true
+        title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24).isActive = true
+        title.trailingAnchor.constraint(equalTo: exitButton.leadingAnchor, constant: -24).isActive = true
+        //header constraints
+        subtitle.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 25).isActive = true
+        subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 0).isActive = true
         //vote counter label constraints
-        totalVotes.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 15).isActive = true
-        totalVotes.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        totalVotes.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 40).isActive = true
+        totalVotes.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 23).isActive = true
         totalVotes.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         //tableview constriants
-        tableView.topAnchor.constraint(equalTo: totalVotes.bottomAnchor, constant: 10).isActive = true
+        tableView.topAnchor.constraint(equalTo: totalVotes.bottomAnchor, constant: 5).isActive = true
         tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
         tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
         tableView.heightAnchor.constraint(greaterThanOrEqualToConstant: 200).isActive = true
@@ -76,21 +76,24 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         deleteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15).isActive = true
         deleteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
         //exit button constraints
-        exitButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
-        exitButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true
+        exitButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15).isActive = true
+        exitButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
         exitButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
         exitButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        //header text
-        header.text = "Analytics"
-        header.font = UIFont(name: Universal.fontName, size: 20)
         //title text
         title.text = ""
-        title.font = UIFont(name: Universal.fontName, size: 30)
+        title.textColor = UIColor.black
+        title.font = UIFont(name: Universal.heavyFont, size: 22)
         title.lineBreakMode = .byWordWrapping
+        title.textAlignment = .left
+        //header text
+        subtitle.text = "Analytics"
+        subtitle.textColor = UIColor.darkText
+        subtitle.font = UIFont(name: Universal.lightFont, size: 15)
         //totalvotes text
         totalVotes.text = ""
-        totalVotes.textColor = UIColor.darkGray
-        totalVotes.font = UIFont(name: Universal.fontName, size: 20)
+        totalVotes.textColor = UIColor.darkText
+        totalVotes.font = UIFont(name: Universal.mediumFont, size: 17)
         //button config
         exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
         deleteButton.configure(tuple: button.popupDelete)
@@ -237,7 +240,7 @@ class FlagPopup: UIView, UITextViewDelegate {
         postButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
         postButton.widthAnchor.constraint(equalToConstant: 260).isActive = true
         //reason aesthetics
-        reason.font = UIFont(name: Universal.fontName, size: 20)
+        reason.font = UIFont(name: Universal.heavyFont, size: 20)
         reason.text = placeholder
         reason.textColor = UIColor.lightGray
         reason.selectedTextRange = reason.textRange(from: reason.beginningOfDocument, to: reason.beginningOfDocument)
@@ -247,7 +250,7 @@ class FlagPopup: UIView, UITextViewDelegate {
         postButton.configure(tuple: button.popupReport)
         exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
         //title aesthetics
-        title.font = UIFont(name: Universal.fontName, size: 20)
+        title.font = UIFont(name: Universal.heavyFont, size: 20)
         title.textColor = Universal.blue.withAlphaComponent(0.8)
         title.lineBreakMode = .byWordWrapping
         title.textAlignment = .center
@@ -376,7 +379,7 @@ class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
         //button aesthetics
         postButton.configure(tuple: button.popupOkay)
         //title aesthetics
-        title.font = UIFont(name: Universal.fontName, size: 20)
+        title.font = UIFont(name: Universal.heavyFont, size: 20)
         title.textColor = Universal.blue.withAlphaComponent(0.8)
         title.lineBreakMode = .byWordWrapping
         title.textAlignment = .center
@@ -400,7 +403,7 @@ class TagPopup: UIView, UITableViewDelegate, UITableViewDataSource {
         let text = options[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "tagCell") as! UITableViewCell
         cell.textLabel!.text = text
-        cell.textLabel?.font = UIFont(name: Universal.fontName, size: 20)
+        cell.textLabel?.font = UIFont(name: Universal.heavyFont, size: 20)
         cell.textLabel?.textColor = UIColor.black.withAlphaComponent(0.6)
         cell.selectionStyle = .none
         if decision.isTagged(at: indexPath.row) {
@@ -477,14 +480,14 @@ class Popup: UIView {
         label.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10).isActive = true
         label.widthAnchor.constraint(equalToConstant: 280).isActive = true
         //title aesthetics
-        title.font = UIFont(name: Universal.fontName, size: 19)
+        title.font = UIFont(name: Universal.heavyFont, size: 19)
         title.textColor = UIColor.black
         title.lineBreakMode = .byWordWrapping
         title.textAlignment = .center
         title.numberOfLines = 0
         title.text = "Delete Decision"
         //aesthetics
-        label.font = UIFont(name: Universal.fontName, size: 17)
+        label.font = UIFont(name: Universal.lightFont, size: 17)
         label.textColor = UIColor.lightGray
         label.lineBreakMode = .byWordWrapping
         label.textAlignment = .center

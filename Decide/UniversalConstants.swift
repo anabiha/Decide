@@ -12,6 +12,8 @@ import UIKit
 struct Universal {
     static let blue: UIColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
     static let viewBackgroundColor: UIColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
-    static let fontName: String = "AvenirNext-DemiBold"
+    static let heavyFont: String = "AvenirNext-DemiBold"
+    static let mediumFont: String = "Avenir-Book"
+    static let lightFont: String = "Avenir-Light"
     static let cornerRadius: CGFloat = 10
 }

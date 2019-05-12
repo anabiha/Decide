@@ -29,19 +29,18 @@ class ProfilePopupCell: UITableViewCell {
         }
         
         decisionLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        decisionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        decisionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 25).isActive = true
+        decisionLabel.trailingAnchor.constraint(greaterThanOrEqualTo: voteCountLabel.leadingAnchor, constant: -10).isActive = true
+        
         voteCountLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         voteCountLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
-        decisionLabel.trailingAnchor.constraint(greaterThanOrEqualTo: voteCountLabel.leadingAnchor, constant: 10).isActive = true
         
         decisionLabel.text = decision
-        decisionLabel.font = UIFont(name: Universal.fontName, size: 20)
-        decisionLabel.textColor = UIColor.darkGray
+        decisionLabel.font = UIFont(name: Universal.lightFont, size: 16)
+        decisionLabel.textColor = UIColor.darkText
         voteCountLabel.text = "\(voteCount)"
-        voteCountLabel.font = UIFont(name: Universal.fontName, size: 20)
-        voteCountLabel.textColor = UIColor.darkGray
-        
-        
+        voteCountLabel.font = UIFont(name: Universal.heavyFont, size: 16)
+        voteCountLabel.textColor = UIColor.black
         selectionStyle = .none
     }
     func setLabel(to text: String) {
@@ -61,7 +60,7 @@ class ProfileChoiceCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         if shouldRound {
-            roundCorners([.bottomLeft, .bottomRight], radius: 15)
+            roundCorners([.bottomLeft, .bottomRight], radius: Universal.cornerRadius)
         } else {
             roundCorners([.bottomLeft, .bottomRight], radius: 0)
         }
@@ -76,9 +75,9 @@ class ProfileChoiceCell: UITableViewCell {
         choice.translatesAutoresizingMaskIntoConstraints = false
         choice.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         choice.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        choice.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 14).isActive = true
+        choice.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         choice.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        choice.heightAnchor.constraint(greaterThanOrEqualToConstant: 45).isActive = true
+        choice.heightAnchor.constraint(greaterThanOrEqualToConstant: 40).isActive = true
         //set the information
         choice.text = text
         decision = text
@@ -98,8 +97,9 @@ class ProfileChoiceCell: UITableViewCell {
         backgroundColor = color
         //label aesthetics
         choice.backgroundColor = UIColor.clear
-        choice.font = UIFont(name: Universal.fontName, size: 20)
-        choice.textColor = Universal.blue //color of bar
+        choice.font = UIFont(name: Universal.mediumFont, size: 16)
+        choice.textColor = Universal.blue
+        choice.textAlignment = .center
     }
     func updatePercent(newPercent: Double) {
         percentage = newPercent
@@ -149,7 +149,7 @@ class ProfileTitleCell: UITableViewCell {
     var title: UITextView!
     override func layoutSubviews() {
         super.layoutSubviews()
-        roundCorners([.topLeft, .topRight], radius: 15)
+        roundCorners([.topLeft, .topRight], radius: Universal.cornerRadius)
     }
     func configure(text: String) {
         if title == nil {
@@ -160,18 +160,18 @@ class ProfileTitleCell: UITableViewCell {
         title.translatesAutoresizingMaskIntoConstraints = false
         title.isUserInteractionEnabled = false
         title.isScrollEnabled = false
-        title.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        title.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
         title.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         title.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         title.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         title.text = text
-        title.textColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1)
+        title.textColor = UIColor.black
         selectionStyle = .none
-        title.font = UIFont(name: Universal.fontName, size: 30)
-        title.textContainerInset = UIEdgeInsets(top: 5, left: 7, bottom: 5, right: 7)
+        title.font = UIFont(name: Universal.mediumFont, size: 18)
+        title.textAlignment = .center
     }
 }
-class ChoiceCell: UITableViewCell {
+class HomeChoiceCell: UITableViewCell {
     @IBOutlet weak var choice: UILabel!
     var decision: String! //the text of the decision
     var bar: UIView?//creates the bar that highlights percentages
@@ -184,7 +184,7 @@ class ChoiceCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         if shouldRound {
-            roundCorners([.bottomLeft, .bottomRight], radius: 15)
+            roundCorners([.bottomLeft, .bottomRight], radius: Universal.cornerRadius)
         } else {
             roundCorners([.bottomLeft, .bottomRight], radius: 0)
         }
@@ -212,8 +212,9 @@ class ChoiceCell: UITableViewCell {
         backgroundColor = color
         //label aesthetics
         choice.backgroundColor = UIColor.clear
-        choice.font = UIFont(name: Universal.fontName, size: 20)
+        choice.font = UIFont(name: Universal.lightFont, size: 15)
         choice.textColor = Universal.blue //color of bar
+        choice.textAlignment = .center
     }
     func updatePercent(newPercent: Double) {
         percentage = newPercent
@@ -260,31 +261,30 @@ class ChoiceCell: UITableViewCell {
     }
 }
 
-
 class HomeTitleCell: UITableViewCell {
     @IBOutlet weak var title: UITextView!
     func configure(text: String) {
         title.text = text
-        title.textColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1)
+        title.textColor = UIColor.black
         selectionStyle = .none
-        title.font = UIFont(name: Universal.fontName, size: 30)
-        title.textContainerInset = UIEdgeInsets(top: 0, left: 5, bottom: 5, right: 0)
+        title.font = UIFont(name: Universal.mediumFont, size: 18)
+        title.textAlignment = .center
     }
 }
 class UserCell: UITableViewCell {
-    
     @IBOutlet weak var username: UILabel!
     @IBOutlet weak var profilePicture: UIImageView!
     @IBOutlet weak var flagButton: CustomButton!
     override func layoutSubviews() {
         super.layoutSubviews()
-        roundCorners([.topLeft, .topRight], radius: 15)
+        roundCorners([.topLeft, .topRight], radius: Universal.cornerRadius)
     }
     func configure(username: String) {
         clipsToBounds = true
         selectionStyle = .none
         self.username.text = username
-        self.username.font = UIFont(name: Universal.fontName, size: 15)
+        self.username.textAlignment = .center
+        self.username.font = UIFont(name: Universal.heavyFont, size: 16)
         backgroundColor = UIColor.white
     }
     func setButtonTarget(_ target: Any?, _ selector: Selector) {
@@ -302,18 +302,16 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     let normalBorderColor: CGColor = UIColor.white.cgColor
     let normalTextColor: UIColor = UIColor(red: 84/255, green: 84/255, blue: 84/255, alpha: 1)
     let placeholderColor: UIColor = UIColor(red:240/255, green: 240/255, blue: 240/255, alpha: 1)
-    let normalFont = UIFont(name: "AvenirNext-Medium", size: 25)
+    let normalFont = UIFont(name: Universal.lightFont, size: 25)
     var textViewPlaceholder: UILabel!
     var decisionHandler: Decision?
     public func configure(text: String?) { //sets everything in the cell up
         descriptionBox.delegate = self //important
         descriptionBox.text = text
         descriptionBox.font = normalFont
-        //UIFont.boldSystemFont(ofSize: 25.0)
         descriptionBox.textColor = normalTextColor
         selectionStyle = .none//disables the "selected" animation when someone clicks on the cell, but still allows for interaction with the descriptionBox
         //setting the colors of the descriptionBox and row
-        //let grayColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)//custom color (pretty light grey)
         descriptionBox.backgroundColor = normalBGColor
         descriptionBox.layer.borderColor = normalBorderColor
         descriptionBox.layer.borderWidth = 2
@@ -409,9 +407,6 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     }
 }
 
-
-
-
 class AddButton: UITableViewCell {
     //198, 236, 255
     let normalBGColor = Universal.blue.withAlphaComponent(0.2)
@@ -419,7 +414,7 @@ class AddButton: UITableViewCell {
     //UIColor(red: 255/255, green: 147/255, blue: 33/155, alpha: 1)
     let greyBG = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 1)
     let greyText = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 1)
-    let normalFont = UIFont(name: Universal.fontName, size: 15)
+    let normalFont = UIFont(name: Universal.mediumFont, size: 15)
     public func configure(BGColor: UIColor, TextColor: UIColor) { //sets everything in the cell up
         //addbutton aesthetics
         textLabel?.text = "+ Add an item"
@@ -471,7 +466,7 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
     let normalBGColor = UIColor.clear
     let normalTextColor = Universal.blue
     let placeholderColor = Universal.blue
-    let normalFont = UIFont(name: Universal.fontName, size: 34)
+    let normalFont = UIFont(name: Universal.heavyFont, size: 30)
     var decisionHandler: Decision?
     public func configure(text: String) {
         questionBar.delegate = self

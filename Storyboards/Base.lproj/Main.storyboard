@@ -57,7 +57,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kg2-ds-u5s">
-                                                    <rect key="frame" x="33.333333333333343" y="11" width="286.66666666666663" height="89"/>
+                                                    <rect key="frame" x="149.33333333333334" y="11" width="36.333333333333343" height="89"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -72,13 +72,12 @@
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="bottom" secondItem="kg2-ds-u5s" secondAttribute="bottom" id="0MP-wI-6Hl"/>
                                                 <constraint firstItem="kg2-ds-u5s" firstAttribute="top" secondItem="pBM-mg-csr" secondAttribute="topMargin" id="3xg-iC-zQd"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="En4-s3-GfY" secondAttribute="trailing" id="8ZS-jD-yhZ"/>
                                                 <constraint firstItem="xE4-VJ-Ac3" firstAttribute="leading" secondItem="pBM-mg-csr" secondAttribute="leading" id="8rf-9s-hZR"/>
-                                                <constraint firstItem="kg2-ds-u5s" firstAttribute="leading" secondItem="xE4-VJ-Ac3" secondAttribute="trailing" id="H42-iD-dFb"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="kg2-ds-u5s" secondAttribute="trailing" id="avS-zD-N08"/>
+                                                <constraint firstItem="kg2-ds-u5s" firstAttribute="centerX" secondItem="pBM-mg-csr" secondAttribute="centerX" id="ZuW-6Y-hfv"/>
                                                 <constraint firstItem="En4-s3-GfY" firstAttribute="top" secondItem="pBM-mg-csr" secondAttribute="topMargin" id="csL-so-gsZ"/>
+                                                <constraint firstAttribute="bottom" secondItem="kg2-ds-u5s" secondAttribute="bottom" id="dIW-kJ-a1m"/>
                                                 <constraint firstItem="xE4-VJ-Ac3" firstAttribute="top" secondItem="pBM-mg-csr" secondAttribute="top" id="klj-lU-I42"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -96,24 +95,24 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0n-rI-5K2">
-                                                    <rect key="frame" x="3" y="0.0" width="329" height="100"/>
+                                                    <rect key="frame" x="3" y="5" width="329" height="90"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 </textView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="bottom" secondItem="d0n-rI-5K2" secondAttribute="bottom" id="Igp-ye-164"/>
+                                                <constraint firstAttribute="bottom" secondItem="d0n-rI-5K2" secondAttribute="bottom" constant="5" id="Igp-ye-164"/>
                                                 <constraint firstItem="d0n-rI-5K2" firstAttribute="leading" secondItem="9th-0G-QBp" secondAttribute="leading" constant="3" id="WiS-v7-9f8"/>
                                                 <constraint firstAttribute="trailing" secondItem="d0n-rI-5K2" secondAttribute="trailing" constant="3" id="erT-R4-zHg"/>
-                                                <constraint firstItem="d0n-rI-5K2" firstAttribute="top" secondItem="9th-0G-QBp" secondAttribute="top" id="p2z-F7-74H"/>
+                                                <constraint firstItem="d0n-rI-5K2" firstAttribute="top" secondItem="9th-0G-QBp" secondAttribute="top" constant="5" id="p2z-F7-74H"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="title" destination="d0n-rI-5K2" id="yok-Tw-LFw"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="choiceCell" rowHeight="100" id="YBR-vm-Muw" customClass="ChoiceCell" customModule="Decide" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="choiceCell" rowHeight="100" id="YBR-vm-Muw" customClass="HomeChoiceCell" customModule="Decide" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="228" width="335" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YBR-vm-Muw" id="UMm-ww-7uP">

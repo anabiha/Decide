@@ -18,7 +18,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var yourPostsView: UIView! //the white view with user's posts
     @IBOutlet weak var yourPostsViewHeight: NSLayoutConstraint! //height of the view, will vary based on device
     var insets: UIEdgeInsets = UIEdgeInsets.init(top: 0, left: 0, bottom: UIScreen.main.bounds.height/2, right: 0) //content inset for tableview
-    let cellSpacingHeight: CGFloat = 14
+    let cellSpacingHeight: CGFloat = 12
     var cellCount = 1
     let titleIdentifier = "profileTitleCell"
     let choiceIdentifier = "profileChoiceCell"
@@ -64,7 +64,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         headerLabel.topAnchor.constraint(equalTo: yourPostsView.topAnchor, constant: 15).isActive = true
         headerLabel.leadingAnchor.constraint(equalTo: yourPostsView.leadingAnchor, constant: 20).isActive = true
         headerLabel.text = "Your Posts"
-        headerLabel.font = UIFont(name: Universal.fontName, size: 35)
+        headerLabel.font = UIFont(name: Universal.heavyFont, size: 35)
         //gesture recognizer
         let dragView = UIPanGestureRecognizer(target: self, action: #selector(wasDragged(gestureRecognizer:)))
         yourPostsView.addGestureRecognizer(dragView)

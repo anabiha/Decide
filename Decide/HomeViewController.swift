@@ -37,13 +37,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         header.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 15).isActive = true
         header.text = "Home"
-        header.font = UIFont(name: Universal.fontName, size: 35)
+        header.font = UIFont(name: Universal.heavyFont, size: 35)
         //subheader constraints and setup
         subheader.translatesAutoresizingMaskIntoConstraints = false
         subheader.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 23).isActive = true
         subheader.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 0).isActive = true
         subheader.text = "Welcome"
-        subheader.font = UIFont(name: "AvenirNext-Medium", size: 15)
+        subheader.font = UIFont(name: Universal.mediumFont, size: 15)
         subheader.textColor = UIColor.lightGray
         //tableview data and setup
         tableView.delegate = self
@@ -269,7 +269,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             return cell
         } else { //choice bars
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: choiceIdentifier) as! ChoiceCell
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: choiceIdentifier) as! HomeChoiceCell
             if let post = homeDecision.getPost(at: indexPath.section) {
                 if indexPath.row == post.decisions.count + 1 { //rounds corners of bottom row
                     cell.shouldRound = true
@@ -307,7 +307,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
         let post = homeDecision.getPost(at: indexPath.section)
         if post!.isVoteable && indexPath.row > 1 {
-            if let cell = tableView.cellForRow(at: indexPath) as? ChoiceCell {
+            if let cell = tableView.cellForRow(at: indexPath) as? HomeChoiceCell {
                 UIView.animate(withDuration: 0.1, animations: {
                     cell.backgroundColor = cell.color2
                 })
@@ -319,7 +319,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
         let post = homeDecision.getPost(at: indexPath.section)
         if post!.isVoteable && indexPath.row > 1 {
-            if let cell = tableView.cellForRow(at: indexPath) as? ChoiceCell {
+            if let cell = tableView.cellForRow(at: indexPath) as? HomeChoiceCell {
                 UIView.animate(withDuration: 0.1, delay: 0.1, animations: {
                     cell.backgroundColor = cell.color1
                 })
@@ -340,7 +340,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 post.didDisplayPercents = !post.didDisplayPercents //mark the cell as displayed, regardless of whether whole post is visible, switch it each time it is pressed
                 
                 for index in 2..<post.decisions.count + 2 {
-                    if let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: indexPath.section)) as? ChoiceCell {
+                    if let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: indexPath.section)) as? HomeChoiceCell {
                         cell.updatePercent(newPercent: post.getPercentage(forDecisionAt: index - 2)) //retrieve the updated percentage and display it
                         if post.didDisplayPercents {
                             UIView.animate(withDuration: 0.2) {
