@@ -29,6 +29,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     var confirmDelete: Popup!
     var dimBackground: UIView!
     var canLinkToScroll: Bool = true //unlinks the header "your posts" from scrollview when refreshing -> PREVENTS JITTERING
+    var dragToHome: UIGestureRecognizer!
     private let refreshControl = UIRefreshControl()
     override func viewDidLoad() {
         //instantiation and addition of subviews
@@ -68,6 +69,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         //gesture recognizer
         let dragView = UIPanGestureRecognizer(target: self, action: #selector(wasDragged(gestureRecognizer:)))
         yourPostsView.addGestureRecognizer(dragView)
+        dragToHome = UIPanGestureRecognizer(target: self, action: #selector(wasDraggedToHome(gestureRecognizer:)))
+        view.addGestureRecognizer(dragToHome)
         //instantiation and addition of subviews
         moreInfo = ProfilePopup()
         confirmDelete = Popup()
@@ -95,7 +98,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         updateData()
         super.viewDidLoad()
     }
-   
+    override func viewDidAppear(_ animated: Bool) {
+        if dragToHome != nil {
+            dragToHome.isEnabled = true
+        }
+    }
     func updateData() {
         guard let UID = Auth.auth().currentUser?.uid else {return}
         let ref = Database.database().reference().root
@@ -122,6 +129,20 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.refreshControl.endRefreshing()
             self.canLinkToScroll = true
         })
+    }
+    //used for switching back to home page
+    @objc func wasDraggedToHome(gestureRecognizer: UIPanGestureRecognizer) {
+        if gestureRecognizer.state == UIGestureRecognizer.State.began || gestureRecognizer.state == UIGestureRecognizer.State.changed {
+            let translation = gestureRecognizer.translation(in: self.view)
+            
+            if gestureRecognizer.view!.frame.minX + translation.x > 0 {
+                if let tb = tabBarController as? MainTabBarController {
+                    gestureRecognizer.isEnabled = false
+                    tb.animateTabSwitch(to: 0)
+                    tb.selectedIndex = 0
+                }
+            }
+        }
     }
     //allows shifting of the posts view
     @objc func wasDragged(gestureRecognizer: UIPanGestureRecognizer) {

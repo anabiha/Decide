@@ -23,7 +23,7 @@
                     <connections>
                         <segue destination="xpL-5J-QEJ" kind="relationship" relationship="viewControllers" id="TYc-8c-s9B"/>
                         <segue destination="voE-PO-wgR" kind="relationship" relationship="viewControllers" id="YOb-H0-1B1"/>
-                        <segue destination="BMC-BX-j13" kind="relationship" relationship="viewControllers" id="lqE-YR-Qad"/>
+                        <segue destination="rzk-Gj-QaM" kind="relationship" relationship="viewControllers" id="lqE-YR-Qad"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="u3r-Df-nlc" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -217,9 +217,28 @@
         <scene sceneID="XfS-vX-cXV">
             <objects>
                 <viewControllerPlaceholder storyboardName="Profile" id="BMC-BX-j13" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="AWf-sh-HRd"/>
+                    <navigationItem key="navigationItem" id="T1z-cZ-6D4"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3gT-Fo-MuP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2006.4000000000001" y="244.58128078817734"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="U53-6m-pMc">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="rzk-Gj-QaM" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="AWf-sh-HRd"/>
+                    <toolbarItems/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="T2G-pZ-D7C">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BMC-BX-j13" kind="relationship" relationship="rootViewController" id="dR5-AX-umW"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LV6-Cb-bf6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1064.8" y="244.58128078817734"/>
         </scene>

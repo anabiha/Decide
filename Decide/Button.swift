@@ -42,6 +42,18 @@ class CustomButton: UIButton {
         normalBGColor = tuple.0
         selectedBGColor = tuple.1
     }
+    func configure(withImage image: UIImage, tuple: (UIColor, UIColor, UIColor, UIColor, String)) {
+        backgroundColor = tuple.0
+        setTitleColor(tuple.2, for: .normal)
+        setTitleColor(tuple.3, for: .highlighted)
+        setTitleColor(tuple.3, for: .selected)
+        setTitle(tuple.4, for: .normal)
+        titleLabel?.font = UIFont(name: Universal.heavyFont, size: 16)
+        layer.cornerRadius = Universal.cornerRadius
+        self.setImage(image, for: .normal)
+        normalBGColor = tuple.0
+        selectedBGColor = tuple.1
+    }
     //change the title of the button
     func changeTitle(to newTitle: String) {
         setTitle(newTitle, for: .normal)

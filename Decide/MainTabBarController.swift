@@ -41,10 +41,11 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     }
     //FUNCTION DOES NOT HANDLE SWITCHING OF SELECTED TAB
     func animateTabSwitch(to index: Int) {
-        guard let fromView = self.selectedViewController?.view,
+        guard let fromView = self.selectedViewController?.view, let fromIndex = self.viewControllers?.index(of: self.selectedViewController!),
             let toView = self.viewControllers?[index].view else {
                 return
         }
+        
         // Add the toView to the tab bar view
         fromView.superview?.addSubview(toView)
         // Position toView off screen (above subview)
@@ -52,19 +53,19 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         
         var offsetY: CGFloat!
         var offsetX: CGFloat!
-        let isVertical = (index == 1 || index == 0) ? true : false
+        let isVertical = (index == 1 || fromIndex == 1 && index == 0) ? true : false
         if isVertical {
             offsetY = index == 1 ? -screenSize.height : screenSize.height
             offsetX = 0
         } else {
             offsetY = 0
-            offsetX = -screenSize.width
+            offsetX = index == 2 ? -screenSize.width : screenSize.width
         }
         toView.center = CGPoint(x: fromView.center.x - offsetX, y: toView.center.y - offsetY)
         // Disable interaction during animation
         view.isUserInteractionEnabled = false
         
-        UIView.animate(withDuration: 0.4,
+        UIView.animate(withDuration: 0.3,
                        delay: 0,
                        options: .curveEaseOut,
                        animations: {

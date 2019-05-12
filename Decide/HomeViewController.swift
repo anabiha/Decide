@@ -26,6 +26,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var subheader: UILabel!
     var canLinkToScroll = true
     var addButton: CustomButton!
+    var profileButton: CustomButton!
+    var dragToProfile: UIGestureRecognizer!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.modalPresentationStyle = .overFullScreen //very important for transitions
@@ -36,6 +38,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         view.addSubview(subheader)
         addButton = CustomButton()
         view.addSubview(addButton)
+        profileButton = CustomButton()
+        view.addSubview(profileButton)
         //header constraints and setup
         header.translatesAutoresizingMaskIntoConstraints = false
         header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
@@ -49,14 +53,23 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         subheader.text = "Welcome"
         subheader.font = UIFont(name: Universal.mediumFont, size: 15)
         subheader.textColor = UIColor.lightGray
+        //profile button
+        profileButton.translatesAutoresizingMaskIntoConstraints = false
+        profileButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
+        profileButton.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20).isActive = true
+        profileButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        profileButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        profileButton.configure(withImage: UIImage(named: "profile_icosahedron")!, tuple: button.popupDelete)
+        profileButton.addTarget(self, action: #selector(showProfile(_:)), for: .touchUpInside)
         //add button
         addButton.translatesAutoresizingMaskIntoConstraints = false
-        addButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
+        addButton.trailingAnchor.constraint(equalTo: profileButton.leadingAnchor, constant: -10).isActive = true
         addButton.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20).isActive = true
         addButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
         addButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         addButton.configure(tuple: button.add)
         addButton.addTarget(self, action: #selector(showNewDecision(_:)), for: .touchUpInside)
+        
         //tableview data and setup
         tableView.delegate = self
         tableView.dataSource = self
@@ -68,6 +81,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.rowHeight = UITableView.automaticDimension
         tableView.contentInset = insets
         self.view.backgroundColor = Universal.viewBackgroundColor
+        dragToProfile = UIPanGestureRecognizer(target: self, action: #selector(wasDragged(gestureRecognizer:)))
+        view.addGestureRecognizer(dragToProfile)
         //add dim background
         dimBackground = UIView(frame: UIScreen.main.bounds)
         dimBackground.alpha = 0
@@ -90,7 +105,36 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         instantiateRefreshControl()
         updateData()
     }
-    
+    override func viewDidAppear(_ animated: Bool) {
+        if dragToProfile != nil {
+            dragToProfile.isEnabled = true
+        }
+    }
+    @objc func wasDragged(gestureRecognizer: UIPanGestureRecognizer) {
+        if gestureRecognizer.state == UIGestureRecognizer.State.began || gestureRecognizer.state == UIGestureRecognizer.State.changed {
+            let translation = gestureRecognizer.translation(in: self.view)
+            
+            if gestureRecognizer.view!.frame.minX + translation.x < -10 {
+                if let tb = tabBarController as? MainTabBarController {
+                    gestureRecognizer.isEnabled = false
+                    tb.animateTabSwitch(to: 2)
+                    tb.selectedIndex = 2
+                }
+            }
+        }
+    }
+    @objc func showNewDecision(_ sender: Any) {
+        if let tb = tabBarController as? MainTabBarController {
+            tb.animateTabSwitch(to: 1)
+            tb.selectedIndex = 1
+        }
+    }
+    @objc func showProfile(_ sender: Any) {
+        if let tb = tabBarController as? MainTabBarController {
+            tb.animateTabSwitch(to: 2)
+            tb.selectedIndex = 2
+        }
+    }
     //displays the data from firebase in the homepage
     func updateData() {
         let ref = Database.database().reference().child("posts")
@@ -186,12 +230,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             print("HomeViewController;keyboardWillHide(): POPUPDEFAULTFRAME DOES NOT EXIST")
         }
     }
-    @objc func showNewDecision(_ sender: Any) {
-        if let tb = tabBarController as? MainTabBarController {
-            tb.animateTabSwitch(to: 1)
-            tb.selectedIndex = 1
-        }
-    }
+   
     // MARK: - Table View delegate methods
     func numberOfSections(in tableView: UITableView) -> Int {
             return homeDecision.posts.count

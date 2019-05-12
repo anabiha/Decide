@@ -13,7 +13,7 @@
         <!--ProfileViewController-->
         <scene sceneID="9PP-Jn-DeE">
             <objects>
-                <viewController title="ProfileViewController" id="Qsh-eX-iTn" customClass="ProfileViewController" customModule="Decide" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="ProfileViewController" hidesBottomBarWhenPushed="YES" id="Qsh-eX-iTn" customClass="ProfileViewController" customModule="Decide" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="B2x-Gq-ZCd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -63,6 +63,7 @@
                     <tabBarItem key="tabBarItem" tag="2" title="" image="ProfileNew" selectedImage="ProfileNew" id="PFe-w1-kOW">
                         <inset key="imageInsets" minX="0.0" minY="7" maxX="0.0" maxY="-7"/>
                     </tabBarItem>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="yourPostsView" destination="oBw-Z3-3MY" id="ePp-xU-x1s"/>
                         <outlet property="yourPostsViewHeight" destination="FSN-EU-PiP" id="yrs-gF-fwJ"/>
@@ -116,6 +117,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="fKR-uC-Hhd"/>
                     </view>
+                    <nil key="simulatedBottomBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Iec-f5-Jyi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

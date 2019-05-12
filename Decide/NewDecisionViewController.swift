@@ -114,7 +114,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     //scrolls new decision back up to home
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         //increase size of button and scroll down when scrolling tableview down
-        print(scrollView.contentOffset.y)
         if scrollView.contentOffset.y < -insets.top {
             //trigger the cancel action if past a certain point
             if scrollView.contentOffset.y <= -130 {
