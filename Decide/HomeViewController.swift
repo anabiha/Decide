@@ -28,9 +28,15 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var addButton: CustomButton!
     var profileButton: CustomButton!
     var dragToProfile: UIGestureRecognizer!
+    let generator1 = UINotificationFeedbackGenerator()
+    let generator2 = UIImpactFeedbackGenerator(style: .medium)
+   
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.modalPresentationStyle = .overFullScreen //very important for transitions
+        self.modalPresentationStyle = .fullScreen //very important for transitions
+        
+        
+        view.clipsToBounds = true
         //instantiation of labels
         header = UILabel()
         view.addSubview(header)
@@ -113,42 +119,41 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     @objc func wasDragged(gestureRecognizer: UIPanGestureRecognizer) {
         let translation = gestureRecognizer.translation(in: self.view)
         if gestureRecognizer.state == UIGestureRecognizer.State.began || gestureRecognizer.state == UIGestureRecognizer.State.changed {
-            let minDist = UIScreen.main.bounds.width/6
+            let minDist = UIScreen.main.bounds.width/4
             if gestureRecognizer.view!.frame.minX + translation.x < 0 {
                 gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x + translation.x, y: gestureRecognizer.view!.center.y)
                 gestureRecognizer.setTranslation(.zero, in: view)
                 if gestureRecognizer.view!.frame.minX + translation.x < -minDist {
-                    print("HEY")
                     if let tb = tabBarController as? MainTabBarController {
                         gestureRecognizer.isEnabled = false
-                        tb.animateTabSwitch(to: 2)
-                        tb.selectedIndex = 2
+                        tb.animateTabSwitch(to: 2, withScaleAnimation: false)
+//                        tb.selectedIndex = 2
                     }
                 }
             }
             
         } else if gestureRecognizer.state == UIGestureRecognizer.State.ended { //reset the frame if it didnt get dragged the minimum distance
-            if gestureRecognizer.view!.frame.minX + translation.x < 0 {
                 UIView.animate(withDuration: 0.2) {
                     self.view.frame.origin = .zero
                 }
-            }
+            
         }
     }
     @objc func showNewDecision(_ sender: Any) {
         if let tb = tabBarController as? MainTabBarController {
-            tb.animateTabSwitch(to: 1)
-            tb.selectedIndex = 1
+             generator2.impactOccurred()
+            tb.animateTabSwitch(to: 1, withScaleAnimation: true)
         }
     }
     @objc func showProfile(_ sender: Any) {
         if let tb = tabBarController as? MainTabBarController {
-            tb.animateTabSwitch(to: 2)
-            tb.selectedIndex = 2
+             generator2.impactOccurred()
+            tb.animateTabSwitch(to: 2, withScaleAnimation: true)
         }
     }
     //displays the data from firebase in the homepage
     func updateData() {
+        generator1.notificationOccurred(.success)
         let ref = Database.database().reference().child("posts")
         
         ref.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in

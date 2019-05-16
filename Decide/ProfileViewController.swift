@@ -141,17 +141,17 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 if gestureRecognizer.view!.frame.minX + translation.x > minDist {
                     if let tb = tabBarController as? MainTabBarController {
                         gestureRecognizer.isEnabled = false
-                        tb.animateTabSwitch(to: 0)
-                        tb.selectedIndex = 0
+                        tb.animateTabSwitch(to: 0, withScaleAnimation: false)
+//                        tb.selectedIndex = 0
                     }
                 }
             }
         } else if gestureRecognizer.state == UIGestureRecognizer.State.ended { //reset the frame if it didnt get dragged the minimum distance
-            if gestureRecognizer.view!.frame.minX + translation.x > 0 {
+            
                 UIView.animate(withDuration: 0.2) {
                     self.view.frame.origin = .zero
                 }
-            }
+            
         }
     }
     //allows shifting of the posts view

@@ -27,6 +27,8 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     var username = ""
     var tagPopup: TagPopup!
     var dimBackground: UIView!
+    let generator = UIImpactFeedbackGenerator(style: .medium)
+    
     //Background is an IMAGEVIEW
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -117,11 +119,11 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         if scrollView.contentOffset.y < -insets.top {
             //trigger the cancel action if past a certain point
             if scrollView.contentOffset.y <= -130 {
+                generator.impactOccurred()
                 scrollView.setContentOffset(scrollView.contentOffset, animated: false) //freezes view so that selection doesnt get called twice
                 scrollView.isScrollEnabled = false
                 let tb = tabBarController as! MainTabBarController
-                tb.animateTabSwitch(to: 0)
-                tb.selectedIndex = 0
+                tb.animateTabSwitch(to: 0, withScaleAnimation: false)
             }
         }
       
@@ -321,7 +323,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             ref.child("users").child(userKey).child("posts").child(newPostKey!).setValue(newPostKey!) //the key == the value, didn't know how else to get it to work like this.
             //animate the action of going back while clearing the view controller
             if let tb = self.tabBarController as? MainTabBarController {
-                tb.animateTabSwitch(to: 0)
+                tb.animateTabSwitch(to: 0, withScaleAnimation: true)
                 tb.selectedIndex = 0
                 let vc = self.storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
                 let nc = self.tabBarController!.viewControllers?[1] as! UINavigationController
