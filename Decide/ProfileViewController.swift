@@ -25,12 +25,14 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     let userPosts = HomeDecision()
     var headerLabel: UILabel!
     var tableView: UITableView!
-    var moreInfo: ProfilePopup!
+    var analytics: ProfilePopup!
     var confirmDelete: Popup!
     var dimBackground: UIView!
     var canLinkToScroll: Bool = true //unlinks the header "your posts" from scrollview when refreshing -> PREVENTS JITTERING
     var dragToHome: UIGestureRecognizer!
     private let refreshControl = UIRefreshControl()
+    let generator1 = UINotificationFeedbackGenerator()
+    let generator2 = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
     override func viewDidLoad() {
         //instantiation and addition of subviews
         tableView = UITableView()
@@ -72,19 +74,19 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         dragToHome = UIPanGestureRecognizer(target: self, action: #selector(wasDraggedToHome(gestureRecognizer:)))
         view.addGestureRecognizer(dragToHome)
         //instantiation and addition of subviews
-        moreInfo = ProfilePopup()
+        analytics = ProfilePopup()
         confirmDelete = Popup()
         dimBackground = UIView(frame: UIScreen.main.bounds)
         dimBackground.alpha = 0
         dimBackground.isHidden = true
         dimBackground.backgroundColor = UIColor.black
         tabBarController!.view.addSubview(dimBackground) //tab bar controller so that everything goes over the tab bar
-        tabBarController!.view.addSubview(moreInfo)
+        tabBarController!.view.addSubview(analytics)
         tabBarController!.view.addSubview(confirmDelete)
         //configuration of analytics popup
-        moreInfo.configure()
-        moreInfo.setExitButtonTarget(self, #selector(closeMoreInfo(_:)))
-        moreInfo.setDeleteButtonTarget(self, #selector(openConfirm(_:)))
+        analytics.configure()
+        analytics.setExitButtonTarget(self, #selector(closeAnalytics(_:)))
+        analytics.setDeleteButtonTarget(self, #selector(openConfirm(_:)))
         //configuration of confirmation popup
         confirmDelete.configureTwoButtons()
         confirmDelete.changeButton1(to: button.popupCancel)
@@ -122,6 +124,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 currentPost.isVoteable = false
                 self.userPosts.posts.append(currentPost)
             }
+            self.generator1.notificationOccurred(.success)
             //inserting new sections
             let indexSet = IndexSet(integersIn: 0..<self.userPosts.posts.count)
             self.tableView.insertSections(indexSet, with: .fade)
@@ -129,10 +132,14 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.refreshControl.endRefreshing()
             self.canLinkToScroll = true
         })
+        
     }
     //used for switching back to home page
     @objc func wasDraggedToHome(gestureRecognizer: UIPanGestureRecognizer) {
         let translation = gestureRecognizer.translation(in: self.view)
+        if gestureRecognizer.state == UIGestureRecognizer.State.began {
+            generator2.impactOccurred()
+        }
         if gestureRecognizer.state == UIGestureRecognizer.State.began || gestureRecognizer.state == UIGestureRecognizer.State.changed {
             let minDist = UIScreen.main.bounds.width/4
             if gestureRecognizer.view!.frame.minX + translation.x > 0 {
@@ -142,15 +149,15 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                     if let tb = tabBarController as? MainTabBarController {
                         gestureRecognizer.isEnabled = false
                         tb.animateTabSwitch(to: 0, withScaleAnimation: false)
-//                        tb.selectedIndex = 0
                     }
                 }
             }
         } else if gestureRecognizer.state == UIGestureRecognizer.State.ended { //reset the frame if it didnt get dragged the minimum distance
-            
-                UIView.animate(withDuration: 0.2) {
-                    self.view.frame.origin = .zero
-                }
+            UIView.animate(withDuration: 0.2, animations: {
+                self.view.frame.origin = .zero
+            }, completion: { finished in
+                self.generator2.impactOccurred()
+            })
             
         }
     }
@@ -260,17 +267,17 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(tableView.rectForRow(at: indexPath).height)
-        let frame = tableView.convert(tableView.rect(forSection: indexPath.section), to: self.view)
+        self.generator2.impactOccurred()
         if let post = userPosts.getPost(at: indexPath.section) {
-            moreInfo.setPost(to: post)
+            analytics.setPost(to: post)
         }
-        openMoreInfo(withFrame: frame)
+        analytics.showPopup()
+        
     }
     @objc func deletePost(_ sender: Any) {
         let ref = Database.database().reference().root
         guard let UID = Auth.auth().currentUser?.uid else {return}
-        if let key = moreInfo.post?.key {
+        if let key = analytics.post?.key {
             ref.child("users").child(UID).child("posts").child(key).removeValue()
             ref.child("posts").child(key).removeValue()
             updateData()
@@ -301,7 +308,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     //open confirm popup
     @objc func openConfirm(_ sender: Any) {
-        closeMoreInfo()
+        closeAnalytics()
         self.confirmDelete.isHidden = false
         self.dimBackground.isHidden = false
         UIView.transition(with: confirmDelete, duration: 0.1, options: .transitionCrossDissolve, animations: {
@@ -313,36 +320,12 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         })
         print("ProfileViewController;openConfirm(): confirm popup opened")
     }
-    func openMoreInfo(withFrame frame: CGRect) {
-        moreInfo.setSize(toFrame: frame)
-        self.moreInfo.isHidden = false
-        self.dimBackground.isHidden = false
-        UIView.transition(with: moreInfo, duration: 0.1, options: .transitionCrossDissolve, animations: {
-            self.moreInfo.alpha = 1
-            self.dimBackground.alpha = 0.3
-        }, completion: nil )
-        UIView.animate(withDuration: 0.2, delay: 0, options: .transitionCrossDissolve, animations: {
-            self.moreInfo.transform = CGAffineTransform(scaleX: 1, y: 1)
-        })
-        print("ProfileViewController;openMoreInfo(): more info popup opened")
-    }
-    
-    func closeMoreInfo() {
-        UIView.animate(withDuration: 0.3, delay: 0, options: [.transitionCrossDissolve, .curveEaseIn], animations: {
-            self.moreInfo.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-        }, completion: nil)
-        UIView.transition(with: moreInfo, duration: 0.1, options: .transitionCrossDissolve, animations: {
-            self.moreInfo.alpha = 0
-            self.dimBackground.alpha = 0
-        }, completion: { finished in
-            self.moreInfo.isHidden = true
-        })
-        self.dimBackground.isHidden = true
-        print("ProfileViewController;closeMoreInfo(): more info popup closed")
+    func closeAnalytics() {
+        analytics.hidePopup()
     }
     //the objc wrapper for close more info, used by exit button on popup
-    @objc func closeMoreInfo(_ sender: Any) {
-        closeMoreInfo()
+    @objc func closeAnalytics(_ sender: Any) {
+        closeAnalytics()
     }
     @IBAction func logOutButton(_ sender: Any) {
         

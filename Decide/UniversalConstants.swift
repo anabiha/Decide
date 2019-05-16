@@ -17,4 +17,5 @@ struct Universal {
     static let mediumFont: String = "Avenir-Roman"
     static let lightFont: String = "Avenir-Light"
     static let cornerRadius: CGFloat = 10
+    static let vibrationStyle: UIImpactFeedbackGenerator.FeedbackStyle = .heavy
 }

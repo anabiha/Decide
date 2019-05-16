@@ -10,8 +10,17 @@
 import Foundation
 import UIKit
 
+/*
+profiles now work like this:
+the class itself is the DARK BACKGROUND, or base layer
+The actual "popup" card is a subview of this dark background layer
+This allows for show and hide methods to be INSIDE the popup class rather than
+the view controller that holds them, since before,
+ the dark background had to be a separate component
+ */
 class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
-    
+    var popup: UIView!
+    var dimBackground: UIView!
     var subtitle: UILabel!
     var title: UILabel!
     var totalVotes: UILabel!
@@ -20,10 +29,14 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     var post: Post?
     var tableView: UITableView!
     var isShowingPercentages = false
-    let width = UIScreen.main.bounds.width - 40
+    let width = UIScreen.main.bounds.width
     func configure() {
         clipsToBounds = true
         self.translatesAutoresizingMaskIntoConstraints = false
+        popup = UIView()
+        popup.translatesAutoresizingMaskIntoConstraints = false
+        dimBackground = UIView()
+        dimBackground.translatesAutoresizingMaskIntoConstraints = false
         subtitle = UILabel() //the header at the top of the popup
         subtitle.translatesAutoresizingMaskIntoConstraints = false
         title = UILabel() //the decision's question
@@ -42,44 +55,58 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         tableView.separatorStyle = .none
         tableView.register(ProfilePopupCell.self, forCellReuseIdentifier: "cell") //register cell
         //adding subviews
-        addSubview(subtitle)
-        addSubview(title)
-        addSubview(totalVotes)
-        addSubview(exitButton)
-        addSubview(deleteButton)
-        addSubview(tableView)
+        addSubview(dimBackground)
+        addSubview(popup)
+        popup.addSubview(subtitle)
+        popup.addSubview(title)
+        popup.addSubview(totalVotes)
+        popup.addSubview(exitButton)
+        popup.addSubview(deleteButton)
+        popup.addSubview(tableView)
         //popup constraints
         if let view = superview {
-            centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-            widthAnchor.constraint(equalToConstant: width).isActive = true
+            topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+            dimBackground.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            dimBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            dimBackground.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            dimBackground.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        } else {
+            print("ERROR PROFILEPOPUP: VIEW WAS CONFIGURED BEFORE BEING ADDED TO SUPERVIEW")
         }
+        popup.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        popup.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        popup.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
         //vote question/title constraints
-        title.topAnchor.constraint(equalTo: self.topAnchor, constant: 25).isActive = true
-        title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24).isActive = true
+        title.topAnchor.constraint(equalTo: popup.topAnchor, constant: 25).isActive = true
+        title.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 24).isActive = true
         title.trailingAnchor.constraint(equalTo: exitButton.leadingAnchor, constant: -24).isActive = true
         //header constraints
-        subtitle.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 25).isActive = true
+        subtitle.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 25).isActive = true
         subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 3).isActive = true
         //vote counter label constraints
         totalVotes.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 40).isActive = true
-        totalVotes.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 23).isActive = true
-        totalVotes.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        totalVotes.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 23).isActive = true
+        totalVotes.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -20).isActive = true
         //tableview constriants
         tableView.topAnchor.constraint(equalTo: totalVotes.bottomAnchor, constant: 0).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
-        tableView.heightAnchor.constraint(greaterThanOrEqualToConstant: 200).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 0).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: 0).isActive = true
+        tableView.heightAnchor.constraint(greaterThanOrEqualToConstant: 250).isActive = true
         //delete button constraints
         deleteButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 10).isActive = true
-        deleteButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15).isActive = true
-        deleteButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15).isActive = true
-        deleteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15).isActive = true
+        deleteButton.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 15).isActive = true
+        deleteButton.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -15).isActive = true
+        deleteButton.bottomAnchor.constraint(equalTo: popup.bottomAnchor, constant: -15).isActive = true
         //exit button constraints
-        exitButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15).isActive = true
-        exitButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
+        exitButton.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -15).isActive = true
+        exitButton.topAnchor.constraint(equalTo: popup.topAnchor, constant: 20).isActive = true
         exitButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
         exitButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        //dimbackground color
+        dimBackground.backgroundColor = UIColor.black
         //title text
         title.text = ""
         title.textColor = UIColor.black
@@ -97,13 +124,20 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         //button config
         exitButton.setBackgroundImage(UIImage(named: "CancelButton"), for: .normal)
         deleteButton.configure(tuple: button.popupDelete)
-        //view config
-        self.alpha = 0
+        //popup view config
+        popup.backgroundColor = UIColor.white
+        popup.layer.cornerRadius = Universal.cornerRadius
+        popup.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        //position popup offscreen
+        self.title.alpha = 0
+        self.subtitle.alpha = 0
+        self.tableView.alpha = 0
+        self.totalVotes.alpha = 0
+        self.dimBackground.alpha = 0
         self.isHidden = true
-        layer.cornerRadius = Universal.cornerRadius
-        backgroundColor = UIColor.white
     }
     func setPost(to post: Post) {
+        
         tableView.beginUpdates()
         if self.post != nil {
             let count = self.post!.decisions.count
@@ -118,8 +152,43 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         title.text = post.title
         totalVotes.text = "Total Votes: \(post.getTotal())"
         tableView.endUpdates()
+        popup.frame.origin = CGPoint(x: self.frame.minX, y: self.frame.maxY)
     }
-    
+    func showPopup() {
+        isHidden = false
+        print(popup.frame.origin)
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+            self.popup.frame.origin = CGPoint(x: self.popup.frame.origin.x, y: self.popup.frame.origin.y - self.popup.frame.height)
+            self.dimBackground.alpha = 0.3
+        }, completion: { finished in
+            print(self.popup.frame.origin)
+            UIView.animate(withDuration: 0.2, animations: {
+                self.title.alpha = 1
+                self.subtitle.alpha = 1
+                self.tableView.alpha = 1
+                self.totalVotes.alpha = 1
+            })
+        })
+        print("ProfilePopup; showPopup(): popup opened")
+    }
+    func hidePopup() {
+        UIView.transition(with: popup, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.title.alpha = 0
+            self.subtitle.alpha = 0
+            self.tableView.alpha = 0
+            self.totalVotes.alpha = 0
+        }, completion: { finished in
+            UIView.animate(withDuration: 0.25, delay: 0, options: [.transitionCrossDissolve, .curveEaseOut], animations: {
+                self.popup.frame.origin = CGPoint(x: self.frame.minX, y: self.frame.maxY)
+                self.dimBackground.alpha = 0
+            }, completion: { finished in
+                
+                self.isHidden = true
+            })
+        })
+        
+        print("ProfilePopup; showPopup(): more info popup closed")
+    }
     func setSize(toFrame frame: CGRect) {
         let scaleX = frame.size.width/width
         let scaleY = frame.size.height/300

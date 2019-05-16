@@ -81,7 +81,7 @@ extension UIView {
         animation.toValue = NSValue(cgPoint: CGPoint(x: self.center.x + 12, y: self.center.y))
         self.layer.add(animation, forKey: "position")
     }
-    
+    //rounds specific corners of any uiview you want
     func roundCorners(_ corners: UIRectCorner, radius: CGFloat) {
         let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         let mask = CAShapeLayer()

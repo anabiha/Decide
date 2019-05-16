@@ -27,7 +27,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     var username = ""
     var tagPopup: TagPopup!
     var dimBackground: UIView!
-    let generator = UIImpactFeedbackGenerator(style: .medium)
+    let generator = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
     
     //Background is an IMAGEVIEW
     override func viewDidLoad() {

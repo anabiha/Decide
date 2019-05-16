@@ -29,6 +29,8 @@ struct button {
 class CustomButton: UIButton {
     var normalBGColor: UIColor!
     var selectedBGColor: UIColor!
+    var shouldVibrate = true
+    let vibration = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
     //normal bg color, highlighted bg color, normal text color, highlighted text color, title
     func configure(tuple: (UIColor, UIColor, UIColor, UIColor, String)) {
         backgroundColor = tuple.0
@@ -64,6 +66,11 @@ class CustomButton: UIButton {
             UIView.animate(withDuration: 0.2, animations: {
                 self.backgroundColor = self.isHighlighted ? self.selectedBGColor : self.normalBGColor
             })
+            if self.isHighlighted && shouldVibrate {
+                shouldVibrate = false
+                vibration.impactOccurred()
+            }
+            else if !self.isHighlighted { shouldVibrate = true }
         }
     }
 }
