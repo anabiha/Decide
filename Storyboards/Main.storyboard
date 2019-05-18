@@ -250,7 +250,6 @@
                     <tabBarItem key="tabBarItem" tag="3" title="Item" id="QRc-sC-BAg"/>
                     <toolbarItems/>
                     <nil key="simulatedTopBarMetrics"/>
-                    <nil key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="YUD-z8-n7E">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

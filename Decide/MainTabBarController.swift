@@ -15,6 +15,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         delegate = self
         tabBar.unselectedItemTintColor = .black
+        tabBar.isHidden = true
         view.backgroundColor = Universal.viewBackgroundColor
     }
     
@@ -25,6 +26,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
             return false
         }
         
+        print("WHY IS IT HERE")
         animateTabSwitch(to: toIndex, withScaleAnimation: false)
       
         return true
@@ -100,9 +102,9 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
            //keeping this in the animate tab rather than the completion = smoother animation
         }, completion: { finished in
             // Remove the old view from the tabbar view.
+            print("went to view: \(index)")
             fromView.removeFromSuperview()
             self.view.isUserInteractionEnabled = true
-            
         })
     }
 }

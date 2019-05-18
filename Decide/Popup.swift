@@ -279,7 +279,6 @@ class FlagPopup: UIView, UITextViewDelegate {
         self.bringSubviewToFront(reason)
         //popup constraints
         if let view = self.superview {
-            print("Helloo")
             self.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
             self.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
             self.widthAnchor.constraint(equalToConstant: 290).isActive = true

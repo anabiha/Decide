@@ -29,6 +29,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     var dimBackground: UIView!
     let generator = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
     
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+    }
     //Background is an IMAGEVIEW
     override func viewDidLoad() {
         super.viewDidLoad()

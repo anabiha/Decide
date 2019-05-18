@@ -17,11 +17,11 @@ class SettingsViewController: UIViewController {
     var account: UILabel!
     var homeTab: UIView! //the tab that acts as a slice of the home view
     let homeTabWidth: CGFloat = 80 //the width of the home tab
-    
+    let vibration = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
+    var dragToHome: UIGestureRecognizer!
     override func viewDidLoad() {
         super.viewDidLoad()
-        tabBarController?.tabBar.isHidden = true
-        view.clipsToBounds = true
+        
         container = UIView()
         logo = UILabel()
         preferences = UILabel()
@@ -39,9 +39,10 @@ class SettingsViewController: UIViewController {
         container.addSubview(logo)
         container.addSubview(preferences)
         container.addSubview(account)
-
+        view.sendSubviewToBack(container)
         let containerWidth = UIScreen.main.bounds.width - homeTabWidth
         let center = (UIScreen.main.bounds.width - homeTabWidth)/2 //the center of the region between tab and leading anchor
+        
         container.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height).isActive = true
         container.widthAnchor.constraint(equalToConstant: containerWidth).isActive = true
         container.centerXAnchor.constraint(equalTo: view.leadingAnchor, constant: center).isActive = true
@@ -80,13 +81,49 @@ class SettingsViewController: UIViewController {
         homeTab.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
         
         container.alpha = 0
+        
+        dragToHome = UIPanGestureRecognizer(target: self, action: #selector(wasDraggedToHome(gestureRecognizer:)))
+        view.addGestureRecognizer(dragToHome)
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        if dragToHome != nil {
+            dragToHome.isEnabled = true
+        }
     }
     override func viewWillAppear(_ animated: Bool) {
         let offset = UIScreen.main.bounds.width/2
         self.container.center = CGPoint(x: self.container.center.x - offset, y: self.container.center.y)
-        UIView.animate(withDuration: 0.35, delay: 0.05, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.35, delay: 0.05, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
             self.container.alpha = 1
             self.container.center = CGPoint(x: self.container.center.x + offset, y: self.container.center.y)
-        })
+        }, completion: nil)
+        print("appeared")
+    }
+    //used for switching back to home page
+    @objc func wasDraggedToHome(gestureRecognizer: UIPanGestureRecognizer) {
+        let translation = gestureRecognizer.translation(in: self.view)
+        if gestureRecognizer.state == UIGestureRecognizer.State.began {
+            vibration.impactOccurred()
+        }
+        if gestureRecognizer.state == UIGestureRecognizer.State.began || gestureRecognizer.state == UIGestureRecognizer.State.changed {
+            let minDist = UIScreen.main.bounds.width/4
+            if gestureRecognizer.view!.frame.minX + translation.x < 0 {
+                gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x + translation.x, y: gestureRecognizer.view!.center.y)
+                gestureRecognizer.setTranslation(.zero, in: view)
+                if gestureRecognizer.view!.frame.minX + translation.x < -minDist {
+                    if let tb = tabBarController as? MainTabBarController {
+                        gestureRecognizer.isEnabled = false
+                        tb.animateTabSwitch(to: 0, withScaleAnimation: false)
+                    }
+                }
+            }
+        } else if gestureRecognizer.state == UIGestureRecognizer.State.ended { //reset the frame if it didnt get dragged the minimum distance
+            UIView.animate(withDuration: 0.2, animations: {
+                self.view.frame.origin = .zero
+            }, completion: { finished in
+                self.vibration.impactOccurred()
+            })
+            
+        }
     }
 }

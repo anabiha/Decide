@@ -20,7 +20,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     private let refreshControl = UIRefreshControl() //refresh animation
     var flagPopup = FlagPopup() //popup for flagging posts
     var dimBackground: UIView!
-    var popupDefaultFrame: CGRect!
     var flagHandler = FlagHandler()
     var header: UILabel!
     var subheader: UILabel!
@@ -28,11 +27,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var addButton: CustomButton! //button to get to new decision
     var profileButton: CustomButton!
     var settingsButton: CustomButton!
-    var settingsPanel: SettingsPanel! //the settings panel
     var dragToProfile: UIGestureRecognizer!
     let generator1 = UINotificationFeedbackGenerator()
     let generator2 = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
-   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.modalPresentationStyle = .fullScreen //very important for transitions
@@ -110,7 +108,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         //bringing subviews to front
         tabBarController!.view.bringSubviewToFront(dimBackground)
         tabBarController!.view.bringSubviewToFront(flagPopup)
-                //allows detection of keyboard appearing/disappearing
+        //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         instantiateRefreshControl()
@@ -129,20 +127,19 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if gestureRecognizer.state == UIGestureRecognizer.State.began || gestureRecognizer.state == UIGestureRecognizer.State.changed {
             let minDist = UIScreen.main.bounds.width/4
             
-            if settingsPanel.isHidden {
-                gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x + translation.x, y: gestureRecognizer.view!.center.y)
-                gestureRecognizer.setTranslation(.zero, in: view)
-                if gestureRecognizer.view!.frame.minX + translation.x < -minDist {
-                    if let tb = tabBarController as? MainTabBarController {
-                        gestureRecognizer.isEnabled = false
-                        tb.animateTabSwitch(to: 2, withScaleAnimation: false)
-                    }
-                } else if gestureRecognizer.view!.frame.minX + translation.x > minDist {
-                   // showSettings()
+            gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x + translation.x, y: gestureRecognizer.view!.center.y)
+            gestureRecognizer.setTranslation(.zero, in: view)
+            if gestureRecognizer.view!.frame.minX + translation.x < -minDist {
+                if let tb = tabBarController as? MainTabBarController {
+                    gestureRecognizer.isEnabled = false
+                    tb.animateTabSwitch(to: 2, withScaleAnimation: false)
+                }
+            } else if gestureRecognizer.view!.frame.minX + translation.x > minDist {
+                if let tb = tabBarController as? MainTabBarController {
+                    gestureRecognizer.isEnabled = false
+                    tb.animateTabSwitch(to: 3, withScaleAnimation: false)
                 }
             }
-            
-            
         } else if gestureRecognizer.state == UIGestureRecognizer.State.ended { //reset the frame if it didnt get dragged the minimum distance
             UIView.animate(withDuration: 0.2, animations: {
                 self.view.frame.origin = .zero
@@ -158,8 +155,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     @objc func showNewDecision(_ sender: Any) {
         if let tb = tabBarController as? MainTabBarController {
-            tb.animateTabSwitch(to: 3, withScaleAnimation: true)
-            
+            tb.animateTabSwitch(to: 1, withScaleAnimation: true)
         }
     }
     @objc func showProfile(_ sender: Any) {
@@ -235,7 +231,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     override func viewWillAppear(_ animated: Bool) {
-              //allows detection of keyboard appearing/disappearing
+        //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
@@ -243,7 +239,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         //removes keyboard detection of view once it disappears, used to prevent detection when keyboard appears on NEWDECISION
         NotificationCenter.default.removeObserver(self)
     }
-   
+    
     //shift view up when keyboard appears
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -258,16 +254,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     //shift view down when keyboard disappears
     @objc func keyboardWillHide(_ notification:Notification) {
-        if popupDefaultFrame != nil {
-            flagPopup.frame = popupDefaultFrame
-        } else {
-            print("HomeViewController;keyboardWillHide(): POPUPDEFAULTFRAME DOES NOT EXIST")
-        }
+        
+        flagPopup.center = view.center
     }
-   
+    
     // MARK: - Table View delegate methods
     func numberOfSections(in tableView: UITableView) -> Int {
-            return homeDecision.posts.count
+        return homeDecision.posts.count
     }
     
     // There is just one row in every section
@@ -300,7 +293,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
             self.flagPopup.transform = CGAffineTransform(scaleX: 1, y: 1)
         })
-        popupDefaultFrame = flagPopup.frame
     }
     func closeFlagPopup() {
         UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
@@ -459,5 +451,5 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         //the height of the post, to be implemented later
         return UITableView.automaticDimension
     }
-   
+    
 }
