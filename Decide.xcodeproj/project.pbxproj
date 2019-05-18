@@ -37,6 +37,7 @@
 		65F2B9C12289ACCF00696551 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F2B9C02289ACCF00696551 /* SettingsViewController.swift */; };
 		65F2B9C6228CB51700696551 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F2B9C5228CB51700696551 /* SettingsView.swift */; };
 		65F2B9CB228DF1FE00696551 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65F2B9CA228DF1FE00696551 /* Main.storyboard */; };
+		65F2B9CD2290401C00696551 /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65F2B9CC2290401C00696551 /* SettingsViewController.storyboard */; };
 		65FAC95D227A01BC00BF3B44 /* DataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FAC95C227A01BC00BF3B44 /* DataModels.swift */; };
 		B14A058F58E3E44900DBD1D0 /* Pods_Decide.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9A6D4B7F112FA74F23CEEB /* Pods_Decide.framework */; };
 /* End PBXBuildFile section */
@@ -74,6 +75,7 @@
 		65F2B9C02289ACCF00696551 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		65F2B9C5228CB51700696551 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		65F2B9CA228DF1FE00696551 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		65F2B9CC2290401C00696551 /* SettingsViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SettingsViewController.storyboard; sourceTree = "<group>"; };
 		65FAC95C227A01BC00BF3B44 /* DataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModels.swift; sourceTree = "<group>"; };
 		BF3503CA55741D1DBCF832B8 /* Pods-Decide.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Decide.release.xcconfig"; path = "Pods/Target Support Files/Pods-Decide/Pods-Decide.release.xcconfig"; sourceTree = "<group>"; };
 		D3662C2BE9CC9C962C839A73 /* Pods-Decide.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Decide.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Decide/Pods-Decide.debug.xcconfig"; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 			children = (
 				65E7918322247D7100537D95 /* NewDecision.storyboard */,
 				65F2B9CA228DF1FE00696551 /* Main.storyboard */,
+				65F2B9CC2290401C00696551 /* SettingsViewController.storyboard */,
 				65E7918622247E0000537D95 /* Profile.storyboard */,
 				354A800921AF116700B54A47 /* Login.storyboard */,
 			);
@@ -250,6 +253,7 @@
 				65E7918422247D7100537D95 /* NewDecision.storyboard in Resources */,
 				35105AD92185EE3000C93FE8 /* Assets.xcassets in Resources */,
 				65E7918722247E0000537D95 /* Profile.storyboard in Resources */,
+				65F2B9CD2290401C00696551 /* SettingsViewController.storyboard in Resources */,
 				354A800A21AF116700B54A47 /* Login.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

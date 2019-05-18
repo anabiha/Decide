@@ -87,19 +87,19 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
             offsetX = 0
         } else {
             offsetY = 0
-            offsetX = index == 2 ? -screenSize.width : screenSize.width
+            offsetX = index == 2 || fromIndex == 3 && index == 0 ? -screenSize.width : screenSize.width //2 = move right, 3 = move left
         }
         toView.center = CGPoint(x: fromView.center.x - offsetX, y: toView.center.y - offsetY)
         // Disable interaction during animation
         view.isUserInteractionEnabled = false
-        
+      
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
             toView.center = CGPoint(x: toView.center.x + offsetX, y: toView.center.y  + offsetY)
             fromView.center = CGPoint(x: fromView.center.x + offsetX, y: fromView.center.y  + offsetY)
-            self.selectedIndex = index //keeping this in the animate tab rather than the completion = smoother animation
+            self.selectedIndex = index
+           //keeping this in the animate tab rather than the completion = smoother animation
         }, completion: { finished in
             // Remove the old view from the tabbar view.
-//            toView.center = CGPoint(x: toView.center.x + offsetX - 100, y: toView.center.y  + offsetY)
             fromView.removeFromSuperview()
             self.view.isUserInteractionEnabled = true
             

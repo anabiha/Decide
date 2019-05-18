@@ -9,3 +9,13 @@
 import Foundation
 import UIKit
 
+class SettingsPanel: UIView {
+    var logo: UILabel!
+    var preferences: UILabel!
+    var account: UILabel!
+    var homeTab: UIView!
+    let homeTabWidth: CGFloat = 80
+    func configure() {
+        
+    }
+}

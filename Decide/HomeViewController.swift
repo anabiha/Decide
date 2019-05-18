@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     let usernameIdentifier = "userCell"
@@ -17,16 +17,18 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     let cellSpacingHeight: CGFloat = 40
     var insets = UIEdgeInsets(top: 60, left: 0, bottom: 50, right: 0)
     let homeDecision = HomeDecision()
-    private let refreshControl = UIRefreshControl()
-    var flagPopup = FlagPopup()
+    private let refreshControl = UIRefreshControl() //refresh animation
+    var flagPopup = FlagPopup() //popup for flagging posts
     var dimBackground: UIView!
     var popupDefaultFrame: CGRect!
     var flagHandler = FlagHandler()
     var header: UILabel!
     var subheader: UILabel!
     var canLinkToScroll = true
-    var addButton: CustomButton!
+    var addButton: CustomButton! //button to get to new decision
     var profileButton: CustomButton!
+    var settingsButton: CustomButton!
+    var settingsPanel: SettingsPanel! //the settings panel
     var dragToProfile: UIGestureRecognizer!
     let generator1 = UINotificationFeedbackGenerator()
     let generator2 = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
@@ -34,8 +36,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         self.modalPresentationStyle = .fullScreen //very important for transitions
-        
-        
         view.clipsToBounds = true
         //instantiation of labels
         header = UILabel()
@@ -46,6 +46,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         view.addSubview(addButton)
         profileButton = CustomButton()
         view.addSubview(profileButton)
+        settingsButton = CustomButton()
+        view.addSubview(settingsButton)
         //header constraints and setup
         header.translatesAutoresizingMaskIntoConstraints = false
         header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
@@ -75,6 +77,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         addButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         addButton.configure(tuple: button.add)
         addButton.addTarget(self, action: #selector(showNewDecision(_:)), for: .touchUpInside)
+        //settings
+        settingsButton.translatesAutoresizingMaskIntoConstraints = false
         //tableview data and setup
         tableView.delegate = self
         tableView.dataSource = self
@@ -86,7 +90,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.rowHeight = UITableView.automaticDimension
         tableView.contentInset = insets
         self.view.backgroundColor = Universal.viewBackgroundColor
+        //drag recognizer
         dragToProfile = UIPanGestureRecognizer(target: self, action: #selector(wasDragged(gestureRecognizer:)))
+        dragToProfile.delegate = self
         view.addGestureRecognizer(dragToProfile)
         //add dim background
         dimBackground = UIView(frame: UIScreen.main.bounds)
@@ -122,7 +128,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         if gestureRecognizer.state == UIGestureRecognizer.State.began || gestureRecognizer.state == UIGestureRecognizer.State.changed {
             let minDist = UIScreen.main.bounds.width/4
-            if gestureRecognizer.view!.frame.minX + translation.x < 0 {
+            
+            if settingsPanel.isHidden {
                 gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x + translation.x, y: gestureRecognizer.view!.center.y)
                 gestureRecognizer.setTranslation(.zero, in: view)
                 if gestureRecognizer.view!.frame.minX + translation.x < -minDist {
@@ -130,8 +137,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                         gestureRecognizer.isEnabled = false
                         tb.animateTabSwitch(to: 2, withScaleAnimation: false)
                     }
+                } else if gestureRecognizer.view!.frame.minX + translation.x > minDist {
+                   // showSettings()
                 }
             }
+            
             
         } else if gestureRecognizer.state == UIGestureRecognizer.State.ended { //reset the frame if it didnt get dragged the minimum distance
             UIView.animate(withDuration: 0.2, animations: {
@@ -142,9 +152,14 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         }
     }
+    //prevents gesturerecognition of subview
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return touch.view == gestureRecognizer.view
+    }
     @objc func showNewDecision(_ sender: Any) {
         if let tb = tabBarController as? MainTabBarController {
-            tb.animateTabSwitch(to: 1, withScaleAnimation: true)
+            tb.animateTabSwitch(to: 3, withScaleAnimation: true)
+            
         }
     }
     @objc func showProfile(_ sender: Any) {
