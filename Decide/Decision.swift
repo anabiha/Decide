@@ -13,10 +13,20 @@ import Firebase
 class ProfilePopupCell: UITableViewCell {
     var decision: String!
     var voteCount: Int!
+    var percentage: Double! //might be nil if there have been no votes
+    var bar: UIView!
+    var fadedBar: UIView! //the default bar
     var decisionLabel: UILabel!
     var voteCountLabel: UILabel!
-    func configure(decision: String, voteCount: Int) {
-       
+    var barColor = Universal.blue.withAlphaComponent(0.8)
+    var fadedBarColor = Universal.blue.withAlphaComponent(0.1)
+    let barHeight: CGFloat = 20
+    func configure(decision: String, voteCount: Int, percentage: Double) {
+        
+        self.percentage = percentage
+        self.decision = decision
+        self.voteCount = voteCount
+        
         if decisionLabel == nil {
             decisionLabel = UILabel()
             decisionLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -27,13 +37,34 @@ class ProfilePopupCell: UITableViewCell {
             voteCountLabel.translatesAutoresizingMaskIntoConstraints = false
             addSubview(voteCountLabel)
         }
+        if bar == nil {
+            bar = UIView(frame: CGRect(x: 25, y: self.frame.height - barHeight + 15, width: self.frame.width, height: barHeight))
+            bar.layer.cornerRadius = Universal.cornerRadius
+            bar.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner, .layerMaxXMaxYCorner, .layerMaxXMinYCorner]
+            bar.layer.backgroundColor = barColor.cgColor
+            bar.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0.5))
+            bar.transform = CGAffineTransform(scaleX: 0, y: 1)
+            bar.isHidden = true
+            addSubview(bar)
+        }
+        if fadedBar == nil {
+            fadedBar = UIView(frame: CGRect(x: 25, y: self.frame.height - barHeight + 15, width: self.frame.width, height: barHeight))
+            fadedBar.layer.cornerRadius = 10
+            fadedBar.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner, .layerMaxXMaxYCorner, .layerMaxXMinYCorner]
+            fadedBar.layer.backgroundColor = fadedBarColor.cgColor
+            addSubview(fadedBar)
+        }
         
-        decisionLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        decisionLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         decisionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 25).isActive = true
+        decisionLabel.bottomAnchor.constraint(equalTo: bar.topAnchor).isActive = true
         decisionLabel.trailingAnchor.constraint(greaterThanOrEqualTo: voteCountLabel.leadingAnchor, constant: -10).isActive = true
-        
-        voteCountLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+       
+        voteCountLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         voteCountLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        voteCountLabel.bottomAnchor.constraint(equalTo: bar.topAnchor).isActive = true
+        
+        bar.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5).isActive = true
         
         decisionLabel.text = decision
         decisionLabel.font = UIFont(name: Universal.lightFont, size: 17)
@@ -44,7 +75,33 @@ class ProfilePopupCell: UITableViewCell {
         selectionStyle = .none
     }
     func setLabel(to text: String) {
-        voteCountLabel.text = text
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.voteCountLabel.text = text
+        }, completion: nil)
+    }
+    func displayPercentage() {
+        bar.isHidden = false
+        //animate bar
+        UIView.animate(withDuration: 0.4, delay: 0.2, options: .curveEaseOut, animations: {
+            self.bar.transform = CGAffineTransform(scaleX: CGFloat(self.percentage)/100, y: 1)
+        }, completion: nil)
+        //animate shifting of choice alpha
+        UIView.animate(withDuration: 0.5, delay: 0.2, options: .curveEaseIn, animations: {
+            self.voteCountLabel.alpha = 0
+            self.voteCountLabel.alpha = 1
+        }, completion: nil)
+        UIView.animate(withDuration: 0.1, delay: 0.2, options: .transitionCrossDissolve, animations: {
+            if !self.percentage.isNaN  {
+                self.setLabel(to: String("\(self.percentage.truncate(places: 1))%"))
+            } else {
+                self.setLabel(to: "No votes")
+            }
+        }, completion: nil)
+    }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        bar.isHidden = true
+        bar.transform = CGAffineTransform(scaleX: 0, y: 1)
     }
 }
 class ProfileChoiceCell: UITableViewCell {
@@ -53,9 +110,6 @@ class ProfileChoiceCell: UITableViewCell {
     var bar: UIView?//creates the bar that highlights percentages
     var percentage: Double! //percentage
     var shouldRound = false //decides whether the row should be rounded
-    var color1 = UIColor.white
-    //default color
-    var color2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)  //the color of what was chosen
     var barColor = Universal.blue.withAlphaComponent(0.2) //color of bar
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -97,8 +151,8 @@ class ProfileChoiceCell: UITableViewCell {
         backgroundColor = color
         //label aesthetics
         choice.backgroundColor = UIColor.clear
-        choice.font = UIFont(name: Universal.mediumFont, size: 16)
-        choice.textColor = Universal.blue
+        choice.font = UIFont(name: Universal.mediumFont, size: 17)
+        choice.textColor = UIColor.darkGray
         choice.textAlignment = .center
     }
     func updatePercent(newPercent: Double) {
@@ -167,7 +221,7 @@ class ProfileTitleCell: UITableViewCell {
         title.text = text
         title.textColor = UIColor.black
         selectionStyle = .none
-        title.font = UIFont(name: Universal.mediumFont, size: 18)
+        title.font = UIFont(name: Universal.mediumFont, size: 17)
         title.textAlignment = .center
     }
 }
@@ -191,8 +245,8 @@ class HomeChoiceCell: UITableViewCell {
     }
     func configure(text: String, percentage: Double, color: UIColor) {
         //make sure subviews to leave the view
-        clipsToBounds = true
         selectionStyle = .none
+         clipsToBounds = false
         //set the information
         choice.text = text
         decision = text
@@ -213,7 +267,7 @@ class HomeChoiceCell: UITableViewCell {
         //label aesthetics
         choice.backgroundColor = UIColor.clear
         choice.font = UIFont(name: Universal.lightFont, size: 18)
-        choice.textColor = Universal.blue //color of bar
+        choice.textColor = UIColor.darkGray
         choice.textAlignment = .center
     }
     func updatePercent(newPercent: Double) {
@@ -265,7 +319,7 @@ class HomeTitleCell: UITableViewCell {
     @IBOutlet weak var title: UITextView!
     func configure(text: String) {
         title.text = text
-        title.textColor = UIColor.black
+        title.textColor = UIColor.darkText
         selectionStyle = .none
         title.font = UIFont(name: Universal.mediumFont, size: 18)
         title.textAlignment = .center
@@ -280,8 +334,8 @@ class UserCell: UITableViewCell {
         roundCorners([.topLeft, .topRight], radius: Universal.cornerRadius)
     }
     func configure(username: String) {
-        clipsToBounds = true
         selectionStyle = .none
+        clipsToBounds = false
         self.username.text = username
         self.username.textAlignment = .center
         self.username.font = UIFont(name: Universal.heavyFont, size: 16)

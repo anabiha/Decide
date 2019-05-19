@@ -55,6 +55,7 @@ extension UIView {
         var newPoint = CGPoint(x: self.bounds.size.width * anchorPoint.x,
                                y: self.bounds.size.height * anchorPoint.y)
         
+        
         var oldPoint = CGPoint(x: self.bounds.size.width * self.layer.anchorPoint.x,
                                y: self.bounds.size.height * self.layer.anchorPoint.y)
         

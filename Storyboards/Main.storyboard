@@ -43,7 +43,7 @@
                                 <rect key="frame" x="20" y="44" width="335" height="734"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="userCell" rowHeight="100" id="ChM-Bf-MpZ" customClass="UserCell" customModule="Decide" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="userCell" rowHeight="100" id="ChM-Bf-MpZ" customClass="UserCell" customModule="Decide" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="335" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ChM-Bf-MpZ" id="pBM-mg-csr">
@@ -58,7 +58,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kg2-ds-u5s">
-                                                    <rect key="frame" x="149.33333333333334" y="11" width="36.333333333333343" height="89"/>
+                                                    <rect key="frame" x="149.33333333333334" y="16" width="36.333333333333343" height="79"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -73,12 +73,12 @@
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="kg2-ds-u5s" firstAttribute="top" secondItem="pBM-mg-csr" secondAttribute="topMargin" id="3xg-iC-zQd"/>
+                                                <constraint firstItem="kg2-ds-u5s" firstAttribute="top" secondItem="pBM-mg-csr" secondAttribute="topMargin" constant="5" id="3xg-iC-zQd"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="En4-s3-GfY" secondAttribute="trailing" id="8ZS-jD-yhZ"/>
                                                 <constraint firstItem="xE4-VJ-Ac3" firstAttribute="leading" secondItem="pBM-mg-csr" secondAttribute="leading" id="8rf-9s-hZR"/>
                                                 <constraint firstItem="kg2-ds-u5s" firstAttribute="centerX" secondItem="pBM-mg-csr" secondAttribute="centerX" id="ZuW-6Y-hfv"/>
                                                 <constraint firstItem="En4-s3-GfY" firstAttribute="top" secondItem="pBM-mg-csr" secondAttribute="topMargin" id="csL-so-gsZ"/>
-                                                <constraint firstAttribute="bottom" secondItem="kg2-ds-u5s" secondAttribute="bottom" id="dIW-kJ-a1m"/>
+                                                <constraint firstAttribute="bottom" secondItem="kg2-ds-u5s" secondAttribute="bottom" constant="5" id="dIW-kJ-a1m"/>
                                                 <constraint firstItem="xE4-VJ-Ac3" firstAttribute="top" secondItem="pBM-mg-csr" secondAttribute="top" id="klj-lU-I42"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -88,7 +88,7 @@
                                             <outlet property="username" destination="kg2-ds-u5s" id="jWZ-Sk-clu"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="titleCell" rowHeight="100" id="ddb-wU-zo8" customClass="HomeTitleCell" customModule="Decide" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="titleCell" rowHeight="100" id="ddb-wU-zo8" customClass="HomeTitleCell" customModule="Decide" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="128" width="335" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ddb-wU-zo8" id="9th-0G-QBp">
@@ -113,7 +113,7 @@
                                             <outlet property="title" destination="d0n-rI-5K2" id="yok-Tw-LFw"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="choiceCell" rowHeight="100" id="YBR-vm-Muw" customClass="HomeChoiceCell" customModule="Decide" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="choiceCell" rowHeight="100" id="YBR-vm-Muw" customClass="HomeChoiceCell" customModule="Decide" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="228" width="335" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YBR-vm-Muw" id="UMm-ww-7uP">

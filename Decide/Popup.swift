@@ -28,8 +28,9 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     var deleteButton: CustomButton!
     var post: Post?
     var tableView: UITableView!
-    var isShowingPercentages = false
+    var isShowingPercentages = true
     let width = UIScreen.main.bounds.width
+    
     func configure() {
         clipsToBounds = true
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -69,42 +70,44 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
             bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
             leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
             trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+            
             dimBackground.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
             dimBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
             dimBackground.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
             dimBackground.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+            
+            popup.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+            popup.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            popup.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
+            //vote question/title constraints
+            title.topAnchor.constraint(equalTo: popup.topAnchor, constant: 25).isActive = true
+            title.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 24).isActive = true
+            title.trailingAnchor.constraint(equalTo: exitButton.leadingAnchor, constant: -24).isActive = true
+            //header constraints
+            subtitle.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 25).isActive = true
+            subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 3).isActive = true
+            //vote counter label constraints
+            totalVotes.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 40).isActive = true
+            totalVotes.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 23).isActive = true
+            totalVotes.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -20).isActive = true
+            //tableview constriants
+            tableView.topAnchor.constraint(equalTo: totalVotes.bottomAnchor, constant: 0).isActive = true
+            tableView.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 0).isActive = true
+            tableView.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: 0).isActive = true
+            tableView.heightAnchor.constraint(greaterThanOrEqualToConstant: 300).isActive = true
+            //delete button constraints
+            deleteButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 10).isActive = true
+            deleteButton.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 25).isActive = true
+            deleteButton.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -25).isActive = true
+            deleteButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -15).isActive = true
+            //exit button constraints
+            exitButton.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -15).isActive = true
+            exitButton.topAnchor.constraint(equalTo: popup.topAnchor, constant: 20).isActive = true
+            exitButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
+            exitButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
         } else {
             print("ERROR PROFILEPOPUP: VIEW WAS CONFIGURED BEFORE BEING ADDED TO SUPERVIEW")
         }
-        popup.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        popup.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        popup.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
-        //vote question/title constraints
-        title.topAnchor.constraint(equalTo: popup.topAnchor, constant: 25).isActive = true
-        title.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 24).isActive = true
-        title.trailingAnchor.constraint(equalTo: exitButton.leadingAnchor, constant: -24).isActive = true
-        //header constraints
-        subtitle.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 25).isActive = true
-        subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 3).isActive = true
-        //vote counter label constraints
-        totalVotes.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 40).isActive = true
-        totalVotes.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 23).isActive = true
-        totalVotes.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -20).isActive = true
-        //tableview constriants
-        tableView.topAnchor.constraint(equalTo: totalVotes.bottomAnchor, constant: 0).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 0).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: 0).isActive = true
-        tableView.heightAnchor.constraint(greaterThanOrEqualToConstant: 250).isActive = true
-        //delete button constraints
-        deleteButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 10).isActive = true
-        deleteButton.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 15).isActive = true
-        deleteButton.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -15).isActive = true
-        deleteButton.bottomAnchor.constraint(equalTo: popup.bottomAnchor, constant: -15).isActive = true
-        //exit button constraints
-        exitButton.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -15).isActive = true
-        exitButton.topAnchor.constraint(equalTo: popup.topAnchor, constant: 20).isActive = true
-        exitButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        exitButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
         //dimbackground color
         dimBackground.backgroundColor = UIColor.black
         //title text
@@ -137,7 +140,6 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         self.isHidden = true
     }
     func setPost(to post: Post) {
-        
         tableView.beginUpdates()
         if self.post != nil {
             let count = self.post!.decisions.count
@@ -152,22 +154,26 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
         title.text = post.title
         totalVotes.text = "Total Votes: \(post.getTotal())"
         tableView.endUpdates()
-        popup.frame.origin = CGPoint(x: self.frame.minX, y: self.frame.maxY)
+        if let view = superview {
+            popup.frame.origin = CGPoint(x: view.frame.minX, y: view.frame.maxY)
+        }
     }
     func showPopup() {
         isHidden = false
-        print(popup.frame.origin)
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
             self.popup.frame.origin = CGPoint(x: self.popup.frame.origin.x, y: self.popup.frame.origin.y - self.popup.frame.height)
             self.dimBackground.alpha = 0.3
         }, completion: { finished in
-            print(self.popup.frame.origin)
             UIView.animate(withDuration: 0.2, animations: {
                 self.title.alpha = 1
                 self.subtitle.alpha = 1
                 self.tableView.alpha = 1
                 self.totalVotes.alpha = 1
             })
+            for i in 0..<self.post!.decisions.count {
+                let cell = self.tableView.cellForRow(at: IndexPath(row: i, section: 0)) as! ProfilePopupCell
+                cell.displayPercentage()
+            }
         })
         print("ProfilePopup; showPopup(): popup opened")
     }
@@ -179,10 +185,9 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
             self.totalVotes.alpha = 0
         }, completion: { finished in
             UIView.animate(withDuration: 0.25, delay: 0, options: [.transitionCrossDissolve, .curveEaseOut], animations: {
-                self.popup.frame.origin = CGPoint(x: self.frame.minX, y: self.frame.maxY)
+                self.popup.frame.origin = CGPoint(x: self.popup.frame.origin.x, y: self.popup.frame.origin.y + self.popup.frame.height)
                 self.dimBackground.alpha = 0
             }, completion: { finished in
-                
                 self.isHidden = true
             })
         })
@@ -221,8 +226,9 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! ProfilePopupCell
+        let percentage = post!.getPercentage(forDecisionAt: indexPath.row) * 100
         if post != nil {
-            cell.configure(decision: post!.getDecision(at: indexPath.row), voteCount: post!.getVotes(at: indexPath.row))
+            cell.configure(decision: post!.getDecision(at: indexPath.row), voteCount: post!.getVotes(at: indexPath.row), percentage: percentage)
         } else {
             print("post is nil")
         }

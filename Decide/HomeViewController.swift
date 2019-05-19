@@ -221,7 +221,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let actualOffset = scrollView.contentOffset.y + insets.top
         if actualOffset < 0 && canLinkToScroll {
-            header.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0))
+            header.setAnchorPoint(anchorPoint: .zero)
             subheader.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: -1))
             header.transform = CGAffineTransform(scaleX: 1 + -actualOffset/300, y: 1 + -actualOffset/300)
             subheader.transform = CGAffineTransform(scaleX: 1 + -actualOffset/300, y: 1 + -actualOffset/300)

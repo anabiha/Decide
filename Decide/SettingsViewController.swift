@@ -93,7 +93,7 @@ class SettingsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         let offset = UIScreen.main.bounds.width/2
         self.container.center = CGPoint(x: self.container.center.x - offset, y: self.container.center.y)
-        UIView.animate(withDuration: 0.35, delay: 0.05, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
+        UIView.animate(withDuration: 0.35, delay: 0.08, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
             self.container.alpha = 1
             self.container.center = CGPoint(x: self.container.center.x + offset, y: self.container.center.y)
         }, completion: nil)

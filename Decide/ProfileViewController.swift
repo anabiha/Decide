@@ -27,8 +27,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     var tableView: UITableView!
     var analytics: ProfilePopup!
     var confirmDelete: Popup!
-    var dimBackground: UIView!
     var canLinkToScroll: Bool = true //unlinks the header "your posts" from scrollview when refreshing -> PREVENTS JITTERING
+    var dimBackground: UIView!
     var dragToHome: UIGestureRecognizer!
     private let refreshControl = UIRefreshControl()
     let generator1 = UINotificationFeedbackGenerator()
@@ -191,7 +191,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     //data refresh when scrolling down!
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y < 0 && canLinkToScroll {
-            headerLabel.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0))
+            headerLabel.setAnchorPoint(anchorPoint: .zero)
             headerLabel.transform = CGAffineTransform(scaleX: 1 + -scrollView.contentOffset.y/300, y: 1 + -scrollView.contentOffset.y/300)
         }
     }
@@ -234,7 +234,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         return UITableView.automaticDimension
     }
     
-    
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 { //title bar
@@ -255,7 +254,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 //change percentage to a decimal
                 let total = post.getTotal()
                 
-                cell.configure(text: post.getDecision(at: indexPath.row-1), percentage: Double(post.getVotes(at: indexPath.row - 1))/Double(total), color: cell.color1)
+                cell.configure(text: post.getDecision(at: indexPath.row-1), percentage: Double(post.getVotes(at: indexPath.row - 1))/Double(total), color: UIColor.white)
                 if post.didDisplayPercents { //redisplay percentages if they were shown prior
                     cell.displayPercentage()
                 }
@@ -264,7 +263,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
     }
-    
     // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.generator2.impactOccurred()
@@ -272,7 +270,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             analytics.setPost(to: post)
         }
         analytics.showPopup()
-        
     }
     @objc func deletePost(_ sender: Any) {
         let ref = Database.database().reference().root
