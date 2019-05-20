@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="9ag-aP-xxy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="9ag-aP-xxy">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -62,19 +62,20 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="En4-s3-GfY" customClass="CustomButton" customModule="Decide" customModuleProvider="target">
-                                                    <rect key="frame" x="274" y="11" width="46" height="30"/>
-                                                    <state key="normal" title="Button"/>
+                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="En4-s3-GfY" customClass="CustomButton" customModule="Decide" customModuleProvider="target">
+                                                    <rect key="frame" x="313" y="16" width="22" height="13"/>
+                                                    <state key="normal" title="Button" image="flag"/>
                                                 </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="kg2-ds-u5s" secondAttribute="bottom" id="0MP-wI-6Hl"/>
                                                 <constraint firstItem="kg2-ds-u5s" firstAttribute="top" secondItem="pBM-mg-csr" secondAttribute="topMargin" id="3xg-iC-zQd"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="En4-s3-GfY" secondAttribute="trailing" id="8ZS-jD-yhZ"/>
+                                                <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="En4-s3-GfY" secondAttribute="trailing" constant="-15" id="8ZS-jD-yhZ"/>
                                                 <constraint firstItem="xE4-VJ-Ac3" firstAttribute="leading" secondItem="pBM-mg-csr" secondAttribute="leading" id="8rf-9s-hZR"/>
                                                 <constraint firstItem="kg2-ds-u5s" firstAttribute="leading" secondItem="xE4-VJ-Ac3" secondAttribute="trailing" id="H42-iD-dFb"/>
+                                                <constraint firstItem="En4-s3-GfY" firstAttribute="leading" secondItem="xE4-VJ-Ac3" secondAttribute="trailing" constant="272.66666666666669" id="a3a-yj-GHx"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="kg2-ds-u5s" secondAttribute="trailing" id="avS-zD-N08"/>
-                                                <constraint firstItem="En4-s3-GfY" firstAttribute="top" secondItem="pBM-mg-csr" secondAttribute="topMargin" id="csL-so-gsZ"/>
+                                                <constraint firstItem="En4-s3-GfY" firstAttribute="top" secondItem="pBM-mg-csr" secondAttribute="topMargin" constant="-11" id="csL-so-gsZ"/>
                                                 <constraint firstItem="xE4-VJ-Ac3" firstAttribute="top" secondItem="pBM-mg-csr" secondAttribute="top" id="klj-lU-I42"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -223,7 +224,8 @@
     </scenes>
     <resources>
         <image name="AddNew" width="25" height="25"/>
-        <image name="GreyFireButton" width="258" height="259"/>
+        <image name="GreyFireButton" width="123.83999633789062" height="124.31999969482422"/>
         <image name="HomeNew" width="25" height="25"/>
+        <image name="flag" width="48" height="48"/>
     </resources>
 </document>
