@@ -20,7 +20,8 @@ class ProfilePopupCell: UITableViewCell {
     var voteCountLabel: UILabel!
     var barColor = Universal.blue.withAlphaComponent(0.8)
     var fadedBarColor = Universal.blue.withAlphaComponent(0.1)
-    let barHeight: CGFloat = 20
+    var barHeight: CGFloat = 20
+    var barWidth: CGFloat!
     func configure(decision: String, voteCount: Int, percentage: Double) {
         
         self.percentage = percentage
@@ -38,12 +39,13 @@ class ProfilePopupCell: UITableViewCell {
             addSubview(voteCountLabel)
         }
         if bar == nil {
-            bar = UIView(frame: CGRect(x: 25, y: self.frame.height - barHeight + 15, width: self.frame.width, height: barHeight))
+            barWidth = self.frame.width
+            bar = UIView(frame: CGRect(x: 25, y: self.frame.height - barHeight + 15, width: barWidth, height: barHeight))
             bar.layer.cornerRadius = Universal.cornerRadius
             bar.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner, .layerMaxXMaxYCorner, .layerMaxXMinYCorner]
             bar.layer.backgroundColor = barColor.cgColor
-            bar.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0.5))
-            bar.transform = CGAffineTransform(scaleX: 0, y: 1)
+            //bar.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0.5))
+            bar.frame.size.width = 0
             bar.isHidden = true
             addSubview(bar)
         }
@@ -69,39 +71,35 @@ class ProfilePopupCell: UITableViewCell {
         decisionLabel.text = decision
         decisionLabel.font = UIFont(name: Universal.lightFont, size: 17)
         decisionLabel.textColor = UIColor.darkText
-        voteCountLabel.text = "\(voteCount)"
+        
+        voteCountLabel.text = voteCount == 0 ? "No votes" : "\(voteCount)"
         voteCountLabel.font = UIFont(name: Universal.heavyFont, size: 17)
         voteCountLabel.textColor = UIColor.black
         selectionStyle = .none
     }
     func setLabel(to text: String) {
-        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+        UIView.animate(withDuration: 0.4, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.voteCountLabel.alpha = 0
+            self.voteCountLabel.alpha = 1
             self.voteCountLabel.text = text
         }, completion: nil)
     }
-    func displayPercentage() {
+   
+    func displayPercentageBar() {
         bar.isHidden = false
-        //animate bar
-        UIView.animate(withDuration: 0.4, delay: 0.2, options: .curveEaseOut, animations: {
-            self.bar.transform = CGAffineTransform(scaleX: CGFloat(self.percentage)/100, y: 1)
+        UIView.animate(withDuration: 0.35, delay: 0.3, options: .curveEaseOut, animations: {
+            self.bar.frame.size.width = self.barWidth * CGFloat(self.percentage)/100
         }, completion: nil)
         //animate shifting of choice alpha
-        UIView.animate(withDuration: 0.5, delay: 0.2, options: .curveEaseIn, animations: {
+        UIView.animate(withDuration: 0.4, delay: 0.2, options: .curveEaseIn, animations: {
             self.voteCountLabel.alpha = 0
             self.voteCountLabel.alpha = 1
-        }, completion: nil)
-        UIView.animate(withDuration: 0.1, delay: 0.2, options: .transitionCrossDissolve, animations: {
-            if !self.percentage.isNaN  {
-                self.setLabel(to: String("\(self.percentage.truncate(places: 1))%"))
-            } else {
-                self.setLabel(to: "No votes")
-            }
         }, completion: nil)
     }
     override func prepareForReuse() {
         super.prepareForReuse()
         bar.isHidden = true
-        bar.transform = CGAffineTransform(scaleX: 0, y: 1)
+        bar.frame.size.width = 0
     }
 }
 class ProfileChoiceCell: UITableViewCell {
@@ -294,7 +292,7 @@ class HomeChoiceCell: UITableViewCell {
             //animate bar
             UIView.animate(withDuration: 0.3, delay: 0.2, options: .curveEaseOut, animations: {
                 bar.alpha = 1
-                bar.frame.size.width = self.frame.size.width * CGFloat(self.percentage)
+                bar.frame.size.width = self.frame.size.width * CGFloat(self.percentage)/100
             }, completion: nil)
             //animate shifting of choice alpha
             UIView.animate(withDuration: 0.5, delay: 0.2, options: .curveEaseIn, animations: {
@@ -302,7 +300,7 @@ class HomeChoiceCell: UITableViewCell {
                 self.choice.alpha = 1
             }, completion: nil)
             UIView.animate(withDuration: 0.1, delay: 0.2, options: .transitionCrossDissolve, animations: {
-                self.choice.text = String("\((self.percentage * 100).truncate(places: 1))%") //this step must happen before the shift of choice, otherwise animation wont work
+                self.choice.text = String("\((self.percentage).truncate(places: 1))%") //this step must happen before the shift of choice, otherwise animation wont work
             }, completion: nil)
         }
     }

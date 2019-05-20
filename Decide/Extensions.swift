@@ -89,6 +89,16 @@ extension UIView {
         mask.path = path.cgPath
         self.layer.mask = mask
     }
+    func addCornerRadiusAnimation(from: CGFloat, to: CGFloat, duration: CFTimeInterval)
+    {
+        let animation = CABasicAnimation(keyPath:"cornerRadius")
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+        animation.fromValue = from
+        animation.toValue = to
+        animation.duration = duration
+        layer.add(animation, forKey: "cornerRadius")
+        layer.cornerRadius = to
+    }
     
     
 }

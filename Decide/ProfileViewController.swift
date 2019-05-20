@@ -268,6 +268,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.generator2.impactOccurred()
         if let post = userPosts.getPost(at: indexPath.section) {
             analytics.setPost(to: post)
+        } else {
+            print("ProfileViewController;didSelectRowAt(): ERROR - Post doesn't exist")
         }
         analytics.showPopup()
     }

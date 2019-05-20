@@ -28,7 +28,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     var deleteButton: CustomButton!
     var post: Post?
     var tableView: UITableView!
-    var isShowingPercentages = true
+    var shouldShowPercentages = true
     let width = UIScreen.main.bounds.width
     
     func configure() {
@@ -79,6 +79,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
             popup.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
             popup.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
             popup.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
+            popup.topAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
             //vote question/title constraints
             title.topAnchor.constraint(equalTo: popup.topAnchor, constant: 25).isActive = true
             title.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 24).isActive = true
@@ -87,14 +88,14 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
             subtitle.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 25).isActive = true
             subtitle.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 3).isActive = true
             //vote counter label constraints
-            totalVotes.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 40).isActive = true
+            totalVotes.topAnchor.constraint(equalTo: subtitle.bottomAnchor, constant: 30).isActive = true
             totalVotes.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 23).isActive = true
             totalVotes.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: -20).isActive = true
             //tableview constriants
             tableView.topAnchor.constraint(equalTo: totalVotes.bottomAnchor, constant: 0).isActive = true
             tableView.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 0).isActive = true
             tableView.trailingAnchor.constraint(equalTo: popup.trailingAnchor, constant: 0).isActive = true
-            tableView.heightAnchor.constraint(greaterThanOrEqualToConstant: 300).isActive = true
+            tableView.heightAnchor.constraint(greaterThanOrEqualToConstant: 350).isActive = true
             //delete button constraints
             deleteButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 10).isActive = true
             deleteButton.leadingAnchor.constraint(equalTo: popup.leadingAnchor, constant: 25).isActive = true
@@ -171,8 +172,9 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
                 self.totalVotes.alpha = 1
             })
             for i in 0..<self.post!.decisions.count {
-                let cell = self.tableView.cellForRow(at: IndexPath(row: i, section: 0)) as! ProfilePopupCell
-                cell.displayPercentage()
+                if let cell = self.tableView.cellForRow(at: IndexPath(row: i, section: 0)) as? ProfilePopupCell {
+                    cell.displayPercentageBar()
+                }
             }
         })
         print("ProfilePopup; showPopup(): popup opened")
@@ -226,20 +228,32 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! ProfilePopupCell
-        let percentage = post!.getPercentage(forDecisionAt: indexPath.row) * 100
+        let percentage = post!.getPercentage(forDecisionAt: indexPath.row)
         if post != nil {
             cell.configure(decision: post!.getDecision(at: indexPath.row), voteCount: post!.getVotes(at: indexPath.row), percentage: percentage)
+            cell.displayPercentageBar() //display the bar regardless of whether the percentage is on screen
+            if shouldShowPercentages { //if should display percentage
+                if post!.totalVotes != 0 {
+                    cell.setLabel(to: "\((post!.getPercentage(forDecisionAt: indexPath.row)).truncate(places: 1)) %")
+                } else {
+                    cell.setLabel(to: "No votes")
+                }
+            } else { //should display vote count
+                cell.setLabel(to: "\(post!.getVotes(at: indexPath.row))")
+            }
         } else {
-            print("post is nil")
+            print("ProfilePopup; cellForRowAt(): Post is nil")
         }
         return cell
     }
+    //the popup starts by showing percentages, and it will change to numbers upon a tap
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        shouldShowPercentages = !shouldShowPercentages
         for i in 0..<post!.decisions.count {
             if let cell = tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section)) as? ProfilePopupCell {
-                if isShowingPercentages {
-                    if post?.totalVotes != 0 {
-                        cell.setLabel(to: "\((post!.getPercentage(forDecisionAt: i) * 100).truncate(places: 1)) %")
+                if shouldShowPercentages {
+                    if post!.totalVotes != 0 {
+                        cell.setLabel(to: "\((post!.getPercentage(forDecisionAt: i)).truncate(places: 1)) %")
                     } else {
                         cell.setLabel(to: "No votes")
                     }
@@ -248,7 +262,7 @@ class ProfilePopup: UIView, UITableViewDelegate, UITableViewDataSource {
                 }
             }
         }
-        isShowingPercentages = !isShowingPercentages
+        
     }
     
 }

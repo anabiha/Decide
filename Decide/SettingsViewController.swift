@@ -10,8 +10,12 @@ import Foundation
 import UIKit
 import Firebase
 
-class SettingsViewController: UIViewController {
+class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
+    
     var container: UIView! //container that holds all options
+    var tableview: UITableView!
+    var insets = UIEdgeInsets(top: 100, left: 0, bottom: 0, right: 0)
     var logo: UILabel!
     var preferences: UILabel!
     var account: UILabel!
@@ -22,40 +26,33 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        container = UIView()
-        logo = UILabel()
-        preferences = UILabel()
-        account = UILabel()
+        tableview = UITableView()
+        tableview.dataSource = self
+        tableview.delegate = self
+        tableview.estimatedRowHeight = 43.5
+        tableview.backgroundColor = UIColor.clear
+        tableview.rowHeight = UITableView.automaticDimension
+        tableview.tableFooterView = UIView()
+        tableview.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableview.isScrollEnabled = false
+        tableview.contentInset = insets
+        tableview.separatorStyle = .none
+        
         homeTab = UIView()
         
-        container.translatesAutoresizingMaskIntoConstraints = false
-        logo.translatesAutoresizingMaskIntoConstraints = false
-        preferences.translatesAutoresizingMaskIntoConstraints = false
-        account.translatesAutoresizingMaskIntoConstraints = false
+        tableview.translatesAutoresizingMaskIntoConstraints = false
         homeTab.translatesAutoresizingMaskIntoConstraints = false
         
-        view.addSubview(container)
+        view.addSubview(tableview)
         view.addSubview(homeTab)
-        container.addSubview(logo)
-        container.addSubview(preferences)
-        container.addSubview(account)
-        view.sendSubviewToBack(container)
-        let containerWidth = UIScreen.main.bounds.width - homeTabWidth
+        
+        let tableviewWidth = UIScreen.main.bounds.width - homeTabWidth
         let center = (UIScreen.main.bounds.width - homeTabWidth)/2 //the center of the region between tab and leading anchor
         
-        container.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height).isActive = true
-        container.widthAnchor.constraint(equalToConstant: containerWidth).isActive = true
-        container.centerXAnchor.constraint(equalTo: view.leadingAnchor, constant: center).isActive = true
-        container.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-       
-        logo.topAnchor.constraint(equalTo: container.topAnchor, constant: 150).isActive = true
-        logo.centerXAnchor.constraint(equalTo: container.centerXAnchor).isActive = true
-        
-        preferences.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: 10).isActive = true
-        preferences.centerXAnchor.constraint(equalTo: container.centerXAnchor).isActive = true
-        
-        account.topAnchor.constraint(equalTo: preferences.bottomAnchor, constant: 10).isActive = true
-        account.centerXAnchor.constraint(equalTo: container.centerXAnchor).isActive = true
+        tableview.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height).isActive = true
+        tableview.widthAnchor.constraint(equalToConstant: tableviewWidth).isActive = true
+        tableview.centerXAnchor.constraint(equalTo: view.leadingAnchor, constant: center).isActive = true
+        tableview.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         
         homeTab.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         homeTab.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -63,24 +60,12 @@ class SettingsViewController: UIViewController {
         homeTab.widthAnchor.constraint(equalToConstant: homeTabWidth).isActive = true
         
         view.backgroundColor = Universal.blue
-        
-        logo.text = "Decide"
-        logo.font = UIFont(name: Universal.heavyFont, size: 30)
-        logo.textColor = UIColor.white
-        
-        preferences.text = "Preferences"
-        preferences.font = UIFont(name: Universal.lightFont, size: 20)
-        preferences.textColor = UIColor.white
-        
-        account.text = "Account"
-        account.font = UIFont(name: Universal.lightFont, size: 20)
-        account.textColor = UIColor.white
-        
+       
         homeTab.backgroundColor = Universal.viewBackgroundColor
         homeTab.layer.cornerRadius = Universal.cornerRadius
         homeTab.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
         
-        container.alpha = 0
+        tableview.alpha = 0
         
         dragToHome = UIPanGestureRecognizer(target: self, action: #selector(wasDraggedToHome(gestureRecognizer:)))
         view.addGestureRecognizer(dragToHome)
@@ -92,12 +77,11 @@ class SettingsViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         let offset = UIScreen.main.bounds.width/2
-        self.container.center = CGPoint(x: self.container.center.x - offset, y: self.container.center.y)
+        self.tableview.center = CGPoint(x: self.tableview.center.x - offset, y: self.tableview.center.y)
         UIView.animate(withDuration: 0.35, delay: 0.08, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
-            self.container.alpha = 1
-            self.container.center = CGPoint(x: self.container.center.x + offset, y: self.container.center.y)
+            self.tableview.alpha = 1
+            self.tableview.center = CGPoint(x: self.tableview.center.x + offset, y: self.tableview.center.y)
         }, completion: nil)
-        print("appeared")
     }
     //used for switching back to home page
     @objc func wasDraggedToHome(gestureRecognizer: UIPanGestureRecognizer) {
@@ -125,5 +109,31 @@ class SettingsViewController: UIViewController {
             })
             
         }
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 2
+    }
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! UITableViewCell
+        cell.textLabel!.textColor = UIColor.white
+        cell.textLabel!.textAlignment = .center
+        cell.backgroundColor = UIColor.clear
+        switch indexPath.row {
+        case 0: //the logo
+            cell.textLabel!.font = UIFont(name: Universal.heavyFont, size: 30)
+            cell.textLabel!.text = "Decide"
+        case 1:
+            cell.textLabel!.font = UIFont(name: Universal.lightFont, size: 20)
+            cell.textLabel!.text = "Account"
+        default:
+            cell.textLabel!.text = "ERROR"
+        }
+        return cell
     }
 }
