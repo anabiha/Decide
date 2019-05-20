@@ -8,26 +8,76 @@
 
 import UIKit
 import Firebase
-class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
+class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    
     let usernameIdentifier = "userCell"
     let titleIdentifier = "titleCell"
     let choiceIdentifier = "choiceCell"
     let cellSpacingHeight: CGFloat = 40
+    var insets = UIEdgeInsets(top: 60, left: 0, bottom: 50, right: 0)
     let homeDecision = HomeDecision()
-    
-    private let refreshControl = UIRefreshControl()
-    var customView : UIView!
-    
-    var flagPopup = FlagPopup()
+    private let refreshControl = UIRefreshControl() //refresh animation
+    var flagPopup = FlagPopup() //popup for flagging posts
     var dimBackground: UIView!
-    var popupDefaultFrame: CGRect!
     var flagHandler = FlagHandler()
+    var header: UILabel!
+    var subheader: UILabel!
+    var canLinkToScroll = true
+    var addButton: CustomButton! //button to get to new decision
+    var profileButton: CustomButton!
+    var settingsButton: CustomButton!
+    var dragToProfile: UIGestureRecognizer!
+    let generator1 = UINotificationFeedbackGenerator()
+    let generator2 = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.modalPresentationStyle = .fullScreen //very important for transitions
+        view.clipsToBounds = true
+        //instantiation of labels
+        header = UILabel()
+        view.addSubview(header)
+        subheader = UILabel()
+        view.addSubview(subheader)
+        addButton = CustomButton()
+        view.addSubview(addButton)
+        profileButton = CustomButton()
+        view.addSubview(profileButton)
+        settingsButton = CustomButton()
+        view.addSubview(settingsButton)
+        //header constraints and setup
+        header.translatesAutoresizingMaskIntoConstraints = false
+        header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        header.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 15).isActive = true
+        header.text = "Home"
+        header.font = UIFont(name: Universal.heavyFont, size: 35)
+        //subheader constraints and setup
+        subheader.translatesAutoresizingMaskIntoConstraints = false
+        subheader.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 23).isActive = true
+        subheader.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 0).isActive = true
+        subheader.text = "Welcome"
+        subheader.font = UIFont(name: Universal.mediumFont, size: 15)
+        subheader.textColor = UIColor.lightGray
+        //profile button
+        profileButton.translatesAutoresizingMaskIntoConstraints = false
+        profileButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
+        profileButton.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20).isActive = true
+        profileButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        profileButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        profileButton.configure(withImage: UIImage(named: "profile_icosahedron")!, tuple: button.popupDelete)
+        profileButton.addTarget(self, action: #selector(showProfile(_:)), for: .touchUpInside)
+        //add button
+        addButton.translatesAutoresizingMaskIntoConstraints = false
+        addButton.trailingAnchor.constraint(equalTo: profileButton.leadingAnchor, constant: -10).isActive = true
+        addButton.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20).isActive = true
+        addButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        addButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        addButton.configure(tuple: button.add)
+        addButton.addTarget(self, action: #selector(showNewDecision(_:)), for: .touchUpInside)
+        //settings
+        settingsButton.translatesAutoresizingMaskIntoConstraints = false
+        //tableview data and setup
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = UIColor.clear
@@ -35,10 +85,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.estimatedRowHeight = 43.5
         tableView.estimatedSectionHeaderHeight = cellSpacingHeight;
         tableView.estimatedSectionFooterHeight = 0;
-        
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
-        self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
+        tableView.contentInset = insets
+        self.view.backgroundColor = Universal.viewBackgroundColor
+        //drag recognizer
+        dragToProfile = UIPanGestureRecognizer(target: self, action: #selector(wasDragged(gestureRecognizer:)))
+        dragToProfile.delegate = self
+        view.addGestureRecognizer(dragToProfile)
         //add dim background
         dimBackground = UIView(frame: UIScreen.main.bounds)
         dimBackground.alpha = 0
@@ -55,15 +108,64 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         //bringing subviews to front
         tabBarController!.view.bringSubviewToFront(dimBackground)
         tabBarController!.view.bringSubviewToFront(flagPopup)
-                //allows detection of keyboard appearing/disappearing
+        //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         instantiateRefreshControl()
         updateData()
     }
-    
+    override func viewDidAppear(_ animated: Bool) {
+        if dragToProfile != nil {
+            dragToProfile.isEnabled = true
+        }
+    }
+    @objc func wasDragged(gestureRecognizer: UIPanGestureRecognizer) {
+        let translation = gestureRecognizer.translation(in: self.view)
+        if gestureRecognizer.state == UIGestureRecognizer.State.began {
+            generator2.impactOccurred()
+        }
+        if gestureRecognizer.state == UIGestureRecognizer.State.began || gestureRecognizer.state == UIGestureRecognizer.State.changed {
+            let minDist = UIScreen.main.bounds.width/4
+            
+            gestureRecognizer.view!.center = CGPoint(x: gestureRecognizer.view!.center.x + translation.x, y: gestureRecognizer.view!.center.y)
+            gestureRecognizer.setTranslation(.zero, in: view)
+            if gestureRecognizer.view!.frame.minX + translation.x < -minDist {
+                if let tb = tabBarController as? MainTabBarController {
+                    gestureRecognizer.isEnabled = false
+                    tb.animateTabSwitch(to: 2, withScaleAnimation: false)
+                }
+            } else if gestureRecognizer.view!.frame.minX + translation.x > minDist {
+                if let tb = tabBarController as? MainTabBarController {
+                    gestureRecognizer.isEnabled = false
+                    tb.animateTabSwitch(to: 3, withScaleAnimation: false)
+                }
+            }
+        } else if gestureRecognizer.state == UIGestureRecognizer.State.ended { //reset the frame if it didnt get dragged the minimum distance
+            UIView.animate(withDuration: 0.2, animations: {
+                self.view.frame.origin = .zero
+            }, completion: { finished in
+                self.generator2.impactOccurred()
+            })
+            
+        }
+    }
+    //prevents gesturerecognition of subview
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return touch.view == gestureRecognizer.view
+    }
+    @objc func showNewDecision(_ sender: Any) {
+        if let tb = tabBarController as? MainTabBarController {
+            tb.animateTabSwitch(to: 1, withScaleAnimation: true)
+        }
+    }
+    @objc func showProfile(_ sender: Any) {
+        if let tb = tabBarController as? MainTabBarController {
+            tb.animateTabSwitch(to: 2, withScaleAnimation: true)
+        }
+    }
     //displays the data from firebase in the homepage
     func updateData() {
+        
         let ref = Database.database().reference().child("posts")
         
         ref.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
@@ -85,12 +187,14 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                     self.homeDecision.posts.insert(currentPost, at: 0)
                 }
+                self.generator1.notificationOccurred(.success)
                 //inserting new sections
                 self.tableView.beginUpdates()
                 let indexSet = IndexSet(integersIn: 0..<self.homeDecision.posts.count)
                 self.tableView.insertSections(indexSet, with: .fade)
                 self.tableView.endUpdates()
                 self.refreshControl.endRefreshing()
+                self.canLinkToScroll = true
             }
             
         })
@@ -101,21 +205,33 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }else{
             tableView.addSubview(refreshControl)
         }
-        refreshControl.addTarget(self, action:#selector(refreshData(_:)), for: .valueChanged)
     }
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if refreshControl.isRefreshing {
-            updateData()
+        if self.refreshControl.isRefreshing {
+            canLinkToScroll = false
+            UIView.animate(withDuration: 0.20, animations: {
+                self.header.transform = CGAffineTransform(scaleX: 1, y: 1)
+                self.subheader.transform = CGAffineTransform(scaleX: 1, y: 1)
+            }) { (finished) in
+                self.updateData()
+            }
         }
     }
-    @objc private func refreshData(_ sender: Any) {
-        if !tableView.isDragging {
-            updateData()
+    //data refresh when scrolling down!
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let actualOffset = scrollView.contentOffset.y + insets.top
+        if actualOffset < 0 && canLinkToScroll {
+            header.setAnchorPoint(anchorPoint: .zero)
+            subheader.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: -1))
+            header.transform = CGAffineTransform(scaleX: 1 + -actualOffset/300, y: 1 + -actualOffset/300)
+            subheader.transform = CGAffineTransform(scaleX: 1 + -actualOffset/300, y: 1 + -actualOffset/300)
+        } else if actualOffset > 0 { //shifts header and subheader up when sliding up
+            header.transform = CGAffineTransform(translationX: 0, y: -actualOffset)
+            subheader.transform = CGAffineTransform(translationX: 0, y: -actualOffset)
         }
     }
-    
     override func viewWillAppear(_ animated: Bool) {
-              //allows detection of keyboard appearing/disappearing
+        //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
@@ -123,7 +239,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         //removes keyboard detection of view once it disappears, used to prevent detection when keyboard appears on NEWDECISION
         NotificationCenter.default.removeObserver(self)
     }
-   
+    
     //shift view up when keyboard appears
     @objc func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -138,15 +254,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     //shift view down when keyboard disappears
     @objc func keyboardWillHide(_ notification:Notification) {
-        if popupDefaultFrame != nil {
-            flagPopup.frame = popupDefaultFrame
-        } else {
-            print("HomeViewController;keyboardWillHide(): POPUPDEFAULTFRAME DOES NOT EXIST")
-        }
+        
+        flagPopup.center = view.center
     }
+    
     // MARK: - Table View delegate methods
     func numberOfSections(in tableView: UITableView) -> Int {
-            return homeDecision.posts.count
+        return homeDecision.posts.count
     }
     
     // There is just one row in every section
@@ -179,7 +293,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
             self.flagPopup.transform = CGAffineTransform(scaleX: 1, y: 1)
         })
-        popupDefaultFrame = flagPopup.frame
     }
     func closeFlagPopup() {
         UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
@@ -240,7 +353,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             return cell
         } else { //choice bars
-            let cell = self.tableView.dequeueReusableCell(withIdentifier: choiceIdentifier) as! ChoiceCell
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: choiceIdentifier) as! HomeChoiceCell
             if let post = homeDecision.getPost(at: indexPath.section) {
                 if indexPath.row == post.decisions.count + 1 { //rounds corners of bottom row
                     cell.shouldRound = true
@@ -278,7 +391,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
         let post = homeDecision.getPost(at: indexPath.section)
         if post!.isVoteable && indexPath.row > 1 {
-            if let cell = tableView.cellForRow(at: indexPath) as? ChoiceCell {
+            if let cell = tableView.cellForRow(at: indexPath) as? HomeChoiceCell {
                 UIView.animate(withDuration: 0.1, animations: {
                     cell.backgroundColor = cell.color2
                 })
@@ -290,7 +403,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
         let post = homeDecision.getPost(at: indexPath.section)
         if post!.isVoteable && indexPath.row > 1 {
-            if let cell = tableView.cellForRow(at: indexPath) as? ChoiceCell {
+            if let cell = tableView.cellForRow(at: indexPath) as? HomeChoiceCell {
                 UIView.animate(withDuration: 0.1, delay: 0.1, animations: {
                     cell.backgroundColor = cell.color1
                 })
@@ -311,7 +424,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 post.didDisplayPercents = !post.didDisplayPercents //mark the cell as displayed, regardless of whether whole post is visible, switch it each time it is pressed
                 
                 for index in 2..<post.decisions.count + 2 {
-                    if let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: indexPath.section)) as? ChoiceCell {
+                    if let cell = self.tableView.cellForRow(at: IndexPath(row: index, section: indexPath.section)) as? HomeChoiceCell {
                         cell.updatePercent(newPercent: post.getPercentage(forDecisionAt: index - 2)) //retrieve the updated percentage and display it
                         if post.didDisplayPercents {
                             UIView.animate(withDuration: 0.2) {
@@ -332,12 +445,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 }
             }
         }
-        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         //the height of the post, to be implemented later
         return UITableView.automaticDimension
     }
-   
+    
 }

@@ -46,9 +46,15 @@ extension Double
     }
 }
 extension UIView {
+    /*sets the anchor to which animations are performed on a uiview. From experimentation:
+     CGPoint(0.5, 0.5) represents the center of the view
+     CGPoint(0, 0) represents the left corner
+     Use THAT SCALE^ to determine which point to use. Don't use the view's actual cgpoints
+    */
     func setAnchorPoint(anchorPoint: CGPoint) {
         var newPoint = CGPoint(x: self.bounds.size.width * anchorPoint.x,
                                y: self.bounds.size.height * anchorPoint.y)
+        
         
         var oldPoint = CGPoint(x: self.bounds.size.width * self.layer.anchorPoint.x,
                                y: self.bounds.size.height * self.layer.anchorPoint.y)
@@ -76,12 +82,22 @@ extension UIView {
         animation.toValue = NSValue(cgPoint: CGPoint(x: self.center.x + 12, y: self.center.y))
         self.layer.add(animation, forKey: "position")
     }
-    
+    //rounds specific corners of any uiview you want
     func roundCorners(_ corners: UIRectCorner, radius: CGFloat) {
         let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         let mask = CAShapeLayer()
         mask.path = path.cgPath
         self.layer.mask = mask
+    }
+    func addCornerRadiusAnimation(from: CGFloat, to: CGFloat, duration: CFTimeInterval)
+    {
+        let animation = CABasicAnimation(keyPath:"cornerRadius")
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+        animation.fromValue = from
+        animation.toValue = to
+        animation.duration = duration
+        layer.add(animation, forKey: "cornerRadius")
+        layer.cornerRadius = to
     }
     
     

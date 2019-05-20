@@ -31,7 +31,7 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
         getStarted.layer.shadowOpacity = 0.5
         getStarted.layer.shadowRadius = 10
         getStarted.layer.shadowOffset = CGSize(width: 7.0, height: 7.0)
-        username.layer.cornerRadius = 10
+        username.layer.cornerRadius = Universal.cornerRadius
         defaultFrame = self.view.frame
         //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -51,6 +51,7 @@ class CreateUserViewController: UIViewController, UITextFieldDelegate {
         //bring views to front
         view.bringSubviewToFront(dimBackground)
         view.bringSubviewToFront(popup)
+        view.backgroundColor = Universal.viewBackgroundColor
     }
     @objc func closePopup(sender: UIButton) {
         UIView.animate(withDuration: 0.15, delay: 0, options: .transitionCrossDissolve, animations: {
