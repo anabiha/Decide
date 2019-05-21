@@ -15,42 +15,97 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         delegate = self
         tabBar.unselectedItemTintColor = .black
+        tabBar.isHidden = true
+        view.backgroundColor = Universal.viewBackgroundColor
     }
     
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-        
-        if (previouslySelectedIndex == nil) {
-            previouslySelectedIndex = tabBarController.selectedIndex
-        }
-        
-        if (viewController.tabBarItem.tag == 1) {
-           let vc = self.storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
-           self.present(vc, animated: true, completion: nil)
-//            animateToTab(toIndex: 1) //initiate slide up animation if new decision is pressed
-            //also note that the tab bar is hidden in this view
-        }
-        //switch statement used to change previouslySelectedIndex
-        switch viewController.tabBarItem.tag {
-        case 0:
-            previouslySelectedIndex = viewController.tabBarItem.tag //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
-            print("Home button pressed")
-            print ("Previously selected index is now: \(previouslySelectedIndex!)")
-        case 1: //don't change previously selected if they press newdecision
-            print ("Add decision button pressed")
-            print ("Previously selected index is still: \(previouslySelectedIndex!)")
+       
+        guard let tabViewControllers = tabBarController.viewControllers, let fromIndex = tabViewControllers.firstIndex(of: selectedViewController!), let toIndex = tabViewControllers.firstIndex(of: viewController), fromIndex != toIndex else {
+            print("error indexes are the same")
             return false
-        case 2:
-            previouslySelectedIndex = viewController.tabBarItem.tag //set the previously selected view so we can revert back to it if needed (ex. if cancel button is pressed)
-            print ("Profile button pressed")
-            print ("Previously selected index is now: \(previouslySelectedIndex!)")
-        default:
-            print("Unexpected tab bar item pressed")
         }
+        
+        print("WHY IS IT HERE")
+        animateTabSwitch(to: toIndex, withScaleAnimation: false)
+      
         return true
     }
-    
-    //slide up animation!!!
-    
-    
+    func animateHalf(to index: Int) {
+        
+        guard let fromView = self.selectedViewController?.view, let fromIndex = self.viewControllers?.firstIndex(of: self.selectedViewController!),
+            let toView = self.viewControllers?[index].view else {
+                return
+        }
+        
+        // Add the toView to the tab bar view
+        fromView.superview?.addSubview(toView)
+        // Position toView off screen (above subview)
+        let screenSize = UIScreen.main.bounds.size
+        
+        var offsetY: CGFloat!
+        var offsetX: CGFloat!
+        let isVertical = (index == 1 || fromIndex == 1 && index == 0) ? true : false
+        if isVertical {
+            offsetY = index == 1 ? -screenSize.height/3 : screenSize.height/3
+            offsetX = 0
+        } else {
+            offsetY = 0
+            offsetX = index == 2 ? -screenSize.width/3 : screenSize.width/3
+        }
+        toView.center = CGPoint(x: fromView.center.x - offsetX, y: toView.center.y - offsetY)
+        // Disable interaction during animation
+        view.isUserInteractionEnabled = false
+        
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+            toView.center = CGPoint(x: toView.center.x + offsetX, y: toView.center.y  + offsetY)
+            fromView.center = CGPoint(x: fromView.center.x + offsetX, y: fromView.center.y  + offsetY)
+            //self.selectedIndex = index //keeping this in the animate tab rather than the completion = smoother animation
+        }, completion: { finished in
+            // Remove the old view from the tabbar view.
+            //fromView.removeFromSuperview()
+            self.view.isUserInteractionEnabled = true
+            
+        })
+    }
+    //FUNCTION HANDLES SWITCHING OF SELECTED TAB
+    func animateTabSwitch(to index: Int, withScaleAnimation shouldScale: Bool) {
+        
+        guard let fromView = self.selectedViewController?.view, let fromIndex = self.viewControllers?.firstIndex(of: self.selectedViewController!),
+            let toView = self.viewControllers?[index].view else {
+                return
+        }
+        
+        // Add the toView to the tab bar view
+        fromView.superview?.addSubview(toView)
+        // Position toView off screen (above subview)
+        let screenSize = UIScreen.main.bounds.size
+        
+        var offsetY: CGFloat!
+        var offsetX: CGFloat!
+        let isVertical = (index == 1 || fromIndex == 1 && index == 0) ? true : false
+        if isVertical {
+            offsetY = index == 1 ? -screenSize.height : screenSize.height
+            offsetX = 0
+        } else {
+            offsetY = 0
+            offsetX = index == 2 || fromIndex == 3 && index == 0 ? -screenSize.width : screenSize.width //2 = move right, 3 = move left
+        }
+        toView.center = CGPoint(x: fromView.center.x - offsetX, y: toView.center.y - offsetY)
+        // Disable interaction during animation
+        view.isUserInteractionEnabled = false
+      
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+            toView.center = CGPoint(x: toView.center.x + offsetX, y: toView.center.y  + offsetY)
+            fromView.center = CGPoint(x: fromView.center.x + offsetX, y: fromView.center.y  + offsetY)
+            self.selectedIndex = index
+           //keeping this in the animate tab rather than the completion = smoother animation
+        }, completion: { finished in
+            // Remove the old view from the tabbar view.
+            print("went to view: \(index)")
+            fromView.removeFromSuperview()
+            self.view.isUserInteractionEnabled = true
+        })
+    }
 }
 

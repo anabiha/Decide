@@ -36,7 +36,13 @@ class Post {
     
     func getPercentage(forDecisionAt index: Int) -> Double {
         if index >= 0 && index < numVotes.count {
-            return Double(numVotes[index])/Double(totalVotes)
+            let percentage = Double(numVotes[index])/Double(totalVotes) * 100
+            if percentage.isNaN {
+                print("Post;getPercentage(): percentage was NAN, returned 0 instead)")
+                return 0
+            } else {
+                return percentage
+            }
         } else {
             print("Post;getPercentage(): INVALID accessing, Index \(index) vs Size \(numVotes.count))")
             return 0
