@@ -19,18 +19,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yOl-bh-KXq">
-                                <rect key="frame" x="30" y="20" width="315" height="617"/>
+                                <rect key="frame" x="20" y="20" width="335" height="617"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="questionBarCell" id="qrw-Yf-HBz" customClass="QuestionBar" customModule="Decide" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="315" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="335" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qrw-Yf-HBz" id="x1v-fy-pSa">
-                                            <rect key="frame" x="0.0" y="0.0" width="315" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="eBD-WZ-GQJ">
-                                                    <rect key="frame" x="10" y="0.0" width="290" height="44"/>
+                                                    <rect key="frame" x="10" y="0.0" width="315" height="44"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="done"/>
@@ -38,7 +38,7 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="eBD-WZ-GQJ" secondAttribute="bottom" id="8OK-lK-uz4"/>
-                                                <constraint firstAttribute="trailing" secondItem="eBD-WZ-GQJ" secondAttribute="trailing" constant="15" id="eaS-Ec-Jzk"/>
+                                                <constraint firstAttribute="trailing" secondItem="eBD-WZ-GQJ" secondAttribute="trailing" constant="10" id="eaS-Ec-Jzk"/>
                                                 <constraint firstItem="eBD-WZ-GQJ" firstAttribute="top" secondItem="x1v-fy-pSa" secondAttribute="top" id="ut2-l3-jy6"/>
                                                 <constraint firstItem="eBD-WZ-GQJ" firstAttribute="leading" secondItem="x1v-fy-pSa" secondAttribute="leading" constant="10" id="xee-Ec-7g7"/>
                                             </constraints>
@@ -48,14 +48,14 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="center" selectionStyle="default" indentationWidth="10" reuseIdentifier="decisionItemCell" id="IK6-ma-def" customClass="DecisionItem" customModule="Decide" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="72" width="315" height="44"/>
+                                        <rect key="frame" x="0.0" y="72" width="335" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="IK6-ma-def" id="czh-Dj-DKP">
-                                            <rect key="frame" x="0.0" y="0.0" width="315" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="nOo-zx-Dca">
-                                                    <rect key="frame" x="10" y="0.0" width="295" height="44"/>
+                                                    <rect key="frame" x="10" y="0.0" width="315" height="44"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -74,27 +74,19 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="addButtonCell" id="Atu-WF-tg1" customClass="AddButton" customModule="Decide" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="116" width="315" height="44"/>
+                                        <rect key="frame" x="0.0" y="116" width="335" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Atu-WF-tg1" id="4y6-gn-dDF">
-                                            <rect key="frame" x="0.0" y="0.0" width="315" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I5M-vc-2jn">
-                                <rect key="frame" x="162.5" y="-45" width="50" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="UZU-Ub-LhO"/>
-                                    <constraint firstAttribute="width" constant="50" id="bam-e1-u2S"/>
-                                </constraints>
-                                <state key="normal" image="CancelButton"/>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t2C-8Y-p2p" customClass="CustomButton" customModule="Decide" customModuleProvider="target">
-                                <rect key="frame" x="40" y="607" width="295" height="40"/>
+                                <rect key="frame" x="27.5" y="607" width="320" height="40"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="295" id="8Oc-mm-vP0"/>
+                                    <constraint firstAttribute="width" constant="320" id="8Oc-mm-vP0"/>
                                     <constraint firstAttribute="height" constant="40" id="ROk-dN-mht"/>
                                 </constraints>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="35" maxX="0.0" maxY="0.0"/>
@@ -108,20 +100,15 @@
                         <constraints>
                             <constraint firstItem="t2C-8Y-p2p" firstAttribute="bottom" secondItem="WIR-KR-om7" secondAttribute="bottom" constant="-20" id="2Hy-Np-ZD3"/>
                             <constraint firstItem="WIR-KR-om7" firstAttribute="bottom" secondItem="yOl-bh-KXq" secondAttribute="bottom" constant="30" id="CqJ-h1-8ig"/>
-                            <constraint firstItem="I5M-vc-2jn" firstAttribute="centerX" secondItem="skA-mO-84H" secondAttribute="centerX" id="QqD-ag-fEm"/>
-                            <constraint firstItem="I5M-vc-2jn" firstAttribute="centerY" secondItem="skA-mO-84H" secondAttribute="top" constant="-20" id="U0x-Pa-9zD"/>
-                            <constraint firstItem="yOl-bh-KXq" firstAttribute="leading" secondItem="WIR-KR-om7" secondAttribute="leading" constant="30" id="WTF-1P-ZqB"/>
+                            <constraint firstItem="yOl-bh-KXq" firstAttribute="leading" secondItem="WIR-KR-om7" secondAttribute="leading" constant="20" id="WTF-1P-ZqB"/>
                             <constraint firstItem="t2C-8Y-p2p" firstAttribute="centerX" secondItem="skA-mO-84H" secondAttribute="centerX" id="dqJ-0i-3WL"/>
-                            <constraint firstItem="WIR-KR-om7" firstAttribute="trailing" secondItem="yOl-bh-KXq" secondAttribute="trailing" constant="30" id="kJ7-Gh-aqO"/>
+                            <constraint firstItem="WIR-KR-om7" firstAttribute="trailing" secondItem="yOl-bh-KXq" secondAttribute="trailing" constant="20" id="kJ7-Gh-aqO"/>
                             <constraint firstItem="yOl-bh-KXq" firstAttribute="top" secondItem="WIR-KR-om7" secondAttribute="top" id="vp7-w4-n1L"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="WIR-KR-om7"/>
                     </view>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="cancelButton" destination="I5M-vc-2jn" id="q8V-lE-6gq"/>
-                        <outlet property="cancelButtonHeight" destination="UZU-Ub-LhO" id="aoa-j8-J0h"/>
-                        <outlet property="cancelButtonWidth" destination="bam-e1-u2S" id="N10-A2-eUu"/>
                         <outlet property="postButton" destination="t2C-8Y-p2p" id="CD4-yw-3pR"/>
                         <outlet property="tableView" destination="yOl-bh-KXq" id="G69-jt-c9n"/>
                     </connections>
@@ -131,7 +118,4 @@
             <point key="canvasLocation" x="2724" y="-563.56821589205401"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="CancelButton" width="55" height="54"/>
-    </resources>
 </document>
