@@ -41,8 +41,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
         createAccount.layer.shadowOpacity = 0.5
         createAccount.layer.shadowRadius = 10
         createAccount.layer.shadowOffset = CGSize(width: 7.0, height: 7.0)
-        email.layer.cornerRadius = 10
-        password.layer.cornerRadius = 10
+        email.layer.cornerRadius = Universal.cornerRadius
+        password.layer.cornerRadius = Universal.cornerRadius
         defaultFrame = self.view.frame
          //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -62,6 +62,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate{
         //bring views to front
         view.bringSubviewToFront(dimBackground)
         view.bringSubviewToFront(popup)
+        view.backgroundColor = Universal.viewBackgroundColor
     }
     @objc func closePopup(sender: UIButton) {
         UIView.animate(withDuration: 0.15, delay: 0, options: .transitionCrossDissolve, animations: {

@@ -31,9 +31,8 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
         resetPassword.layer.shadowOpacity = 0.5
         resetPassword.layer.shadowRadius = 10
         resetPassword.layer.shadowOffset = CGSize(width: 7.0, height: 7.0)
-        email.layer.cornerRadius = 10
+        email.layer.cornerRadius = Universal.cornerRadius
         defaultFrame = self.view.frame
-        
         //allows detection of keyboard appearing/disappearing
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -52,6 +51,7 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
         //bring views to front
         view.bringSubviewToFront(dimBackground)
         view.bringSubviewToFront(popup)
+        view.backgroundColor = Universal.viewBackgroundColor
     }
     //end editing once this view disappears
     override func viewWillDisappear(_ animated: Bool) {

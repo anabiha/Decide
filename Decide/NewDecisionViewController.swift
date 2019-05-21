@@ -14,12 +14,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var postButton: CustomButton!
-    @IBOutlet weak var cancelButton: UIButton!
-    //
-    @IBOutlet weak var cancelButtonHeight: NSLayoutConstraint!
-    @IBOutlet weak var cancelButtonWidth: NSLayoutConstraint!
-    
-    var cancelTriggered: Bool = false
     var decision = Decision() //data manager
     var insets: UIEdgeInsets = UIEdgeInsets.init(top: 20, left: 0, bottom: 100, right: 0) //content inset for tableview
     var cellCount = 4 //current number of cells, start at 4
@@ -27,17 +21,22 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
     let cellReuseIdentifier = "decisionItemCell" //reuse identifiers
     let addButtonCellReuseIdentifier = "addButtonCell"
     let questionBarCellReuseIdentifier = "questionBarCell"
-    let cellSpacingHeight: CGFloat = 10
+    let cellSpacingHeight: CGFloat = 5
     let screenSize = UIScreen.main.bounds
-    var defaultCancelFrame: CGRect?
     var popup: Popup!
     var username = ""
     var tagPopup: TagPopup!
     var dimBackground: UIView!
+    let generator = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+    }
     //Background is an IMAGEVIEW
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.contentInsetAdjustmentBehavior = .never
+        self.modalPresentationStyle = .fullScreen
         //DO NOT REGISTER THE CELL CLASSES HERE, ALREADY DONE IN INTERFACEBUILDER!!!!!!!
         tableView.delegate = self
         tableView.dataSource = self
@@ -48,7 +47,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.rowHeight = UITableView.automaticDimension
         //keeps some space between bottom of screen and the bottom of the tableview
         tableView.contentInset = insets
-        self.view.backgroundColor = UIColor(red:250/255, green: 250/255, blue: 250/255, alpha: 1)
+        self.view.backgroundColor = Universal.viewBackgroundColor
         //configure post button, popup buttons
         postButton.configure(tuple: button.post)
         //configure decision object with cells
@@ -57,9 +56,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         //add keyboard observer, allows for actions when keyboard appears/disappears
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        //tell view what the frame of the cancelbutton looks like
-        defaultCancelFrame = cancelButton.frame
-        
+
         dimBackground = UIView(frame: UIScreen.main.bounds)
         dimBackground.alpha = 0
         dimBackground.isHidden = true
@@ -82,14 +79,9 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         self.view.bringSubviewToFront(dimBackground)
         self.view.bringSubviewToFront(popup)
         self.view.bringSubviewToFront(tagPopup)
-        //keep cancelButton hidden while sliding up
-        cancelButton.alpha = 0
     }
     override func viewDidAppear(_ animated: Bool) {
-        cancelButton.alpha = 1
-    }
-    override func viewWillDisappear(_ animated: Bool) {
-        cancelButton.alpha = 0
+        tableView.isScrollEnabled = true
     }
     /*
      Works in conjunction with decisionitem func "shift" which shifts the cell based on the keyboard size
@@ -124,22 +116,20 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         return headerView
     }
     
-    //cool animations when scrolling!
+    //scrolls new decision back up to home
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         //increase size of button and scroll down when scrolling tableview down
         if scrollView.contentOffset.y < -insets.top {
-            if defaultCancelFrame != nil {
-                cancelButton.frame = defaultCancelFrame!.offsetBy(dx: 0, dy: -(scrollView.contentOffset.y + insets.top))
-                cancelButton.transform = CGAffineTransform(scaleX: -(scrollView.contentOffset.y + insets.top)/100, y: -(scrollView.contentOffset.y + insets.top)/100)
-            }
             //trigger the cancel action if past a certain point
             if scrollView.contentOffset.y <= -130 {
-                if !cancelTriggered {
-                    cancelTriggered = true
-                    cancel()
-                }
+                generator.impactOccurred()
+                scrollView.setContentOffset(scrollView.contentOffset, animated: false) //freezes view so that selection doesnt get called twice
+                scrollView.isScrollEnabled = false
+                let tb = tabBarController as! MainTabBarController
+                tb.animateTabSwitch(to: 0, withScaleAnimation: false)
             }
         }
+      
     }
     
     // create a cell for each table view row
@@ -162,18 +152,12 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         } else if indexPath.section == 0 {
             
             let cell: QuestionBar = self.tableView.dequeueReusableCell(withIdentifier: questionBarCellReuseIdentifier) as! QuestionBar// add button will be a normal cell
-            if let placeholder = cell.textViewPlaceholder {
-                placeholder.removeFromSuperview()
-            }
             cell.decisionHandler = decision
             cell.configure(text: decision.getTitle()) //refer to decision file
             print("CREATED questionBar at index: \(indexPath.section), with question: \(decision.getTitle() == "" ? "\"\"" : decision.getTitle())")
             return cell
         } else { //if it's not the add item button
             let cell: DecisionItem = self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! DecisionItem //cast to decisionitem
-            if let placeholder = cell.textViewPlaceholder {
-                placeholder.removeFromSuperview()
-            }
             cell.decisionHandler = decision
             let text = decision.getDecision(at: indexPath.section)
             cell.configure(text: text)
@@ -289,20 +273,103 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         addPicture.backgroundColor = .orange
         return UISwipeActionsConfiguration(actions: [addPicture])
     }
-    //closes popup
-    func closePopup() {
-        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
-            self.popup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
-        }, completion: nil)
-        
-        UIView.transition(with: popup, duration: 0.1, options: .transitionCrossDissolve, animations: {
-            self.popup.alpha = 0
-            self.dimBackground.alpha = 0
-        }, completion: { finished in
-            self.popup.isHidden = true
-//            self.dimBackground.isHidden = true
-        })
+    
+    //dismisses the popup
+    @objc func cancelPopup(_ sender: Any) {
+        closePopup()
     }
+    @objc func moveToTags(_ sender: Any) {
+        self.closePopup()
+        self.showTagPopup()
+    }
+    
+    //saves the decision
+    @objc func saveDecision(_ sender: Any) {
+        closeTagPopup()
+        print("DECISION SAVED")
+        print("Title: \(self.decision.getTitle())")
+        print("Content: ")
+        for section in 1..<self.cellCount - 1 { //saving each cell
+            print("\(self.decision.getDecision(at: section))")
+        }
+        // upload the decision data to firebase
+        let ref = Database.database().reference().root
+        guard let userKey = Auth.auth().currentUser?.uid else {return}
+        
+        var post_options = self.decision.decisionItemList
+        // removes the first element because it is the question
+        post_options.remove(at: 0)
+        
+        //creating an array for voting
+        var votes: [Int] = []
+        for _ in 0..<post_options.count {
+            votes.append(0)
+        }
+        
+        let reference = Database.database().reference().child("users").child(userKey).child("username")
+        
+        reference.observeSingleEvent(of: .value) { (snapshot) in
+            
+            //dictionary uploaded to firebase for the post
+            let postData = [
+                "title": self.decision.getTitle(),
+                "options": post_options,
+                "uid": userKey,
+                "username": snapshot.value as? String ?? "USER",
+                "votes": votes,
+                ] as [String : Any]
+            
+            let newPostKey = ref.child("posts").childByAutoId().key
+            //store the post under the posts branch
+            ref.child("posts").child(newPostKey!).setValue(postData)
+            //stores the child ID of the post into the users>posts branch
+            ref.child("users").child(userKey).child("posts").child(newPostKey!).setValue(newPostKey!) //the key == the value, didn't know how else to get it to work like this.
+            //animate the action of going back while clearing the view controller
+            if let tb = self.tabBarController as? MainTabBarController {
+                tb.animateTabSwitch(to: 0, withScaleAnimation: true)
+                tb.selectedIndex = 0
+                let vc = self.storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
+                let nc = self.tabBarController!.viewControllers?[1] as! UINavigationController
+                nc.viewControllers[0] = vc
+            }
+        }
+    }
+    
+    //action connected to post button
+    @IBAction func save(_ sender: CustomButton) {
+        var blankCellList: [Int] = [] //used to determine where the blank cells are
+        
+        for section in 1..<cellCount - 1 { //check to see if any are empty
+            if decision.getDecision(at: section) == "" {
+                blankCellList.append(section) //add its section if empty
+            }
+        }
+        //if there are no empty cells....
+        if blankCellList.count == 0 && decision.getTitle() != "" {
+            popup.setTitle(to: "Post Decision")
+            popup.setText(to: "Are you sure you want to post this decision?")
+            popup.changeButton1(to: button.popupCancel)
+            popup.changeButton2(to: button.popupPost)
+            popup.removeAllTargets()
+            popup.setButton1Target(self, #selector(cancelPopup(_:)))
+            popup.setButton2Target(self, #selector(moveToTags(_:)))
+            showPopup()
+        } else { //otherwise...
+            if blankCellList.count != 0 {
+                for section in 0..<blankCellList.count {
+                    if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: blankCellList[section])) as? DecisionItem {
+                        cell.shakeError()
+                    }
+                }
+            }
+            if decision.getTitle() == "" {
+                if let questionBar = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? QuestionBar {
+                    questionBar.shakeError()
+                }
+            }
+        }
+    }
+    
     //opens popup
     func showPopup() {
         self.popup.isHidden = false
@@ -315,7 +382,20 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             self.popup.transform = CGAffineTransform(scaleX: 1, y: 1)
         })
     }
-   func showTagPopup() {
+    //closes popup
+    func closePopup() {
+        UIView.animate(withDuration: 0.1, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.popup.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+        }, completion: nil)
+        
+        UIView.transition(with: popup, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.popup.alpha = 0
+            self.dimBackground.alpha = 0
+        }, completion: { finished in
+            self.popup.isHidden = true
+        })
+    }
+    func showTagPopup() {
         self.tagPopup.isHidden = false
         self.dimBackground.isHidden = false
         UIView.transition(with: tagPopup, duration: 0.1, options: .transitionCrossDissolve, animations: {
@@ -338,121 +418,6 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             self.tagPopup.isHidden = true
             self.dimBackground.isHidden = true
         })
-    }
-    //dismisses the popup
-    @objc func cancelPopup(_ sender: Any) {
-        cancelTriggered = false
-        closePopup()
-    }
-    @objc func moveToTags(_ sender: Any) {
-       
-            self.closePopup()
-            self.showTagPopup()
-       
-    }
-    
-    //saves the decision
-    @objc func saveDecision(_ sender: Any) {
-        cancelTriggered = false
-        closeTagPopup()
-        print("DECISION SAVED")
-        print("Title: \(self.decision.getTitle())")
-        print("Content: ")
-        for section in 1..<self.cellCount - 1 { //saving each cell
-            print("\(self.decision.getDecision(at: section))")
-        }
-        // upload the decision data to firebase
-        let ref = Database.database().reference().root
-        guard let userKey = Auth.auth().currentUser?.uid else {return}
-        
-        var post_options = self.decision.decisionItemList
-        // removes the first element because it is the question
-        post_options.remove(at: 0)
-        
-        //creating an array for voting
-        var votes: [Int] = []
-        for _ in 0..<post_options.count {
-            votes.append(0)
-        }
-        
-        
-        let reference = Database.database().reference().child("users").child(userKey).child("username")
-        
-        reference.observeSingleEvent(of: .value) { (snapshot) in
-            
-            //dictionary uploaded to firebase for the post
-            let postData = [
-                "title": self.decision.getTitle(),
-                "options": post_options,
-                "uid": userKey,
-                "username": snapshot.value as? String ?? "USER",
-                "votes": votes,
-                ] as [String : Any]
-            
-            let newPostKey = ref.child("posts").childByAutoId().key
-            //store the post under the posts branch
-            ref.child("posts").child(newPostKey!).setValue(postData)
-            //stores the child ID of the post into the users>posts branch
-            ref.child("users").child(userKey).child("posts").child(newPostKey!).setValue(newPostKey!) //the key == the value, didn't know how else to get it to work like this.
-            //animate the action of going back, switching tabs is also handled in animated
-            self.dismiss(animated: true, completion: nil)
-    
-        }
-    }
-    
-    //deletes the decision
-    @objc func deleteDecision(_ sender: Any) {
-        closePopup()
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    //cancel button to introduce popup
-    func cancel() {
-        print("Initiated cancelButton")
-        popup.setTitle(to: "Delete Decision")
-        popup.setText(to: "Are you sure you want to delete this decision?")
-        popup.changeButton1(to: button.popupCancel)
-        popup.changeButton2(to: button.popupDelete)
-        popup.removeAllTargets()
-        popup.setButton1Target(self, #selector(cancelPopup(_:)))
-        popup.setButton2Target(self, #selector(deleteDecision(_:)))
-        //fade it in while also zooming in
-        showPopup()
-    }
-    //action connected to post button
-    @IBAction func save(_ sender: CustomButton) {
-        var blankCellList: [Int] = [] //used to determine where the blank cells are
-        
-        for section in 1..<cellCount - 1 { //check to see if any are empty
-            if decision.getDecision(at: section) == "" {
-                blankCellList.append(section) //add its section if empty
-            }
-        }
-        //if there are no empty cells....
-        if blankCellList.count == 0 && decision.getTitle() != "" {
-            popup.setTitle(to: "Post Decision")
-            popup.setText(to: "Are you sure you want to post this decision?")
-            popup.changeButton1(to: button.popupCancel)
-            popup.changeButton2(to: button.popupPost)
-            popup.removeAllTargets()
-            popup.setButton1Target(self, #selector(cancelPopup(_:)))
-            popup.setButton2Target(self, #selector(moveToTags(_:)))
-            showPopup()
-            
-        } else { //otherwise...
-            if blankCellList.count != 0 {
-                for section in 0..<blankCellList.count {
-                    if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: blankCellList[section])) as? DecisionItem {
-                        cell.shakeError()
-                    }
-                }
-            }
-            if decision.getTitle() == "" {
-                if let questionBar = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? QuestionBar {
-                    questionBar.shakeError()
-                }
-            }
-        }
     }
 }
 
