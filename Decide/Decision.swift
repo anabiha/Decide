@@ -13,10 +13,21 @@ import Firebase
 class ProfilePopupCell: UITableViewCell {
     var decision: String!
     var voteCount: Int!
+    var percentage: Double! //might be nil if there have been no votes
+    var bar: UIView!
+    var fadedBar: UIView! //the default bar
     var decisionLabel: UILabel!
     var voteCountLabel: UILabel!
-    func configure(decision: String, voteCount: Int) {
-       
+    var barColor = Universal.blue.withAlphaComponent(0.8)
+    var fadedBarColor = Universal.blue.withAlphaComponent(0.1)
+    var barHeight: CGFloat = 20
+    var barWidth: CGFloat!
+    func configure(decision: String, voteCount: Int, percentage: Double) {
+        
+        self.percentage = percentage
+        self.decision = decision
+        self.voteCount = voteCount
+        
         if decisionLabel == nil {
             decisionLabel = UILabel()
             decisionLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -27,49 +38,98 @@ class ProfilePopupCell: UITableViewCell {
             voteCountLabel.translatesAutoresizingMaskIntoConstraints = false
             addSubview(voteCountLabel)
         }
+        if bar == nil {
+            barWidth = self.frame.width
+            bar = UIView(frame: CGRect(x: 25, y: self.frame.height - barHeight + 15, width: barWidth, height: barHeight))
+            bar.layer.cornerRadius = Universal.cornerRadius
+            bar.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner, .layerMaxXMaxYCorner, .layerMaxXMinYCorner]
+            bar.layer.backgroundColor = barColor.cgColor
+            //bar.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: 0.5))
+            bar.frame.size.width = 0
+            bar.isHidden = true
+            addSubview(bar)
+        }
+        if fadedBar == nil {
+            fadedBar = UIView(frame: CGRect(x: 25, y: self.frame.height - barHeight + 15, width: self.frame.width, height: barHeight))
+            fadedBar.layer.cornerRadius = 10
+            fadedBar.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner, .layerMaxXMaxYCorner, .layerMaxXMinYCorner]
+            fadedBar.layer.backgroundColor = fadedBarColor.cgColor
+            addSubview(fadedBar)
+        }
         
-        decisionLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        decisionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
-        voteCountLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        decisionLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        decisionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 25).isActive = true
+        decisionLabel.bottomAnchor.constraint(equalTo: bar.topAnchor).isActive = true
+        decisionLabel.trailingAnchor.constraint(greaterThanOrEqualTo: voteCountLabel.leadingAnchor, constant: -10).isActive = true
+       
+        voteCountLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         voteCountLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
-        decisionLabel.trailingAnchor.constraint(greaterThanOrEqualTo: voteCountLabel.leadingAnchor, constant: 10).isActive = true
+        voteCountLabel.bottomAnchor.constraint(equalTo: bar.topAnchor).isActive = true
+        
+        bar.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5).isActive = true
         
         decisionLabel.text = decision
-        decisionLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
-        decisionLabel.textColor = UIColor.darkGray
-        voteCountLabel.text = "\(voteCount)"
-        voteCountLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
-        voteCountLabel.textColor = UIColor.darkGray
+        decisionLabel.font = UIFont(name: Universal.lightFont, size: 17)
+        decisionLabel.textColor = UIColor.darkText
         
-        
+        voteCountLabel.text = voteCount == 0 ? "No votes" : "\(voteCount)"
+        voteCountLabel.font = UIFont(name: Universal.heavyFont, size: 17)
+        voteCountLabel.textColor = UIColor.black
         selectionStyle = .none
     }
     func setLabel(to text: String) {
-        voteCountLabel.text = text
+        UIView.animate(withDuration: 0.4, delay: 0, options: .transitionCrossDissolve, animations: {
+            self.voteCountLabel.alpha = 0
+            self.voteCountLabel.alpha = 1
+            self.voteCountLabel.text = text
+        }, completion: nil)
+    }
+   
+    func displayPercentageBar() {
+        bar.isHidden = false
+        UIView.animate(withDuration: 0.35, delay: 0.3, options: .curveEaseOut, animations: {
+            self.bar.frame.size.width = self.barWidth * CGFloat(self.percentage)/100
+        }, completion: nil)
+        //animate shifting of choice alpha
+        UIView.animate(withDuration: 0.4, delay: 0.2, options: .curveEaseIn, animations: {
+            self.voteCountLabel.alpha = 0
+            self.voteCountLabel.alpha = 1
+        }, completion: nil)
+    }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        bar.isHidden = true
+        bar.frame.size.width = 0
     }
 }
 class ProfileChoiceCell: UITableViewCell {
-    @IBOutlet weak var choice: UILabel!
+    var choice: UILabel!
     var decision: String! //the text of the decision
     var bar: UIView?//creates the bar that highlights percentages
     var percentage: Double! //percentage
     var shouldRound = false //decides whether the row should be rounded
-    var color1 = UIColor.white
-    //default color
-    var color2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)  //the color of what was chosen
-    var barColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.2) //color of bar
+    var barColor = Universal.blue.withAlphaComponent(0.2) //color of bar
     override func layoutSubviews() {
         super.layoutSubviews()
         if shouldRound {
-            roundCorners([.bottomLeft, .bottomRight], radius: 15)
+            roundCorners([.bottomLeft, .bottomRight], radius: Universal.cornerRadius)
         } else {
             roundCorners([.bottomLeft, .bottomRight], radius: 0)
         }
     }
     func configure(text: String, percentage: Double, color: UIColor) {
         //make sure subviews to leave the view
-        clipsToBounds = true
         selectionStyle = .none
+        if choice == nil {
+            choice = UILabel()
+            addSubview(choice)
+        }
+        choice.translatesAutoresizingMaskIntoConstraints = false
+        choice.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        choice.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        choice.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        choice.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        choice.heightAnchor.constraint(greaterThanOrEqualToConstant: 40).isActive = true
         //set the information
         choice.text = text
         decision = text
@@ -89,8 +149,9 @@ class ProfileChoiceCell: UITableViewCell {
         backgroundColor = color
         //label aesthetics
         choice.backgroundColor = UIColor.clear
-        choice.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
-        choice.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1) //color of bar
+        choice.font = UIFont(name: Universal.mediumFont, size: 17)
+        choice.textColor = UIColor.darkGray
+        choice.textAlignment = .center
     }
     func updatePercent(newPercent: Double) {
         percentage = newPercent
@@ -137,20 +198,32 @@ class ProfileChoiceCell: UITableViewCell {
     }
 }
 class ProfileTitleCell: UITableViewCell {
-    @IBOutlet weak var title: UITextView!
+    var title: UITextView!
     override func layoutSubviews() {
         super.layoutSubviews()
-        roundCorners([.topLeft, .topRight], radius: 15)
+        roundCorners([.topLeft, .topRight], radius: Universal.cornerRadius)
     }
     func configure(text: String) {
+        if title == nil {
+            title = UITextView()
+            addSubview(title)
+            
+        }
+        title.translatesAutoresizingMaskIntoConstraints = false
+        title.isUserInteractionEnabled = false
+        title.isScrollEnabled = false
+        title.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
+        title.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10).isActive = true
+        title.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10).isActive = true
         title.text = text
-        title.textColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1)
+        title.textColor = UIColor.black
         selectionStyle = .none
-        title.font = UIFont(name: "AvenirNext-DemiBold", size: 30)
-        title.textContainerInset = UIEdgeInsets(top: 10, left: 7, bottom: 5, right: 7)
+        title.font = UIFont(name: Universal.mediumFont, size: 17)
+        title.textAlignment = .center
     }
 }
-class ChoiceCell: UITableViewCell {
+class HomeChoiceCell: UITableViewCell {
     @IBOutlet weak var choice: UILabel!
     var decision: String! //the text of the decision
     var bar: UIView?//creates the bar that highlights percentages
@@ -159,19 +232,19 @@ class ChoiceCell: UITableViewCell {
     var color1 = UIColor.white
         //default color
     var color2 = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)  //the color of what was chosen
-    var barColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.2) //color of bar
+    var barColor = Universal.blue.withAlphaComponent(0.2) //color of bar
     override func layoutSubviews() {
         super.layoutSubviews()
         if shouldRound {
-            roundCorners([.bottomLeft, .bottomRight], radius: 15)
+            roundCorners([.bottomLeft, .bottomRight], radius: Universal.cornerRadius)
         } else {
             roundCorners([.bottomLeft, .bottomRight], radius: 0)
         }
     }
     func configure(text: String, percentage: Double, color: UIColor) {
         //make sure subviews to leave the view
-        clipsToBounds = true
         selectionStyle = .none
+         clipsToBounds = false
         //set the information
         choice.text = text
         decision = text
@@ -191,8 +264,9 @@ class ChoiceCell: UITableViewCell {
         backgroundColor = color
         //label aesthetics
         choice.backgroundColor = UIColor.clear
-        choice.font = UIFont(name: "AvenirNext-DemiBold", size: 20)
-        choice.textColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1) //color of bar
+        choice.font = UIFont(name: Universal.lightFont, size: 18)
+        choice.textColor = UIColor.darkGray
+        choice.textAlignment = .center
     }
     func updatePercent(newPercent: Double) {
         percentage = newPercent
@@ -218,7 +292,7 @@ class ChoiceCell: UITableViewCell {
             //animate bar
             UIView.animate(withDuration: 0.3, delay: 0.2, options: .curveEaseOut, animations: {
                 bar.alpha = 1
-                bar.frame.size.width = self.frame.size.width * CGFloat(self.percentage)
+                bar.frame.size.width = self.frame.size.width * CGFloat(self.percentage)/100
             }, completion: nil)
             //animate shifting of choice alpha
             UIView.animate(withDuration: 0.5, delay: 0.2, options: .curveEaseIn, animations: {
@@ -226,7 +300,7 @@ class ChoiceCell: UITableViewCell {
                 self.choice.alpha = 1
             }, completion: nil)
             UIView.animate(withDuration: 0.1, delay: 0.2, options: .transitionCrossDissolve, animations: {
-                self.choice.text = String("\((self.percentage * 100).truncate(places: 1))%") //this step must happen before the shift of choice, otherwise animation wont work
+                self.choice.text = String("\((self.percentage).truncate(places: 1))%") //this step must happen before the shift of choice, otherwise animation wont work
             }, completion: nil)
         }
     }
@@ -239,31 +313,30 @@ class ChoiceCell: UITableViewCell {
     }
 }
 
-
 class HomeTitleCell: UITableViewCell {
     @IBOutlet weak var title: UITextView!
     func configure(text: String) {
         title.text = text
-        title.textColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1)
+        title.textColor = UIColor.darkText
         selectionStyle = .none
-        title.font = UIFont(name: "AvenirNext-DemiBold", size: 30)
-        title.textContainerInset = UIEdgeInsets(top: 0, left: 5, bottom: 5, right: 0)
+        title.font = UIFont(name: Universal.mediumFont, size: 18)
+        title.textAlignment = .center
     }
 }
 class UserCell: UITableViewCell {
-    
     @IBOutlet weak var username: UILabel!
     @IBOutlet weak var profilePicture: UIImageView!
     @IBOutlet weak var flagButton: CustomButton!
     override func layoutSubviews() {
         super.layoutSubviews()
-        roundCorners([.topLeft, .topRight], radius: 15)
+        roundCorners([.topLeft, .topRight], radius: Universal.cornerRadius)
     }
     func configure(username: String) {
-        clipsToBounds = true
         selectionStyle = .none
+        clipsToBounds = false
         self.username.text = username
-        self.username.font = UIFont(name: "AvenirNext-DemiBold", size: 15)
+        self.username.textAlignment = .center
+        self.username.font = UIFont(name: Universal.heavyFont, size: 16)
         backgroundColor = UIColor.white
     }
     func setButtonTarget(_ target: Any?, _ selector: Selector) {
@@ -278,44 +351,44 @@ class UserCell: UITableViewCell {
 class DecisionItem: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var descriptionBox: UITextView!
     let normalBGColor: UIColor = UIColor.white
-    let normalBorderColor: CGColor = UIColor.lightGray.withAlphaComponent(0.2).cgColor
-    let normalTextColor: UIColor = UIColor(red: 84/255, green: 84/255, blue: 84/255, alpha: 1)
-    let placeholderColor: UIColor = UIColor(red:200/255, green: 200/255, blue: 200/255, alpha: 0.5)
-    let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 25)
-    var textViewPlaceholder: UILabel!
+    let normalBorderColor: CGColor = UIColor.white.cgColor
+    let normalTextColor: UIColor = UIColor.black
+    let placeholderColor: UIColor = Universal.lightGrey
+//        UIColor(red:240/255, green: 240/255, blue: 240/255, alpha: 1)
+    let normalFont = UIFont(name: Universal.lightFont, size: 20)
     var decisionHandler: Decision?
+    var placeholder = "Option"
     public func configure(text: String?) { //sets everything in the cell up
         descriptionBox.delegate = self //important
-        descriptionBox.text = text
+        if text == "" {
+            descriptionBox.text = placeholder
+            descriptionBox.textColor = placeholderColor
+        } else {
+            descriptionBox.text = text
+            descriptionBox.textColor = normalTextColor
+        }
         descriptionBox.font = normalFont
-        //UIFont.boldSystemFont(ofSize: 25.0)
-        descriptionBox.textColor = normalTextColor
-        selectionStyle = .none//disables the "selected" animation when someone clicks on the cell, but still allows for interaction with the descriptionBox
+        
+        selectionStyle = .none
         //setting the colors of the descriptionBox and row
-        //let grayColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1)//custom color (pretty light grey)
         descriptionBox.backgroundColor = normalBGColor
         descriptionBox.layer.borderColor = normalBorderColor
         descriptionBox.layer.borderWidth = 2
-        descriptionBox.layer.cornerRadius = 15
-        descriptionBox.textContainerInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
-        
-        textViewPlaceholder = UILabel()
-        textViewPlaceholder.font = normalFont
-        textViewPlaceholder.textColor = placeholderColor
-        textViewPlaceholder.text = "Option"
-        textViewPlaceholder.sizeToFit()
-        textViewPlaceholder.isHidden = !descriptionBox.text.isEmpty
-        textViewPlaceholder.frame.origin = CGPoint(x: 12, y: (descriptionBox.font?.pointSize)! / 2 - 3)
-        descriptionBox.addSubview(textViewPlaceholder)
-        
+        descriptionBox.layer.cornerRadius = Universal.cornerRadius
+        descriptionBox.textAlignment = .center
+        descriptionBox.textContainerInset = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
         backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor
-        clipsToBounds = true //important
     }
     //tells view controller which cell is currently being edited
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         if let index = self.tableView!.indexPath(for: self) {
             decisionHandler!.activeFieldIndex = index
+        }
+        if self.window != nil { //forces the cursor to the beginning
+            if textView.textColor == placeholderColor {
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            }
         }
         return true
     }
@@ -331,7 +404,6 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
             let rectInTable = self.tableView!.rectForRow(at: index)
             let rectInView = self.tableView!.convert(rectInTable, to: self.tableView!.superview)
             if keyboardSize.intersects(rectInView) {
-                print("intersects")
                 let dist = rectInView.maxY - keyboardSize.minY + 30
                 UIView.animate(withDuration: 0.25) {
                     self.tableView!.contentInset.bottom = dist + self.tableView!.contentInset.bottom
@@ -342,7 +414,6 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     }
     //changes cell height while text is changing
     func textViewDidChange(_ textView: UITextView) { //this only works because "scrolling" was disabled in interface builder
-        textViewPlaceholder.isHidden = !descriptionBox.text.isEmpty
         let startHeight = textView.frame.size.height
         let fixedWidth = textView.frame.size.width
         let newSize =  textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
@@ -354,13 +425,37 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
         }
         decisionHandler!.setDecision(at: getIndexPath()!.section, with: descriptionBox.text)
     }
-    //restricts number of characters, hide keyboard when pressing return
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let currentText:String = textView.text
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        //dismiss keyboard upon hitting return key
         if(text == "\n") {
             textView.resignFirstResponder()
             return false
+        } else if textView.text.count + (text.count - range.length) > 35 {
+            return false
+        } else if updatedText.isEmpty { //show the placeholder if text is empty
+            textView.text = placeholder
+            textView.textColor = placeholderColor
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            decisionHandler!.setDecision(at: getIndexPath()!.section, with: descriptionBox.text)
+        } else if textView.textColor == placeholderColor && !text.isEmpty { //if the user types something and there's a nonempty string, remove the placeholder and make the textcolor black
+            textView.textColor = normalTextColor
+            textView.text = text
+            decisionHandler!.setDecision(at: getIndexPath()!.section, with: descriptionBox.text)
+            //must set text here as well, since textviewdidchange is not called
         } else {
-            return textView.text.count + (text.count - range.length) <= 35
+            return true
+        }
+        return false
+    }
+    
+    //makes the cursor immovable when placeholder is visible
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        if self.window != nil {
+            if textView.textColor == placeholderColor {
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            }
         }
     }
     //shifts color of background
@@ -388,20 +483,15 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     }
 }
 
-
-
-
 class AddButton: UITableViewCell {
-    //198, 236, 255
-    let normalBGColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 0.2)
-    let normalTextColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
-    //UIColor(red: 255/255, green: 147/255, blue: 33/155, alpha: 1)
-    let greyBG = UIColor(red: 215/255.0, green: 215/255.0, blue: 215/255.0, alpha: 1)
+    let normalBGColor = UIColor.white
+    let normalTextColor = Universal.blue
+    let greyBG = Universal.lightGrey
     let greyText = UIColor(red: 160.0/255.0, green: 160.0/255.0, blue: 160.0/255.0, alpha: 1)
-    let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 15)
+    let normalFont = UIFont(name: Universal.mediumFont, size: 25)
     public func configure(BGColor: UIColor, TextColor: UIColor) { //sets everything in the cell up
         //addbutton aesthetics
-        textLabel?.text = "+ Add an item"
+        textLabel?.text = "+"
         textLabel?.font = normalFont
         textLabel?.textAlignment = .center
         textLabel?.textColor = TextColor
@@ -409,7 +499,7 @@ class AddButton: UITableViewCell {
         backgroundColor = BGColor
         layer.borderColor = UIColor.clear.cgColor
         layer.borderWidth = 2
-        layer.cornerRadius = 8
+        layer.cornerRadius = Universal.cornerRadius
         clipsToBounds = true
     }
     //changes color of textview
@@ -440,45 +530,39 @@ class AddButton: UITableViewCell {
             super.frame = frame
         }
     }
-    
 }
 
 class QuestionBar: UITableViewCell, UITextViewDelegate {
-    
     @IBOutlet weak var questionBar: UITextView!
     var textViewPlaceholder: UILabel!
     let normalBGColor = UIColor.clear
-    let normalTextColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
-    let placeholderColor = UIColor(red: 86/255, green: 192/255, blue: 249/255, alpha: 1)
-    let normalFont = UIFont(name: "AvenirNext-DemiBold", size: 34)
+    let normalTextColor = UIColor.black
+    let placeholderColor = Universal.lightGrey
+    let normalFont = UIFont(name: Universal.heavyFont, size: 30)
     var decisionHandler: Decision?
+    var placeholder = "Ask a question..."
     public func configure(text: String) {
         questionBar.delegate = self
-        questionBar.text = text
-        questionBar.textColor = normalTextColor
+        if text == "" {
+            questionBar.text = placeholder
+            questionBar.textColor = placeholderColor
+        } else {
+            questionBar.text = text
+            questionBar.textColor = normalTextColor
+        }
         questionBar.font = normalFont
         questionBar.backgroundColor = normalBGColor
         questionBar.layer.borderColor = UIColor.clear.cgColor
-        questionBar.textContainerInset = UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 10)
-        questionBar.layer.cornerRadius = 10
+        questionBar.textContainerInset = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
+        questionBar.layer.cornerRadius = Universal.cornerRadius
+        questionBar.textAlignment = .center
         selectionStyle = .none
         backgroundColor = UIColor.clear
         layer.borderColor = UIColor.clear.cgColor
-        
-        textViewPlaceholder = UILabel() //places a UILabel over the question bar to make a placeholder
-        textViewPlaceholder.font = normalFont
-        textViewPlaceholder.textColor = placeholderColor
-        textViewPlaceholder.text = "Ask a question..."
-        textViewPlaceholder.sizeToFit()
-        textViewPlaceholder.isHidden = !questionBar.text.isEmpty
-        questionBar.addSubview(textViewPlaceholder)
-        textViewPlaceholder.frame.origin = CGPoint(x: 5, y: (questionBar.font?.pointSize)! / 2 - 12)
-        
         clipsToBounds = true
     }
     //resizes the cell that the textview is in based on text size
     func textViewDidChange(_ textView: UITextView) { //this only works because "scrolling" was disabled in interface builder
-        textViewPlaceholder.isHidden = !questionBar.text.isEmpty
         let startHeight = textView.frame.size.height
         let fixedWidth = textView.frame.size.width
         let newSize =  textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
@@ -496,18 +580,45 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
             self.questionBar.backgroundColor = bgColor
         }, completion: nil)
     }
-    //hides keyboard when pressing return
-    public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if (text == "\n") {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let currentText:String = textView.text
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        //dismiss keyboard upon hitting return key
+        if(text == "\n") {
             textView.resignFirstResponder()
             return false
+        } else if textView.text.count + (text.count - range.length) > 80 {
+            return false
+        } else if updatedText.isEmpty { //show the placeholder if text is empty
+            textView.text = placeholder
+            textView.textColor = placeholderColor
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            decisionHandler!.setTitle(text: questionBar.text)
+        } else if textView.textColor == placeholderColor && !text.isEmpty { //if the user types something and there's a nonempty string, remove the placeholder and make the textcolor black
+            textView.textColor = normalTextColor
+            textView.text = text
+            decisionHandler!.setTitle(text: questionBar.text)
         } else {
-            return textView.text.count + (text.count - range.length) <= 80
+            return true
+        }
+        return false
+    }
+    //makes the cursor immovable when placeholder is visible
+    func textViewDidChangeSelection(_ textView: UITextView) {
+        if self.window != nil {
+            if textView.textColor == placeholderColor {
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            }
         }
     }
     //tells the view controller which cell is currently being edited
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         decisionHandler!.activeFieldIndex = IndexPath(row: 0, section: 0)
+        if self.window != nil {
+            if textView.textColor == placeholderColor {
+                textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            }
+        }
         return true
     }
     //method to invoke shake of the cell
