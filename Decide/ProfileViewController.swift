@@ -15,6 +15,10 @@ import FirebaseAuth
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var headerLabel: UILabel!
+    @IBOutlet weak var profileImage: UIImageView!
+    
+    @IBOutlet weak var Username: UILabel!
+    
     var insets: UIEdgeInsets = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0) //content inset for tableview
     let cellSpacingHeight: CGFloat = 14
     var cellCount = 1
@@ -51,6 +55,12 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.view.backgroundColor = UIColor(red:245/255, green: 245/255, blue: 245/255, alpha: 1)
         super.viewDidLoad()
     }
+    
+    @IBAction func didUnwindFromEditProfile(sender: UIStoryboardSegue){
+        guard let usernameEdit = sender.source as? EditProfileViewController else{return}
+        Username.text = usernameEdit.Username.text
+    }
+   
     func updateData() {
         
         guard let UID = Auth.auth().currentUser?.uid else {return}
@@ -249,6 +259,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
     }
+    
+    
+    @IBAction func EditProfile(_ sender: Any) {
+        performSegue(withIdentifier: "EditProfileConnection", sender: self)
+    }
+    
+    
     
     
     

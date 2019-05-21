@@ -23,7 +23,7 @@
 		35995CCB22381E5900A845E6 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35995CCA22381E5900A845E6 /* SignUpViewController.swift */; };
 		35995CCE22396E9800A845E6 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35995CCD22396E9800A845E6 /* ResetPasswordViewController.swift */; };
 		35995CD02239CF1B00A845E6 /* CreateUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35995CCF2239CF1B00A845E6 /* CreateUserViewController.swift */; };
-		35F1010D222464F50074DA6F /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		35F1010D222464F50074DA6F /* (null) in Resources */ = {isa = PBXBuildFile; };
 		653912AE219E13920003C0B6 /* Decision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653912AD219E13920003C0B6 /* Decision.swift */; };
 		65622ECA21960B1F00C96D0D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65622EC921960B1F00C96D0D /* HomeViewController.swift */; };
 		657DF8EC22808A7900D95C08 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657DF8EB22808A7900D95C08 /* Extensions.swift */; };
@@ -36,6 +36,8 @@
 		65E7918722247E0000537D95 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65E7918622247E0000537D95 /* Profile.storyboard */; };
 		65F21E6E218F594F00A74B52 /* NewDecisionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F21E6C218F527A00A74B52 /* NewDecisionViewController.swift */; };
 		65FAC95D227A01BC00BF3B44 /* DataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FAC95C227A01BC00BF3B44 /* DataModels.swift */; };
+		850746A02285E624009F2971 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8507469F2285E624009F2971 /* EditProfileViewController.swift */; };
+		85992874228EFDBD0026A1E4 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85992873228EFDBD0026A1E4 /* UserData.swift */; };
 		B14A058F58E3E44900DBD1D0 /* Pods_Decide.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9A6D4B7F112FA74F23CEEB /* Pods_Decide.framework */; };
 /* End PBXBuildFile section */
 
@@ -71,6 +73,8 @@
 		65E7918622247E0000537D95 /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		65F21E6C218F527A00A74B52 /* NewDecisionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDecisionViewController.swift; sourceTree = "<group>"; };
 		65FAC95C227A01BC00BF3B44 /* DataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModels.swift; sourceTree = "<group>"; };
+		8507469F2285E624009F2971 /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
+		85992873228EFDBD0026A1E4 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		BF3503CA55741D1DBCF832B8 /* Pods-Decide.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Decide.release.xcconfig"; path = "Pods/Target Support Files/Pods-Decide/Pods-Decide.release.xcconfig"; sourceTree = "<group>"; };
 		D3662C2BE9CC9C962C839A73 /* Pods-Decide.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Decide.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Decide/Pods-Decide.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -118,6 +122,8 @@
 		35105AD02185EE2F00C93FE8 /* Decide */ = {
 			isa = PBXGroup;
 			children = (
+				85992873228EFDBD0026A1E4 /* UserData.swift */,
+				8507469F2285E624009F2971 /* EditProfileViewController.swift */,
 				35105AD12185EE2F00C93FE8 /* AppDelegate.swift */,
 				653912AD219E13920003C0B6 /* Decision.swift */,
 				657F5CEA2245B5160096224E /* Popup.swift */,
@@ -237,7 +243,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35F1010D222464F50074DA6F /* BuildFile in Resources */,
+				35F1010D222464F50074DA6F /* (null) in Resources */,
 				35105ADC2185EE3000C93FE8 /* LaunchScreen.storyboard in Resources */,
 				354A800821AF0FE400B54A47 /* GoogleService-Info.plist in Resources */,
 				65E7917F222465C200537D95 /* Main.storyboard in Resources */,
@@ -320,6 +326,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				850746A02285E624009F2971 /* EditProfileViewController.swift in Sources */,
 				354A800C21AF127700B54A47 /* LoginViewController.swift in Sources */,
 				65C4297A218FDD4000B7768C /* ProfileViewController.swift in Sources */,
 				65C5F0DD21934F3E00E426BB /* MainTabBarController.swift in Sources */,
@@ -331,6 +338,7 @@
 				3562280C225FA945007DC860 /* ViewControllerTableViewCell.swift in Sources */,
 				355A8B3121B027D600D12638 /* UserService.swift in Sources */,
 				653912AE219E13920003C0B6 /* Decision.swift in Sources */,
+				85992874228EFDBD0026A1E4 /* UserData.swift in Sources */,
 				657F5CEB2245B5160096224E /* Popup.swift in Sources */,
 				35995CD02239CF1B00A845E6 /* CreateUserViewController.swift in Sources */,
 				657DF8EC22808A7900D95C08 /* Extensions.swift in Sources */,
