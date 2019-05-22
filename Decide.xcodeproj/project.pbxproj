@@ -38,6 +38,8 @@
 		65F2B9CB228DF1FE00696551 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65F2B9CA228DF1FE00696551 /* Main.storyboard */; };
 		65F2B9CD2290401C00696551 /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65F2B9CC2290401C00696551 /* SettingsViewController.storyboard */; };
 		65FAC95D227A01BC00BF3B44 /* DataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FAC95C227A01BC00BF3B44 /* DataModels.swift */; };
+		850746A02285E624009F2971 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8507469F2285E624009F2971 /* EditProfileViewController.swift */; };
+		85992874228EFDBD0026A1E4 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85992873228EFDBD0026A1E4 /* UserData.swift */; };
 		B14A058F58E3E44900DBD1D0 /* Pods_Decide.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9A6D4B7F112FA74F23CEEB /* Pods_Decide.framework */; };
 /* End PBXBuildFile section */
 
@@ -75,6 +77,8 @@
 		65F2B9CA228DF1FE00696551 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		65F2B9CC2290401C00696551 /* SettingsViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SettingsViewController.storyboard; sourceTree = "<group>"; };
 		65FAC95C227A01BC00BF3B44 /* DataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModels.swift; sourceTree = "<group>"; };
+		8507469F2285E624009F2971 /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
+		85992873228EFDBD0026A1E4 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		BF3503CA55741D1DBCF832B8 /* Pods-Decide.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Decide.release.xcconfig"; path = "Pods/Target Support Files/Pods-Decide/Pods-Decide.release.xcconfig"; sourceTree = "<group>"; };
 		D3662C2BE9CC9C962C839A73 /* Pods-Decide.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Decide.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Decide/Pods-Decide.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -122,6 +126,8 @@
 		35105AD02185EE2F00C93FE8 /* Decide */ = {
 			isa = PBXGroup;
 			children = (
+				85992873228EFDBD0026A1E4 /* UserData.swift */,
+				8507469F2285E624009F2971 /* EditProfileViewController.swift */,
 				35105AD12185EE2F00C93FE8 /* AppDelegate.swift */,
 				65F2B9C02289ACCF00696551 /* SettingsViewController.swift */,
 				65622EC921960B1F00C96D0D /* HomeViewController.swift */,
@@ -327,6 +333,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				850746A02285E624009F2971 /* EditProfileViewController.swift in Sources */,
 				354A800C21AF127700B54A47 /* LoginViewController.swift in Sources */,
 				65F2B9BE228721FB00696551 /* Button.swift in Sources */,
 				65F2B9BC22871F0800696551 /* UniversalConstants.swift in Sources */,
@@ -339,6 +346,7 @@
 				35303C14224BE313004DFA59 /* Data.swift in Sources */,
 				355A8B3121B027D600D12638 /* UserService.swift in Sources */,
 				653912AE219E13920003C0B6 /* Decision.swift in Sources */,
+				85992874228EFDBD0026A1E4 /* UserData.swift in Sources */,
 				657F5CEB2245B5160096224E /* Popup.swift in Sources */,
 				35995CD02239CF1B00A845E6 /* CreateUserViewController.swift in Sources */,
 				65F2B9C12289ACCF00696551 /* SettingsViewController.swift in Sources */,
