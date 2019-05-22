@@ -65,7 +65,7 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.36030632260000001" green="0.68628084659999999" blue="0.95297521350000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-<<<<<<< HEAD
+
                                     <constraint firstItem="GF7-V1-ta2" firstAttribute="leading" secondItem="ut8-Aa-SeT" secondAttribute="leading" constant="10" id="4gH-0n-EyB"/>
                                     <constraint firstAttribute="trailing" secondItem="L50-1b-209" secondAttribute="trailing" constant="90" id="9rA-n9-phl"/>
                                     <constraint firstAttribute="bottom" secondItem="uZS-dk-cU0" secondAttribute="bottom" constant="105" id="Nvx-3p-ppA"/>
@@ -76,11 +76,11 @@
                                     <constraint firstAttribute="bottom" secondItem="gC0-YG-QIA" secondAttribute="bottom" constant="180" id="YCp-VU-ubr"/>
                                     <constraint firstItem="gC0-YG-QIA" firstAttribute="leading" secondItem="ut8-Aa-SeT" secondAttribute="leading" constant="120" id="YGZ-oR-hZg"/>
                                     <constraint firstAttribute="bottom" secondItem="GF7-V1-ta2" secondAttribute="bottom" constant="300" id="beS-Lx-grw"/>
-=======
+
                                     <constraint firstItem="Erw-ep-8T9" firstAttribute="top" secondItem="ut8-Aa-SeT" secondAttribute="top" constant="30" id="RhD-2D-qjG"/>
                                     <constraint firstAttribute="bottom" secondItem="Erw-ep-8T9" secondAttribute="bottom" constant="174" id="WyT-Yc-9Hb"/>
                                     <constraint firstAttribute="height" constant="220" id="Y5b-Lk-4ye"/>
->>>>>>> 4a71c24947d59de7e202641220ba56d4f84cd381
+
                                     <constraint firstItem="Erw-ep-8T9" firstAttribute="leading" secondItem="ut8-Aa-SeT" secondAttribute="leading" constant="301" id="cJP-tz-TA3"/>
                                     <constraint firstItem="gC0-YG-QIA" firstAttribute="top" secondItem="ut8-Aa-SeT" secondAttribute="top" constant="60" id="dFH-hl-JFs"/>
                                     <constraint firstItem="gC0-YG-QIA" firstAttribute="leading" secondItem="GF7-V1-ta2" secondAttribute="trailing" constant="24" id="dGV-Kk-3TS"/>
