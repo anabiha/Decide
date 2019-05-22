@@ -13,16 +13,12 @@ import FirebaseAuth
 
 
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
-    @IBOutlet weak var profileImage: UIImageView!
     
-    @IBOutlet weak var Username: UILabel!
     
     @IBOutlet weak var yourPostsView: UIView! //the white view with user's posts
     @IBOutlet weak var yourPostsViewHeight: NSLayoutConstraint! //height of the view, will vary based on device
     var insets: UIEdgeInsets = UIEdgeInsets.init(top: 0, left: 0, bottom: UIScreen.main.bounds.height/2, right: 0) //content inset for tableview
     let cellSpacingHeight: CGFloat = 12
-
     var cellCount = 1
     let titleIdentifier = "profileTitleCell"
     let choiceIdentifier = "profileChoiceCell"
@@ -104,20 +100,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         updateData()
         super.viewDidLoad()
     }
-
-    
-    @IBAction func didUnwindFromEditProfile(sender: UIStoryboardSegue){
-        guard let usernameEdit = sender.source as? EditProfileViewController else{return}
-        Username.text = usernameEdit.Username.text
-    }
-   
-
     override func viewDidAppear(_ animated: Bool) {
         if dragToHome != nil {
             dragToHome.isEnabled = true
         }
     }
-
     func updateData() {
         guard let UID = Auth.auth().currentUser?.uid else {return}
         let ref = Database.database().reference().root
@@ -357,13 +344,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
     }
-    
-    
-    @IBAction func EditProfile(_ sender: Any) {
-        performSegue(withIdentifier: "EditProfileConnection", sender: self)
-    }
-    
-    
     
     
     
