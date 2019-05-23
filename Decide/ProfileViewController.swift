@@ -100,6 +100,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         updateData()
         super.viewDidLoad()
     }
+    
     override func viewDidAppear(_ animated: Bool) {
         if dragToHome != nil {
             dragToHome.isEnabled = true

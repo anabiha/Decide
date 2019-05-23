@@ -10,63 +10,67 @@ import Foundation
 import UIKit
 import Firebase
 
+//perform segue
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
-    
-    var container: UIView! //container that holds all options
-    var tableview: UITableView!
-    var insets = UIEdgeInsets(top: 100, left: 0, bottom: 0, right: 0)
-    var logo: UILabel!
-    var preferences: UILabel!
-    var account: UILabel!
-    var homeTab: UIView! //the tab that acts as a slice of the home view
-    let homeTabWidth: CGFloat = 80 //the width of the home tab
-    let vibration = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
-    var dragToHome: UIGestureRecognizer!
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        tableview = UITableView()
-        tableview.dataSource = self
-        tableview.delegate = self
+    var tableview: UITableView = {
+        let tableview = UITableView()
+        tableview.translatesAutoresizingMaskIntoConstraints = false
         tableview.estimatedRowHeight = 43.5
         tableview.backgroundColor = UIColor.clear
         tableview.rowHeight = UITableView.automaticDimension
         tableview.tableFooterView = UIView()
         tableview.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableview.isScrollEnabled = false
-        tableview.contentInset = insets
+        tableview.contentInset = UIEdgeInsets(top: 100, left: 0, bottom: 0, right: 0)
         tableview.separatorStyle = .none
-        
-        homeTab = UIView()
-        
-        tableview.translatesAutoresizingMaskIntoConstraints = false
+        return tableview
+    }()
+    var homeTab: UIView = {
+        let homeTab = UIView()
         homeTab.translatesAutoresizingMaskIntoConstraints = false
+        homeTab.backgroundColor = Universal.viewBackgroundColor
+        homeTab.layer.cornerRadius = 30
+        homeTab.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
+        return homeTab
+    } ()//the tab that acts as a slice of the home view
+    let homeTabText: UILabel = {
+        let homeTabText = UILabel()
+        homeTabText.translatesAutoresizingMaskIntoConstraints = false
+        homeTabText.textColor = UIColor.black
+        homeTabText.font = UIFont(name: Universal.heavyFont, size: 30)
+        homeTabText.alpha = 0
+        return homeTabText
+    }()
+    var insets = UIEdgeInsets(top: 100, left: 0, bottom: 0, right: 0)
+    let homeTabWidth: CGFloat = 80 //the width of the home tab
+    let vibration = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
+    var dragToHome: UIGestureRecognizer!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        tableview.dataSource = self
+        tableview.delegate = self
+        tableview.separatorStyle = .none
         
         view.addSubview(tableview)
         view.addSubview(homeTab)
-        
+        homeTab.addSubview(homeTabText)
+        //constraints
         let tableviewWidth = UIScreen.main.bounds.width - homeTabWidth
         let center = (UIScreen.main.bounds.width - homeTabWidth)/2 //the center of the region between tab and leading anchor
-        
         tableview.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height).isActive = true
         tableview.widthAnchor.constraint(equalToConstant: tableviewWidth).isActive = true
         tableview.centerXAnchor.constraint(equalTo: view.leadingAnchor, constant: center).isActive = true
         tableview.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        
         homeTab.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         homeTab.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         homeTab.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         homeTab.widthAnchor.constraint(equalToConstant: homeTabWidth).isActive = true
-        
-        view.backgroundColor = Universal.blue
-       
-        homeTab.backgroundColor = Universal.viewBackgroundColor
-        homeTab.layer.cornerRadius = Universal.cornerRadius
-        homeTab.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
-        
-        tableview.alpha = 0
-        
+        homeTabText.centerXAnchor.constraint(equalTo: homeTab.centerXAnchor).isActive = true
+        homeTabText.centerYAnchor.constraint(equalTo: homeTab.centerYAnchor).isActive = true
+        homeTabText.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/2)
+        view.backgroundColor = UIColor.white
+        //gesture recognizer
         dragToHome = UIPanGestureRecognizer(target: self, action: #selector(wasDraggedToHome(gestureRecognizer:)))
         view.addGestureRecognizer(dragToHome)
     }
@@ -82,6 +86,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             self.tableview.alpha = 1
             self.tableview.center = CGPoint(x: self.tableview.center.x + offset, y: self.tableview.center.y)
         }, completion: nil)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        homeTabText.alpha = 0
     }
     //used for switching back to home page
     @objc func wasDraggedToHome(gestureRecognizer: UIPanGestureRecognizer) {
@@ -121,9 +128,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! UITableViewCell
-        cell.textLabel!.textColor = UIColor.white
+        cell.textLabel!.textColor = UIColor.black
         cell.textLabel!.textAlignment = .center
         cell.backgroundColor = UIColor.clear
+        cell.selectionStyle = .none
         switch indexPath.row {
         case 0: //the logo
             cell.textLabel!.font = UIFont(name: Universal.heavyFont, size: 30)

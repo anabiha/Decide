@@ -119,6 +119,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             dragToProfile.isEnabled = true
         }
     }
+    
     @objc func wasDragged(gestureRecognizer: UIPanGestureRecognizer) {
         let translation = gestureRecognizer.translation(in: self.view)
         if gestureRecognizer.state == UIGestureRecognizer.State.began {

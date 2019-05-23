@@ -22,10 +22,28 @@
                     </view>
                     <navigationItem key="navigationItem" id="iPi-Mv-nxW"/>
                     <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <segue destination="sy6-sI-B49" kind="show" identifier="showOptions" id="mz5-qG-GYh"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aei-z9-Ki7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2228" y="-1306.5967016491754"/>
+        </scene>
+        <!--Settings Options View Controller-->
+        <scene sceneID="Hgq-vr-2h2">
+            <objects>
+                <viewController id="sy6-sI-B49" customClass="SettingsOptionsViewController" customModule="Decide" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="OwA-es-cds">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="bC9-yj-aw5"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AQr-xG-IRL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3060" y="-1290"/>
         </scene>
     </scenes>
 </document>

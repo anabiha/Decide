@@ -103,6 +103,14 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         }, completion: { finished in
             // Remove the old view from the tabbar view.
             print("went to view: \(index)")
+            if index == 3 {
+                let nc = self.viewControllers![3] as! UINavigationController
+                let vc = nc.viewControllers[0] as! SettingsViewController
+                UIView.animate(withDuration: 0.2, delay: 0, options: .transitionCrossDissolve, animations: {
+                    vc.homeTabText.alpha = 1
+                }, completion: nil)
+                vc.homeTabText.text = "Home"
+            }
             fromView.removeFromSuperview()
             self.view.isUserInteractionEnabled = true
         })
