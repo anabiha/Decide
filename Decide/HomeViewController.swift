@@ -322,6 +322,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             guard let UID = Auth.auth().currentUser?.uid else {return}
             let ref = Database.database().reference().child("reported").child(post.key)
             ref.child(UID).setValue(reason)
+            // remove post and then send a notification to the user saying that their post was reported
             flagHandler.clear()
             flagPopup.clearText()
             closeFlagPopup()
