@@ -16,12 +16,12 @@
 		354A800C21AF127700B54A47 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A800B21AF127700B54A47 /* LoginViewController.swift */; };
 		355A8B2B21B0235200D12638 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A8B2A21B0235200D12638 /* User.swift */; };
 		355A8B3121B027D600D12638 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A8B3021B027D600D12638 /* UserService.swift */; };
-		35743941223E919F000E0040 /* ShowPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35743940223E919F000E0040 /* ShowPostViewController.swift */; };
 		35916AAD2226119400126476 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35916AAC2226119400126476 /* Constants.swift */; };
 		35916AAF222611E600126476 /* Storyboard+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35916AAE222611E600126476 /* Storyboard+Utility.swift */; };
 		35995CCB22381E5900A845E6 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35995CCA22381E5900A845E6 /* SignUpViewController.swift */; };
 		35995CCE22396E9800A845E6 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35995CCD22396E9800A845E6 /* ResetPasswordViewController.swift */; };
 		35995CD02239CF1B00A845E6 /* CreateUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35995CCF2239CF1B00A845E6 /* CreateUserViewController.swift */; };
+		35E222792296D89B005E5F0D /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E222782296D89B005E5F0D /* EditProfileViewController.swift */; };
 		35F1010D222464F50074DA6F /* (null) in Resources */ = {isa = PBXBuildFile; };
 		653912AE219E13920003C0B6 /* Decision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653912AD219E13920003C0B6 /* Decision.swift */; };
 		65622ECA21960B1F00C96D0D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65622EC921960B1F00C96D0D /* HomeViewController.swift */; };
@@ -54,12 +54,12 @@
 		354A800B21AF127700B54A47 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		355A8B2A21B0235200D12638 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		355A8B3021B027D600D12638 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
-		35743940223E919F000E0040 /* ShowPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowPostViewController.swift; sourceTree = "<group>"; };
 		35916AAC2226119400126476 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		35916AAE222611E600126476 /* Storyboard+Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Storyboard+Utility.swift"; sourceTree = "<group>"; };
 		35995CCA22381E5900A845E6 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		35995CCD22396E9800A845E6 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		35995CCF2239CF1B00A845E6 /* CreateUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateUserViewController.swift; sourceTree = "<group>"; };
+		35E222782296D89B005E5F0D /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		653912AD219E13920003C0B6 /* Decision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decision.swift; sourceTree = "<group>"; };
 		65622EC921960B1F00C96D0D /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		657DF8EB22808A7900D95C08 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -122,6 +122,7 @@
 		35105AD02185EE2F00C93FE8 /* Decide */ = {
 			isa = PBXGroup;
 			children = (
+				35E222782296D89B005E5F0D /* EditProfileViewController.swift */,
 				35105AD12185EE2F00C93FE8 /* AppDelegate.swift */,
 				65F2B9C02289ACCF00696551 /* SettingsViewController.swift */,
 				65622EC921960B1F00C96D0D /* HomeViewController.swift */,
@@ -142,7 +143,6 @@
 				355A8B2A21B0235200D12638 /* User.swift */,
 				35916AAC2226119400126476 /* Constants.swift */,
 				35916AAE222611E600126476 /* Storyboard+Utility.swift */,
-				35743940223E919F000E0040 /* ShowPostViewController.swift */,
 				35303C13224BE313004DFA59 /* Data.swift */,
 			);
 			path = Decide;
@@ -337,6 +337,7 @@
 				355A8B2B21B0235200D12638 /* User.swift in Sources */,
 				35105AD22185EE2F00C93FE8 /* AppDelegate.swift in Sources */,
 				35303C14224BE313004DFA59 /* Data.swift in Sources */,
+				35E222792296D89B005E5F0D /* EditProfileViewController.swift in Sources */,
 				355A8B3121B027D600D12638 /* UserService.swift in Sources */,
 				653912AE219E13920003C0B6 /* Decision.swift in Sources */,
 				657F5CEB2245B5160096224E /* Popup.swift in Sources */,
@@ -346,7 +347,6 @@
 				35995CCB22381E5900A845E6 /* SignUpViewController.swift in Sources */,
 				65622ECA21960B1F00C96D0D /* HomeViewController.swift in Sources */,
 				35916AAF222611E600126476 /* Storyboard+Utility.swift in Sources */,
-				35743941223E919F000E0040 /* ShowPostViewController.swift in Sources */,
 				65FAC95D227A01BC00BF3B44 /* DataModels.swift in Sources */,
 				35916AAD2226119400126476 /* Constants.swift in Sources */,
 			);
@@ -486,11 +486,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5SWG32R39H;
+				DEVELOPMENT_TEAM = 3EMU544M8V;
 				INFOPLIST_FILE = Decide/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.daniel.Decide;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AyPeDa.Decide;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -506,11 +506,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5SWG32R39H;
+				DEVELOPMENT_TEAM = 3EMU544M8V;
 				INFOPLIST_FILE = Decide/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.daniel.Decide;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AyPeDa.Decide;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_COMPILATION_MODE = wholemodule;

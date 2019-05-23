@@ -14,7 +14,7 @@ import FirebaseAuth
 
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    
+    @IBOutlet weak var Username: UILabel!
     @IBOutlet weak var yourPostsView: UIView! //the white view with user's posts
     @IBOutlet weak var yourPostsViewHeight: NSLayoutConstraint! //height of the view, will vary based on device
     var insets: UIEdgeInsets = UIEdgeInsets.init(top: 0, left: 0, bottom: UIScreen.main.bounds.height/2, right: 0) //content inset for tableview
@@ -345,7 +345,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
-    
+    @IBAction func didUnwindFromEditProfile(sender: UIStoryboardSegue){
+        guard let usernameEdit = sender.source as? EditProfileViewController else{return}
+        Username.text = usernameEdit.Username.text
+    }
     
 }
 
