@@ -25,6 +25,7 @@ extension UIViewController {
         }
     }
 }
+
 //this is how our cell accesses its own tableview
 extension UITableViewCell {
     /// Search up the view hierarchy of the table view cell to find the containing table view

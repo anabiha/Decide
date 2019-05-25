@@ -126,7 +126,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                 scrollView.setContentOffset(scrollView.contentOffset, animated: false) //freezes view so that selection doesnt get called twice
                 scrollView.isScrollEnabled = false
                 let tb = tabBarController as! MainTabBarController
-                tb.animateTabSwitch(to: 0, withScaleAnimation: false)
+                tb.animateTabSwitch(to: 0)
             }
         }
       
@@ -326,7 +326,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
             ref.child("users").child(userKey).child("posts").child(newPostKey!).setValue(newPostKey!) //the key == the value, didn't know how else to get it to work like this.
             //animate the action of going back while clearing the view controller
             if let tb = self.tabBarController as? MainTabBarController {
-                tb.animateTabSwitch(to: 0, withScaleAnimation: true)
+                tb.animateTabSwitch(to: 0)
                 tb.selectedIndex = 0
                 let vc = self.storyboard!.instantiateViewController(withIdentifier:"NewDecisionViewController") as! NewDecisionViewController
                 let nc = self.tabBarController!.viewControllers?[1] as! UINavigationController
@@ -340,12 +340,12 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
         var blankCellList: [Int] = [] //used to determine where the blank cells are
         
         for section in 1..<cellCount - 1 { //check to see if any are empty
-            if decision.getDecision(at: section) == "" {
-                blankCellList.append(section) //add its section if empty
+            if decision.getDecision(at: section).rangeOfCharacter(from: NSCharacterSet.letters) == nil {
+                blankCellList.append(section)
             }
         }
         //if there are no empty cells....
-        if blankCellList.count == 0 && decision.getTitle() != "" {
+        if blankCellList.count == 0 && decision.getTitle().rangeOfCharacter(from: NSCharacterSet.letters) != nil {
             popup.setTitle(to: "Post Decision")
             popup.setText(to: "Are you sure you want to post this decision?")
             popup.changeButton1(to: button.popupCancel)
@@ -362,7 +362,7 @@ class NewDecisionViewController: UIViewController, UITableViewDelegate, UITableV
                     }
                 }
             }
-            if decision.getTitle() == "" {
+            if decision.getTitle().rangeOfCharacter(from: NSCharacterSet.letters) == nil {
                 if let questionBar = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? QuestionBar {
                     questionBar.shakeError()
                 }

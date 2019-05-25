@@ -149,7 +149,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 if gestureRecognizer.view!.frame.minX + translation.x > minDist {
                     if let tb = tabBarController as? MainTabBarController {
                         gestureRecognizer.isEnabled = false
-                        tb.animateTabSwitch(to: 0, withScaleAnimation: false)
+                        tb.animateTabSwitch(to: 0)
                     }
                 }
             }
@@ -251,14 +251,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 } else {
                     cell.shouldRound = false
                 }
-                //configure cell with the correct percentage
-                //change percentage to a decimal
-                let total = post.getTotal()
-                
-                cell.configure(text: post.getDecision(at: indexPath.row-1), percentage: Double(post.getVotes(at: indexPath.row - 1))/Double(total), color: UIColor.white)
-                if post.didDisplayPercents { //redisplay percentages if they were shown prior
-                    cell.displayPercentage()
-                }
+                cell.configure(text: post.getDecision(at: indexPath.row-1))
             }
             return cell
         }

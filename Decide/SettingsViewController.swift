@@ -32,7 +32,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         homeTab.layer.cornerRadius = 30
         homeTab.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
         return homeTab
-    } ()//the tab that acts as a slice of the home view
+    }()//the tab that acts as a slice of the home view
     let homeTabText: UILabel = {
         let homeTabText = UILabel()
         homeTabText.translatesAutoresizingMaskIntoConstraints = false
@@ -41,6 +41,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         homeTabText.alpha = 0
         return homeTabText
     }()
+    let options: [SettingsOptionsViewController.SettingsPage] = [.Account]
+    var nextPage: SettingsOptionsViewController.SettingsPage?
     var insets = UIEdgeInsets(top: 100, left: 0, bottom: 0, right: 0)
     let homeTabWidth: CGFloat = 80 //the width of the home tab
     let vibration = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
@@ -55,9 +57,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         view.addSubview(tableview)
         view.addSubview(homeTab)
         homeTab.addSubview(homeTabText)
-        //constraints
         let tableviewWidth = UIScreen.main.bounds.width - homeTabWidth
         let center = (UIScreen.main.bounds.width - homeTabWidth)/2 //the center of the region between tab and leading anchor
+        //constraints
         tableview.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height).isActive = true
         tableview.widthAnchor.constraint(equalToConstant: tableviewWidth).isActive = true
         tableview.centerXAnchor.constraint(equalTo: view.leadingAnchor, constant: center).isActive = true
@@ -74,19 +76,31 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         dragToHome = UIPanGestureRecognizer(target: self, action: #selector(wasDraggedToHome(gestureRecognizer:)))
         view.addGestureRecognizer(dragToHome)
     }
-    override func viewDidAppear(_ animated: Bool) {
-        if dragToHome != nil {
-            dragToHome.isEnabled = true
-        }
+    //func that is called when unwinding back to this view, connected from storyboard
+    @IBAction func unwindToSettingsView(_ segue: UIStoryboardSegue) {
+        animateIn()
     }
-    override func viewWillAppear(_ animated: Bool) {
+    //animation when this view appears, makes the tab label appear and gives the tableview a slight slide-in effect
+    func animateIn() {
         let offset = UIScreen.main.bounds.width/2
         self.tableview.center = CGPoint(x: self.tableview.center.x - offset, y: self.tableview.center.y)
         UIView.animate(withDuration: 0.35, delay: 0.08, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
             self.tableview.alpha = 1
             self.tableview.center = CGPoint(x: self.tableview.center.x + offset, y: self.tableview.center.y)
         }, completion: nil)
+        
+        UIView.animate(withDuration: 0.2, delay: 0.2, options: .transitionCrossDissolve, animations: {
+            self.homeTabText.alpha = 1
+        }, completion: nil)
+        homeTabText.text = "Home"
     }
+    //enable the ability to drag to the home page again
+    override func viewDidAppear(_ animated: Bool) {
+        if dragToHome != nil {
+            dragToHome.isEnabled = true
+        }
+    }
+    //make the tab label transparent so that it can animate in when the view appears again
     override func viewWillDisappear(_ animated: Bool) {
         homeTabText.alpha = 0
     }
@@ -104,7 +118,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 if gestureRecognizer.view!.frame.minX + translation.x < -minDist {
                     if let tb = tabBarController as? MainTabBarController {
                         gestureRecognizer.isEnabled = false
-                        tb.animateTabSwitch(to: 0, withScaleAnimation: false)
+                        tb.animateTabSwitch(to: 0)
                     }
                 }
             }
@@ -118,7 +132,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return options.count + 1 // +1 to account for header
     }
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -144,4 +158,18 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         }
         return cell
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        nextPage = options[indexPath.row - 1]
+        self.performSegue(withIdentifier: "showOptions", sender: self)
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showOptions" {
+            if let toVC = segue.destination as? SettingsOptionsViewController {
+                toVC.configure(page: nextPage!)
+            } else {
+                print("SettingsViewController; didSelectRowAt(); segue destination is nil")
+            }
+        }
+    }
+    
 }

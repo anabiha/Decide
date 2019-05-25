@@ -16,7 +16,6 @@ class SettingsOptionsViewController: UIViewController, UITableViewDelegate, UITa
         case Preferences
         case About
     }
-    
     let tableview: UITableView = {
         let tableview = UITableView()
         tableview.translatesAutoresizingMaskIntoConstraints = false
@@ -32,23 +31,38 @@ class SettingsOptionsViewController: UIViewController, UITableViewDelegate, UITa
     let backButton: CustomButton = {
         let backButton = CustomButton()
         backButton.translatesAutoresizingMaskIntoConstraints = false
-        backButton.configure(tuple: button.popupCancel)
+        backButton.setBackgroundImage(UIImage(named: "BackButton"), for: .normal)
         return backButton
     }()
     var optionsList: [String]?
     var pageType: SettingsOptionsViewController.SettingsPage?
-    
+    //safe area insets dont become active until the view appears, so only set constraints when they become active
+    override func viewSafeAreaInsetsDidChange() {
+        backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15).isActive = true
+        backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true
+        backButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        backButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        tableview.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 15).isActive = true
+        tableview.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        tableview.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        tableview.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+    }
     override func viewDidLoad() {
         view.backgroundColor = Universal.viewBackgroundColor
         view.addSubview(tableview)
         view.addSubview(backButton)
+
+        tableview.dataSource = self
+        tableview.delegate = self
         
-        tableview.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        tableview.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        tableview.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        tableview.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        tableview.backgroundColor = UIColor.clear
         
+        backButton.addTarget(self, action: #selector(goBack(_:)), for: .touchUpInside)
         configure(page: .Account)
+    }
+    
+    @objc func goBack(_ sender: Any) {
+        self.performSegue(withIdentifier: "unwindToSettings", sender: AnyClass.self)
     }
     func configure(page: SettingsOptionsViewController.SettingsPage) {
         pageType = page
@@ -66,6 +80,7 @@ class SettingsOptionsViewController: UIViewController, UITableViewDelegate, UITa
             print("SettingsOptionsViewController; configure(): default statement for switch executed")
             optionsList = []
         }
+        
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let options = optionsList {
@@ -75,12 +90,20 @@ class SettingsOptionsViewController: UIViewController, UITableViewDelegate, UITa
             return 0
         }
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        print(backButton.frame.origin)
+    }
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! UITableViewCell
         cell.textLabel!.font = UIFont(name: Universal.lightFont, size: 20)
+        cell.textLabel?.textColor = UIColor.black
+        cell.backgroundColor = UIColor.clear
         if let options = optionsList {
             cell.textLabel!.text = options[indexPath.row]
         } else {
@@ -88,4 +111,5 @@ class SettingsOptionsViewController: UIViewController, UITableViewDelegate, UITa
         }
         return cell
     }
+   
 }

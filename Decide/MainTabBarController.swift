@@ -27,7 +27,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         }
         
         print("WHY IS IT HERE")
-        animateTabSwitch(to: toIndex, withScaleAnimation: false)
+        animateTabSwitch(to: toIndex)
       
         return true
     }
@@ -69,7 +69,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         })
     }
     //FUNCTION HANDLES SWITCHING OF SELECTED TAB
-    func animateTabSwitch(to index: Int, withScaleAnimation shouldScale: Bool) {
+    func animateTabSwitch(to index: Int) {
         
         guard let fromView = self.selectedViewController?.view, let fromIndex = self.viewControllers?.firstIndex(of: self.selectedViewController!),
             let toView = self.viewControllers?[index].view else {
@@ -99,18 +99,15 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
             toView.center = CGPoint(x: toView.center.x + offsetX, y: toView.center.y  + offsetY)
             fromView.center = CGPoint(x: fromView.center.x + offsetX, y: fromView.center.y  + offsetY)
             self.selectedIndex = index
+            if index == 3 {
+                let nc = self.viewControllers![3] as! UINavigationController
+                let vc = nc.viewControllers[0] as! SettingsViewController
+                vc.animateIn()
+            }
            //keeping this in the animate tab rather than the completion = smoother animation
         }, completion: { finished in
             // Remove the old view from the tabbar view.
             print("went to view: \(index)")
-            if index == 3 {
-                let nc = self.viewControllers![3] as! UINavigationController
-                let vc = nc.viewControllers[0] as! SettingsViewController
-                UIView.animate(withDuration: 0.2, delay: 0, options: .transitionCrossDissolve, animations: {
-                    vc.homeTabText.alpha = 1
-                }, completion: nil)
-                vc.homeTabText.text = "Home"
-            }
             fromView.removeFromSuperview()
             self.view.isUserInteractionEnabled = true
         })

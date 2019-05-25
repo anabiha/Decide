@@ -117,7 +117,7 @@ class ProfileChoiceCell: UITableViewCell {
             roundCorners([.bottomLeft, .bottomRight], radius: 0)
         }
     }
-    func configure(text: String, percentage: Double, color: UIColor) {
+    func configure(text: String) {
         //make sure subviews to leave the view
         selectionStyle = .none
         if choice == nil {
@@ -133,68 +133,13 @@ class ProfileChoiceCell: UITableViewCell {
         //set the information
         choice.text = text
         decision = text
-        self.percentage = percentage
-        //bar
-        if bar == nil {
-            bar = UIView(frame: self.frame)
-            bar!.sizeToFit()
-            self.addSubview(bar!)
-            bar!.layer.backgroundColor = barColor.cgColor
-            bar!.isHidden = true
-            bar!.alpha = 0
-            bar!.frame.size.width = 0
-        }
-        self.sendSubviewToBack(bar!)
         //cell aesthetics
-        backgroundColor = color
+        backgroundColor = UIColor.white
         //label aesthetics
         choice.backgroundColor = UIColor.clear
         choice.font = UIFont(name: Universal.mediumFont, size: 17)
         choice.textColor = UIColor.darkGray
         choice.textAlignment = .center
-    }
-    func updatePercent(newPercent: Double) {
-        percentage = newPercent
-    }
-    func displayText() {
-        if let bar = bar {
-            UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
-                bar.alpha = 0
-                bar.frame.size.width = 0
-                self.choice.alpha = 0
-            })
-            UIView.animate(withDuration: 0.3, delay: 0.2, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
-                self.choice.alpha = 1
-            })
-            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
-                self.choice.text = self.decision
-            })
-        }
-    }
-    func displayPercentage() {
-        if let bar = bar {
-            bar.isHidden = false
-            //animate bar
-            UIView.animate(withDuration: 0.3, delay: 0.2, options: .curveEaseOut, animations: {
-                bar.alpha = 1
-                bar.frame.size.width = self.frame.size.width * CGFloat(self.percentage)
-            }, completion: nil)
-            //animate shifting of choice alpha
-            UIView.animate(withDuration: 0.5, delay: 0.2, options: .curveEaseIn, animations: {
-                self.choice.alpha = 0
-                self.choice.alpha = 1
-            }, completion: nil)
-            UIView.animate(withDuration: 0.1, delay: 0.2, options: .transitionCrossDissolve, animations: {
-                self.choice.text = String("\((self.percentage * 100).truncate(places: 1))%") //this step must happen before the shift of choice, otherwise animation wont work
-            }, completion: nil)
-        }
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        bar!.isHidden = true
-        bar!.alpha = 0
-        bar!.frame.size.width = 0
     }
 }
 class ProfileTitleCell: UITableViewCell {
@@ -244,11 +189,12 @@ class HomeChoiceCell: UITableViewCell {
     func configure(text: String, percentage: Double, color: UIColor) {
         //make sure subviews to leave the view
         selectionStyle = .none
-         clipsToBounds = false
+        clipsToBounds = false
         //set the information
         choice.text = text
         decision = text
         self.percentage = percentage
+        print(self.percentage)
         //bar
         if bar == nil {
             bar = UIView(frame: self.frame)
@@ -354,7 +300,6 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
     let normalBorderColor: CGColor = UIColor.white.cgColor
     let normalTextColor: UIColor = UIColor.black
     let placeholderColor: UIColor = Universal.lightGrey
-//        UIColor(red:240/255, green: 240/255, blue: 240/255, alpha: 1)
     let normalFont = UIFont(name: Universal.lightFont, size: 20)
     var decisionHandler: Decision?
     var placeholder = "Option"
@@ -423,7 +368,9 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
             self.tableView?.endUpdates()
             UIView.setAnimationsEnabled(true)
         }
-        decisionHandler!.setDecision(at: getIndexPath()!.section, with: descriptionBox.text)
+        if textView.textColor != placeholderColor {
+            decisionHandler!.setDecision(at: getIndexPath()!.section, with: descriptionBox.text)
+        }
     }
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let currentText:String = textView.text
@@ -438,7 +385,7 @@ class DecisionItem: UITableViewCell, UITextViewDelegate {
             textView.text = placeholder
             textView.textColor = placeholderColor
             textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
-            decisionHandler!.setDecision(at: getIndexPath()!.section, with: descriptionBox.text)
+            decisionHandler!.setDecision(at: getIndexPath()!.section, with: "")
         } else if textView.textColor == placeholderColor && !text.isEmpty { //if the user types something and there's a nonempty string, remove the placeholder and make the textcolor black
             textView.textColor = normalTextColor
             textView.text = text
@@ -572,7 +519,9 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
             self.tableView?.endUpdates()
             UIView.setAnimationsEnabled(true)
         }
-        decisionHandler!.setTitle(text: questionBar.text)
+        if textView.textColor != placeholderColor {
+            decisionHandler!.setTitle(text: textView.text)
+        }
     }
     //shifts color of textview
     public func fade(backgroundTo bgColor: UIColor) {
@@ -593,7 +542,7 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
             textView.text = placeholder
             textView.textColor = placeholderColor
             textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
-            decisionHandler!.setTitle(text: questionBar.text)
+            decisionHandler!.setTitle(text: "")
         } else if textView.textColor == placeholderColor && !text.isEmpty { //if the user types something and there's a nonempty string, remove the placeholder and make the textcolor black
             textView.textColor = normalTextColor
             textView.text = text
@@ -623,6 +572,9 @@ class QuestionBar: UITableViewCell, UITextViewDelegate {
     }
     //method to invoke shake of the cell
     public func shakeError() {
+        let errorRed = UIColor(red: 244/255, green: 66/255, blue: 66/255, alpha: 0.7)
+        fade(backgroundTo: errorRed)
         self.shake()
+        fade(backgroundTo: normalBGColor)
     }
 }

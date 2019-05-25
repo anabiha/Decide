@@ -133,12 +133,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             if gestureRecognizer.view!.frame.minX + translation.x < -minDist {
                 if let tb = tabBarController as? MainTabBarController {
                     gestureRecognizer.isEnabled = false
-                    tb.animateTabSwitch(to: 2, withScaleAnimation: false)
+                    tb.animateTabSwitch(to: 2)
                 }
             } else if gestureRecognizer.view!.frame.minX + translation.x > minDist {
                 if let tb = tabBarController as? MainTabBarController {
                     gestureRecognizer.isEnabled = false
-                    tb.animateTabSwitch(to: 3, withScaleAnimation: false)
+                    tb.animateTabSwitch(to: 3)
                 }
             }
         } else if gestureRecognizer.state == UIGestureRecognizer.State.ended { //reset the frame if it didnt get dragged the minimum distance
@@ -156,12 +156,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     @objc func showNewDecision(_ sender: Any) {
         if let tb = tabBarController as? MainTabBarController {
-            tb.animateTabSwitch(to: 1, withScaleAnimation: true)
+            tb.animateTabSwitch(to: 1)
         }
     }
     @objc func showProfile(_ sender: Any) {
         if let tb = tabBarController as? MainTabBarController {
-            tb.animateTabSwitch(to: 2, withScaleAnimation: true)
+            tb.animateTabSwitch(to: 2)
         }
     }
     //displays the data from firebase in the homepage
@@ -377,9 +377,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 } else {
                     color = cell.color1 //everything remains color1 if nothing was voted
                 }
-                let total = post.getTotal()
-                
-                cell.configure(text: post.getDecision(at: indexPath.row-2), percentage: Double(post.getVotes(at: indexPath.row - 2))/Double(total), color: color)
+                let percent = Double(post.getVotes(at: indexPath.row - 2))/Double(post.getTotal()) * 100
+                cell.configure(text: post.getDecision(at: indexPath.row-2), percentage: percent, color: color)
                 if post.didDisplayPercents { //redisplay percentages if they were shown prior
                     cell.displayPercentage()
                 }
