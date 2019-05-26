@@ -20,12 +20,10 @@ class SettingsOptionsViewController: UIViewController, UITableViewDelegate, UITa
         let tableview = UITableView()
         tableview.translatesAutoresizingMaskIntoConstraints = false
         tableview.estimatedRowHeight = 43.5
-        tableview.backgroundColor = UIColor.clear
         tableview.rowHeight = UITableView.automaticDimension
         tableview.tableFooterView = UIView()
         tableview.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableview.isScrollEnabled = false
-        tableview.separatorStyle = .none
         return tableview
     }()
     let backButton: CustomButton = {
@@ -36,6 +34,7 @@ class SettingsOptionsViewController: UIViewController, UITableViewDelegate, UITa
     }()
     var optionsList: [String]?
     var pageType: SettingsOptionsViewController.SettingsPage?
+    let vibration = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
     //safe area insets dont become active until the view appears, so only set constraints when they become active
     override func viewSafeAreaInsetsDidChange() {
         backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15).isActive = true
@@ -58,17 +57,19 @@ class SettingsOptionsViewController: UIViewController, UITableViewDelegate, UITa
         tableview.backgroundColor = UIColor.clear
         
         backButton.addTarget(self, action: #selector(goBack(_:)), for: .touchUpInside)
-        configure(page: .Account)
     }
     
     @objc func goBack(_ sender: Any) {
         self.performSegue(withIdentifier: "unwindToSettings", sender: AnyClass.self)
     }
+    
+    @IBAction func unwindToSettingsOptions(_ sender: UIStoryboardSegue) {}
+    
     func configure(page: SettingsOptionsViewController.SettingsPage) {
         pageType = page
         switch page {
         case .Account:
-            optionsList = ["Reset password", "Delete account"]
+            optionsList = ["Change password", "Delete account"]
             break
         case .Preferences:
             optionsList = ["idk"]
@@ -80,7 +81,6 @@ class SettingsOptionsViewController: UIViewController, UITableViewDelegate, UITa
             print("SettingsOptionsViewController; configure(): default statement for switch executed")
             optionsList = []
         }
-        
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let options = optionsList {
@@ -91,7 +91,18 @@ class SettingsOptionsViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        print(backButton.frame.origin)
+        if let page = pageType {
+            switch page {
+            case .Account:
+                vibration.impactOccurred()
+                if indexPath.row == 0 { self.performSegue(withIdentifier: "showChangePassword", sender: self) }
+                break
+            default:
+                print("SettingsOptionsViewController; didSelectRowAt(): default statement for switch executed")
+            }
+        } else {
+            print("SettingsOptionsViewController; didSelectRowAt(): pagetype doesn't exist ")
+        }
     }
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -103,6 +114,7 @@ class SettingsOptionsViewController: UIViewController, UITableViewDelegate, UITa
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! UITableViewCell
         cell.textLabel!.font = UIFont(name: Universal.lightFont, size: 20)
         cell.textLabel?.textColor = UIColor.black
+        cell.selectionStyle = .none
         cell.backgroundColor = UIColor.clear
         if let options = optionsList {
             cell.textLabel!.text = options[indexPath.row]
@@ -111,5 +123,4 @@ class SettingsOptionsViewController: UIViewController, UITableViewDelegate, UITa
         }
         return cell
     }
-   
 }

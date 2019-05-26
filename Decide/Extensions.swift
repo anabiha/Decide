@@ -20,6 +20,8 @@ extension UIViewController {
             return "Invalid username or password. Please try again."
         case AuthErrorCode.emailAlreadyInUse.rawValue:
             return "User account already exists."
+        case AuthErrorCode.weakPassword.rawValue:
+            return "Password must be more than 6 characters."
         default:
             return error.localizedDescription
         }

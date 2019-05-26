@@ -42,12 +42,52 @@
                     </view>
                     <connections>
                         <segue destination="fE4-9O-XO4" kind="unwind" identifier="unwindToSettings" customClass="CustomUnwindSegue" customModule="Decide" customModuleProvider="target" unwindAction="unwindToSettingsView:" id="KDz-3v-0fL"/>
+                        <segue destination="jye-AJ-PyC" kind="custom" identifier="showChangePassword" customClass="CustomSegue" customModule="Decide" customModuleProvider="target" id="xS0-sk-Rvi"/>
+                        <segue destination="UHS-SI-iq1" kind="custom" identifier="showDeleteAccount" customClass="CustomSegue" customModule="Decide" customModuleProvider="target" id="JgD-0C-qWw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AQr-xG-IRL" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="fE4-9O-XO4" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="3060" y="-1290"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="NlK-1C-X2n">
+            <objects>
+                <viewController id="UHS-SI-iq1" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="4Cx-br-2ST">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="1I4-ZM-ou2"/>
+                    </view>
+                    <connections>
+                        <segue destination="JJs-eK-yuq" kind="unwind" unwindAction="unwindToSettingsOptions:" id="dwK-Al-DCi"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="S0o-6p-idm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="JJs-eK-yuq" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="3942" y="-824"/>
+        </scene>
+        <!--Change Password View Controller-->
+        <scene sceneID="6Rp-as-deF">
+            <objects>
+                <viewController id="jye-AJ-PyC" customClass="ChangePasswordViewController" customModule="Decide" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ELm-3R-Dr1">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="679-nu-HfG"/>
+                    </view>
+                    <connections>
+                        <segue destination="1C8-6c-ElY" kind="unwind" identifier="unwindToSettingsOptions" customClass="CustomUnwindSegue" customModule="Decide" customModuleProvider="target" unwindAction="unwindToSettingsOptions:" id="I2u-TT-amt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gqA-E8-635" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="1C8-6c-ElY" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="3943" y="-1599"/>
         </scene>
     </scenes>
 </document>

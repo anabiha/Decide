@@ -14,6 +14,8 @@ struct button {
     //tuple: normal bg color, highlighted bg color, normal text color, highlighted text color, title
     static let post = (Universal.blue, UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Post")
     static let add = (Universal.blue, UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "+")
+    static let confirm = (Universal.blue, UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Confirm")
+    static let next = (Universal.blue, UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Next")
     static let logIn = (Universal.blue.withAlphaComponent(0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Sign In")
     static let resetPassword = (Universal.blue.withAlphaComponent(0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Reset Password")
     static let createAccount = (Universal.blue.withAlphaComponent(0.8), UIColor(red: 2/255, green: 166/255, blue: 255/255, alpha: 1), UIColor.white, UIColor.white, "Create Account")

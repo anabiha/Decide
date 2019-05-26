@@ -159,9 +159,11 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        nextPage = options[indexPath.row - 1]
+        nextPage = options[indexPath.row - 1] //decide which page was clicked on so we can present it in settingsoptions
+        vibration.impactOccurred()
         self.performSegue(withIdentifier: "showOptions", sender: self)
     }
+    //while preparing to segue to settingsoptions, configure the destination vc to the appropriate page
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showOptions" {
             if let toVC = segue.destination as? SettingsOptionsViewController {

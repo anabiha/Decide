@@ -39,6 +39,7 @@ class ProfilePopupCell: UITableViewCell {
             addSubview(voteCountLabel)
         }
         if bar == nil {
+            //DO NOT set autoresizingmaskintoconstraints = false, since we WANT to use a frame based layout here
             barWidth = self.frame.width
             bar = UIView(frame: CGRect(x: 25, y: self.frame.height - barHeight + 15, width: barWidth, height: barHeight))
             bar.layer.cornerRadius = Universal.cornerRadius
@@ -66,6 +67,7 @@ class ProfilePopupCell: UITableViewCell {
         voteCountLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         voteCountLabel.bottomAnchor.constraint(equalTo: bar.topAnchor).isActive = true
         
+        //even though translatesAutoResizingMaskIntoConstraints is TRUE, i think this works because this is affecting self, which IS affected by autolayout
         bar.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5).isActive = true
         
         decisionLabel.text = decision

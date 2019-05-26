@@ -25,48 +25,9 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
             print("error indexes are the same")
             return false
         }
-        
-        print("WHY IS IT HERE")
         animateTabSwitch(to: toIndex)
       
         return true
-    }
-    func animateHalf(to index: Int) {
-        
-        guard let fromView = self.selectedViewController?.view, let fromIndex = self.viewControllers?.firstIndex(of: self.selectedViewController!),
-            let toView = self.viewControllers?[index].view else {
-                return
-        }
-        
-        // Add the toView to the tab bar view
-        fromView.superview?.addSubview(toView)
-        // Position toView off screen (above subview)
-        let screenSize = UIScreen.main.bounds.size
-        
-        var offsetY: CGFloat!
-        var offsetX: CGFloat!
-        let isVertical = (index == 1 || fromIndex == 1 && index == 0) ? true : false
-        if isVertical {
-            offsetY = index == 1 ? -screenSize.height/3 : screenSize.height/3
-            offsetX = 0
-        } else {
-            offsetY = 0
-            offsetX = index == 2 ? -screenSize.width/3 : screenSize.width/3
-        }
-        toView.center = CGPoint(x: fromView.center.x - offsetX, y: toView.center.y - offsetY)
-        // Disable interaction during animation
-        view.isUserInteractionEnabled = false
-        
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
-            toView.center = CGPoint(x: toView.center.x + offsetX, y: toView.center.y  + offsetY)
-            fromView.center = CGPoint(x: fromView.center.x + offsetX, y: fromView.center.y  + offsetY)
-            //self.selectedIndex = index //keeping this in the animate tab rather than the completion = smoother animation
-        }, completion: { finished in
-            // Remove the old view from the tabbar view.
-            //fromView.removeFromSuperview()
-            self.view.isUserInteractionEnabled = true
-            
-        })
     }
     //FUNCTION HANDLES SWITCHING OF SELECTED TAB
     func animateTabSwitch(to index: Int) {

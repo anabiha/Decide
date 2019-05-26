@@ -567,7 +567,7 @@ class Popup: UIView {
         label.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10).isActive = true
         label.widthAnchor.constraint(equalToConstant: 280).isActive = true
         //title aesthetics
-        title.font = UIFont(name: Universal.heavyFont, size: 19)
+        title.font = UIFont(name: Universal.mediumFont, size: 19)
         title.textColor = UIColor.black
         title.lineBreakMode = .byWordWrapping
         title.textAlignment = .center
