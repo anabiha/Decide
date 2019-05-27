@@ -196,7 +196,6 @@ class HomeChoiceCell: UITableViewCell {
         choice.text = text
         decision = text
         self.percentage = percentage
-        print(self.percentage)
         //bar
         if bar == nil {
             bar = UIView(frame: self.frame)

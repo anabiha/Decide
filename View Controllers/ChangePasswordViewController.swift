@@ -20,7 +20,7 @@ class ChangePasswordViewController: UIViewController, UITextFieldDelegate {
         oldPassword.translatesAutoresizingMaskIntoConstraints = false
         oldPassword.isSecureTextEntry = true
         oldPassword.textColor = UIColor.darkText
-        oldPassword.font = UIFont(name: Universal.lightFont, size: 20)
+        oldPassword.font = UIFont(name: Universal.lightFont, size: 18)
         return oldPassword
     }()
     let newPassword: UITextField = {
@@ -32,7 +32,7 @@ class ChangePasswordViewController: UIViewController, UITextFieldDelegate {
         newPassword.translatesAutoresizingMaskIntoConstraints = false
         newPassword.isSecureTextEntry = true
         newPassword.textColor = UIColor.darkText
-        newPassword.font = UIFont(name: Universal.lightFont, size: 20)
+        newPassword.font = UIFont(name: Universal.lightFont, size: 18)
         newPassword.isHidden = true
         newPassword.alpha = 0
         return newPassword
@@ -46,7 +46,7 @@ class ChangePasswordViewController: UIViewController, UITextFieldDelegate {
         confirmation.translatesAutoresizingMaskIntoConstraints = false
         confirmation.isSecureTextEntry = true
         confirmation.textColor = UIColor.darkText
-        confirmation.font = UIFont(name: Universal.lightFont, size: 20)
+        confirmation.font = UIFont(name: Universal.lightFont, size: 18)
         confirmation.isHidden = true
         confirmation.alpha = 0
         return confirmation

@@ -561,11 +561,11 @@ class Popup: UIView {
         //title constraints
         title.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         title.topAnchor.constraint(equalTo: self.topAnchor, constant: 23).isActive = true
-        title.widthAnchor.constraint(equalToConstant: 280).isActive = true
+        title.widthAnchor.constraint(equalToConstant: 260).isActive = true
         //label constraints
         label.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         label.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10).isActive = true
-        label.widthAnchor.constraint(equalToConstant: 280).isActive = true
+        label.widthAnchor.constraint(equalToConstant: 260).isActive = true
         //title aesthetics
         title.font = UIFont(name: Universal.mediumFont, size: 19)
         title.textColor = UIColor.black

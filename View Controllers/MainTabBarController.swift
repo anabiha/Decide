@@ -69,6 +69,10 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         }, completion: { finished in
             // Remove the old view from the tabbar view.
             print("went to view: \(index)")
+            if fromIndex == 1 {
+                let nc = self.viewControllers![1] as! UINavigationController
+                nc.viewControllers[0] = self.storyboard!.instantiateViewController(withIdentifier: "NewDecisionViewController")
+            }
             fromView.removeFromSuperview()
             self.view.isUserInteractionEnabled = true
         })
