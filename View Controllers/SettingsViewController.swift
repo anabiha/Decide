@@ -87,18 +87,12 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     func animateIn() {
         let offset = UIScreen.main.bounds.width/2
         self.tableview.center = CGPoint(x: self.tableview.center.x - offset, y: self.tableview.center.y)
-        UIView.animate(withDuration: 0.35, delay: 0.08, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
+        UIView.animate(withDuration: 0.3, delay: 0.1, options: [.curveEaseOut, .transitionCrossDissolve], animations: {
             self.tableview.alpha = 1
             self.tableview.center = CGPoint(x: self.tableview.center.x + offset, y: self.tableview.center.y)
-        }, completion: { finished in
-            UIView.animate(withDuration: 0.2, animations: {
-                if let cell = self.tableview.cellForRow(at: IndexPath(row: 0, section: 0)) {
-                    cell.textLabel!.alpha = 1
-                }
-            })
-        })
+        }, completion: nil)
         
-        UIView.animate(withDuration: 0.2, delay: 0.43, options: .transitionCrossDissolve, animations: {
+        UIView.animate(withDuration: 0.2, delay: 0.3, options: .transitionCrossDissolve, animations: {
             self.homeTabText.alpha = 1
         }, completion: nil)
         homeTabText.text = "Home"
@@ -112,9 +106,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     //make the tab label transparent so that it can animate in when the view appears again
     override func viewWillDisappear(_ animated: Bool) {
         homeTabText.alpha = 0
-        if let cell = self.tableview.cellForRow(at: IndexPath(row: 0, section: 0)) {
-            cell.textLabel!.alpha = 0
-        }
     }
     //used for switching back to home page
     @objc func wasDraggedToHome(gestureRecognizer: UIPanGestureRecognizer) {
@@ -160,11 +151,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         cell.selectionStyle = .none
         switch indexPath.row {
         case 0: //the logo
-            cell.textLabel?.alpha = 0
             cell.textLabel!.font = UIFont(name: Universal.heavyFont, size: 30)
             cell.textLabel!.text = "Decide"
         case 1:
-            cell.textLabel?.alpha = 1
             cell.textLabel!.font = UIFont(name: Universal.lightFont, size: 20)
             cell.textLabel!.text = "Account"
         default:
