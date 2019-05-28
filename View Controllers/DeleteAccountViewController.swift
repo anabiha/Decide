@@ -124,7 +124,8 @@ class DeleteAccountViewController: UIViewController {
             }
             //delete the user from the database
             ref.child("users").child(user!.uid).removeValue()
-            
+            //signs user out
+            try! Auth.auth().signOut()
             //delete the user from authentication
             user?.delete(completion: { (error) in
                 if let error = error {

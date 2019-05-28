@@ -48,13 +48,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         view.addSubview(settingsButton)
         //header constraints and setup
         header.translatesAutoresizingMaskIntoConstraints = false
-        header.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 20).isActive = true
+        header.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 5).isActive = true
         header.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 15).isActive = true
         header.text = "Home"
         header.font = UIFont(name: Universal.heavyFont, size: 35)
         //subheader constraints and setup
         subheader.translatesAutoresizingMaskIntoConstraints = false
-        subheader.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 23).isActive = true
+        subheader.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 8).isActive = true
         subheader.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 0).isActive = true
         subheader.text = "Welcome"
         subheader.font = UIFont(name: Universal.mediumFont, size: 15)
