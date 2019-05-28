@@ -51,10 +51,10 @@
             </objects>
             <point key="canvasLocation" x="3060" y="-1290"/>
         </scene>
-        <!--View Controller-->
+        <!--Delete Account View Controller-->
         <scene sceneID="NlK-1C-X2n">
             <objects>
-                <viewController id="UHS-SI-iq1" sceneMemberID="viewController">
+                <viewController id="UHS-SI-iq1" customClass="DeleteAccountViewController" customModule="Decide" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Cx-br-2ST">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -62,7 +62,7 @@
                         <viewLayoutGuide key="safeArea" id="1I4-ZM-ou2"/>
                     </view>
                     <connections>
-                        <segue destination="JJs-eK-yuq" kind="unwind" unwindAction="unwindToSettingsOptions:" id="dwK-Al-DCi"/>
+                        <segue destination="JJs-eK-yuq" kind="unwind" identifier="unwindToSettingsOptions" customClass="CustomUnwindSegue" customModule="Decide" customModuleProvider="target" unwindAction="unwindToSettingsOptions:" id="dwK-Al-DCi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="S0o-6p-idm" userLabel="First Responder" sceneMemberID="firstResponder"/>

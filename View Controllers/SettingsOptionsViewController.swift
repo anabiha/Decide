@@ -110,6 +110,7 @@ class SettingsOptionsViewController: UIViewController, UITableViewDelegate, UITa
             case .Account:
                 vibration.impactOccurred()
                 if indexPath.row == 0 { self.performSegue(withIdentifier: "showChangePassword", sender: self) }
+                if indexPath.row == 1 { self.performSegue(withIdentifier: "showDeleteAccount", sender: self)}
                 break
             default:
                 print("SettingsOptionsViewController; didSelectRowAt(): default statement for switch executed")
