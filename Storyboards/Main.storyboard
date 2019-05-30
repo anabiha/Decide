@@ -40,7 +40,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="200" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yeX-9j-FZC">
-                                <rect key="frame" x="20" y="44" width="335" height="734"/>
+                                <rect key="frame" x="20" y="44" width="335" height="634"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="userCell" rowHeight="100" id="ChM-Bf-MpZ" customClass="UserCell" customModule="Decide" customModuleProvider="target">
@@ -145,7 +145,7 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="yeX-9j-FZC" secondAttribute="trailing" constant="20" id="5QW-cg-ZQy"/>
                             <constraint firstItem="yeX-9j-FZC" firstAttribute="leading" secondItem="5gs-X6-wLW" secondAttribute="leading" constant="20" id="Pgr-nS-qmK"/>
-                            <constraint firstItem="3ps-9h-Rdy" firstAttribute="bottom" secondItem="yeX-9j-FZC" secondAttribute="bottom" id="bAN-xv-3ep"/>
+                            <constraint firstItem="3ps-9h-Rdy" firstAttribute="bottom" secondItem="yeX-9j-FZC" secondAttribute="bottom" constant="100" id="bAN-xv-3ep"/>
                             <constraint firstItem="yeX-9j-FZC" firstAttribute="top" secondItem="3ps-9h-Rdy" secondAttribute="top" id="zml-9d-kGX"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="3ps-9h-Rdy"/>

@@ -48,29 +48,32 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         view.addSubview(settingsButton)
         //header constraints and setup
         header.translatesAutoresizingMaskIntoConstraints = false
-        header.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 5).isActive = true
-        header.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 15).isActive = true
+        header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15).isActive = true
         header.text = "Home"
         header.font = UIFont(name: Universal.heavyFont, size: 35)
         //subheader constraints and setup
         subheader.translatesAutoresizingMaskIntoConstraints = false
         subheader.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 8).isActive = true
         subheader.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 0).isActive = true
+        subheader.bottomAnchor.constraint(equalToSystemSpacingBelow: subheader.bottomAnchor, multiplier: 1).isActive = true
+        
         subheader.text = "Welcome"
         subheader.font = UIFont(name: Universal.mediumFont, size: 15)
         subheader.textColor = UIColor.lightGray
         //profile button
         profileButton.translatesAutoresizingMaskIntoConstraints = false
         profileButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
-        profileButton.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20).isActive = true
+        profileButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 10).isActive = true
         profileButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
         profileButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         profileButton.configure(withImage: UIImage(named: "profile_icosahedron")!, tuple: button.popupDelete)
         profileButton.addTarget(self, action: #selector(showProfile(_:)), for: .touchUpInside)
         //add button
         addButton.translatesAutoresizingMaskIntoConstraints = false
-        addButton.trailingAnchor.constraint(equalTo: profileButton.leadingAnchor, constant: -10).isActive = true
-        addButton.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20).isActive = true
+        addButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        addButton.centerYAnchor.constraint(equalTo:, constant: <#T##CGFloat#>)
+    
         addButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
         addButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         addButton.configure(tuple: button.add)

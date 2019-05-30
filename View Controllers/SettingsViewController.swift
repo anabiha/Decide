@@ -48,20 +48,11 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     let homeTabWidth: CGFloat = 80 //the width of the home tab
     let vibration = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
     var dragToHome: UIGestureRecognizer!
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        tableview.dataSource = self
-        tableview.delegate = self
-        tableview.separatorStyle = .none
-        
-        view.addSubview(tableview)
-        view.addSubview(homeTab)
-        homeTab.addSubview(homeTabText)
+    override func viewSafeAreaInsetsDidChange() {
+        //constraints
         
         let tableviewWidth = UIScreen.main.bounds.width - homeTabWidth
         let center = (UIScreen.main.bounds.width - homeTabWidth)/2 //the center of the region between tab and leading anchor
-        //constraints
         tableview.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height).isActive = true
         tableview.widthAnchor.constraint(equalToConstant: tableviewWidth).isActive = true
         tableview.centerXAnchor.constraint(equalTo: view.leadingAnchor, constant: center).isActive = true
@@ -73,6 +64,19 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         homeTabText.centerXAnchor.constraint(equalTo: homeTab.centerXAnchor).isActive = true
         homeTabText.centerYAnchor.constraint(equalTo: homeTab.centerYAnchor).isActive = true
         homeTabText.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/2)
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        tableview.dataSource = self
+        tableview.delegate = self
+        tableview.separatorStyle = .none
+        
+        view.addSubview(tableview)
+        view.addSubview(homeTab)
+        homeTab.addSubview(homeTabText)
+     
+       
         //bg color
         view.backgroundColor = UIColor.white
         //gesture recognizer
@@ -152,7 +156,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         switch indexPath.row {
         case 0: //the logo
             cell.textLabel!.font = UIFont(name: Universal.heavyFont, size: 30)
-            cell.textLabel!.text = "Decide"
+            cell.textLabel!.text = "Crisp"
         case 1:
             cell.textLabel!.font = UIFont(name: Universal.lightFont, size: 20)
             cell.textLabel!.text = "Account"

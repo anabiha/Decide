@@ -59,7 +59,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
             toView.center = CGPoint(x: toView.center.x + offsetX, y: toView.center.y  + offsetY)
             fromView.center = CGPoint(x: fromView.center.x + offsetX, y: fromView.center.y  + offsetY)
-            self.selectedIndex = index
+            
             if index == 3 {
                 let nc = self.viewControllers![3] as! UINavigationController
                 let vc = nc.viewControllers[0] as! SettingsViewController
@@ -68,6 +68,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
            //keeping this in the animate tab rather than the completion = smoother animation
         }, completion: { finished in
             // Remove the old view from the tabbar view.
+            self.selectedIndex = index
             print("went to view: \(index)")
             if fromIndex == 1 {
                 let nc = self.viewControllers![1] as! UINavigationController
