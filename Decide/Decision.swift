@@ -282,6 +282,7 @@ class UserCell: UITableViewCell {
         selectionStyle = .none
         clipsToBounds = false
         self.username.text = username
+        self.username.textColor = Universal.blue
         self.username.textAlignment = .center
         self.username.font = UIFont(name: Universal.heavyFont, size: 16)
         backgroundColor = UIColor.white

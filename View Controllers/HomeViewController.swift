@@ -21,15 +21,17 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var flagPopup = FlagPopup() //popup for flagging posts
     var dimBackground: UIView!
     var flagHandler = FlagHandler()
+    
+
     var header: UILabel!
     var subheader: UILabel!
     var canLinkToScroll = true
     var addButton: CustomButton! //button to get to new decision
-    var profileButton: CustomButton!
     var settingsButton: CustomButton!
     var dragToProfile: UIGestureRecognizer!
     let generator1 = UINotificationFeedbackGenerator()
     let generator2 = UIImpactFeedbackGenerator(style: Universal.vibrationStyle)
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,41 +44,29 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         view.addSubview(subheader)
         addButton = CustomButton()
         view.addSubview(addButton)
-        profileButton = CustomButton()
-        view.addSubview(profileButton)
         settingsButton = CustomButton()
         view.addSubview(settingsButton)
-        //header constraints and setup
+//        //header constraints and setup
         header.translatesAutoresizingMaskIntoConstraints = false
-        header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+//        header.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        header.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20).isActive = true
         header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15).isActive = true
         header.text = "Home"
         header.font = UIFont(name: Universal.heavyFont, size: 35)
-        //subheader constraints and setup
+//        //subheader constraints and setupx
         subheader.translatesAutoresizingMaskIntoConstraints = false
         subheader.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 8).isActive = true
         subheader.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 0).isActive = true
-        subheader.bottomAnchor.constraint(equalToSystemSpacingBelow: subheader.bottomAnchor, multiplier: 1).isActive = true
-        
         subheader.text = "Welcome"
         subheader.font = UIFont(name: Universal.mediumFont, size: 15)
         subheader.textColor = UIColor.lightGray
-        //profile button
-        profileButton.translatesAutoresizingMaskIntoConstraints = false
-        profileButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
-        profileButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 10).isActive = true
-        profileButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        profileButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        profileButton.configure(withImage: UIImage(named: "profile_icosahedron")!, tuple: button.popupDelete)
-        profileButton.addTarget(self, action: #selector(showProfile(_:)), for: .touchUpInside)
         //add button
         addButton.translatesAutoresizingMaskIntoConstraints = false
         addButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        addButton.centerYAnchor.constraint(equalTo:, constant: <#T##CGFloat#>)
-    
-        addButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        addButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        addButton.configure(tuple: button.add)
+        addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
+        addButton.widthAnchor.constraint(equalToConstant: 45).isActive = true
+        addButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        addButton.configure(tuple: button.whiteAdd)
         addButton.addTarget(self, action: #selector(showNewDecision(_:)), for: .touchUpInside)
         //settings
         settingsButton.translatesAutoresizingMaskIntoConstraints = false
@@ -122,6 +112,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if dragToProfile != nil {
             dragToProfile.isEnabled = true
         }
+        
     }
     
     @objc func wasDragged(gestureRecognizer: UIPanGestureRecognizer) {
@@ -225,12 +216,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     //data refresh when scrolling down!
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let actualOffset = scrollView.contentOffset.y + insets.top
-        if actualOffset < 0 && canLinkToScroll {
-            header.setAnchorPoint(anchorPoint: .zero)
-            subheader.setAnchorPoint(anchorPoint: CGPoint(x: 0, y: -1))
-            header.transform = CGAffineTransform(scaleX: 1 + -actualOffset/300, y: 1 + -actualOffset/300)
-            subheader.transform = CGAffineTransform(scaleX: 1 + -actualOffset/300, y: 1 + -actualOffset/300)
-        } else if actualOffset > 0 { //shifts header and subheader up when sliding up
+        if actualOffset > 0 { //shifts header and subheader up when sliding up
             header.transform = CGAffineTransform(translationX: 0, y: -actualOffset)
             subheader.transform = CGAffineTransform(translationX: 0, y: -actualOffset)
         }
